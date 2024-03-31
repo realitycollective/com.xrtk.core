@@ -17,7 +17,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// Only supports <see cref="IControllerInteractor"/>s.
     /// Does not support <see cref="IPokeInteractor"/>s and will ignore them.
     /// </remarks>
-    public class SyncControllerVisualizerBehaviour : BaseInteractionBehaviour
+    public class LockControllerVisualizerBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Optional local offset from the object's pivot.")]
         private Vector3 poseLocalPositionOffset = Vector3.zero;
