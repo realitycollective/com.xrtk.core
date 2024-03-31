@@ -19,13 +19,26 @@ namespace RealityToolkit.Core.Samples.Interactions
 
         private IControllerInteractor currentInteractor;
         private Vector3 leverResetPosition;
+        private Vector3 compoundMinimumThresholds;
+        private Vector3 compoundMaximumThresholds;
         private Vector3 previousInteractorPosition;
 
         /// <inheritdoc/>
         protected override void Awake()
         {
             base.Awake();
+
             leverResetPosition = GetLeverlPosition();
+
+            compoundMinimumThresholds = new(
+                leverResetPosition.x - translateThresholds.x,
+                leverResetPosition.y - translateThresholds.y,
+                leverResetPosition.z - translateThresholds.z);
+
+            compoundMaximumThresholds = new(
+                leverResetPosition.x + translateThresholds.x,
+                leverResetPosition.y + translateThresholds.y,
+                leverResetPosition.z + translateThresholds.z);
         }
 
         /// <inheritdoc/>
@@ -55,9 +68,9 @@ namespace RealityToolkit.Core.Samples.Interactions
             }
 
             var leverPosition = GetLeverlPosition();
-            leverPosition.x = Mathf.Clamp(leverPosition.x + delta.x, -translateThresholds.x, translateThresholds.x);
-            leverPosition.y = Mathf.Clamp(leverPosition.y + delta.y, -translateThresholds.y, translateThresholds.y);
-            leverPosition.z = Mathf.Clamp(leverPosition.z + delta.z, -translateThresholds.z, translateThresholds.z);
+            leverPosition.x = Mathf.Clamp(leverPosition.x + delta.x, compoundMinimumThresholds.x, compoundMaximumThresholds.x);
+            leverPosition.y = Mathf.Clamp(leverPosition.y + delta.y, compoundMinimumThresholds.y, compoundMaximumThresholds.y);
+            leverPosition.z = Mathf.Clamp(leverPosition.z + delta.z, compoundMinimumThresholds.z, compoundMaximumThresholds.z);
             transform.localPosition = leverPosition;
 
             previousInteractorPosition = currentInteractorPosition;
