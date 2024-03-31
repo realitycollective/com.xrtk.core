@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
@@ -11,6 +11,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// A <see cref="IInteractionBehaviour"/> for creating <see cref="Interactables.IInteractable"/>s that mimick button behaviour.
     /// </summary>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/button-behaviour")]
     public class ButtonBehaviour : BaseInteractionBehaviour
     {
         /// <summary>

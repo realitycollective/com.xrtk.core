@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace RealityToolkit.Core.Samples.Interactions
 {
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/translate-lever-behaviour")]
     public class TranslateLeverBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("The axes to translate upon interaction.")]

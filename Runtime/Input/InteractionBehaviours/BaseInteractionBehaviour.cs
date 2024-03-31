@@ -12,6 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// Base implementation for <see cref="IInteractionBehaviour"/>s.
     /// </summary>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/custom-behaviours")]
     [RequireComponent(typeof(Interactable))]
     public abstract class BaseInteractionBehaviour : MonoBehaviour, IInteractionBehaviour
     {

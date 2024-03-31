@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
@@ -12,6 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <see cref="IDirectInteractor"/>s. It allows to "pick up" the <see cref="Interactables.IInteractable"/>
     /// and carry it around.
     /// </summary>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/grab-behaviour")]
     public class GrabBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Optional local offset from the object's pivot.")]

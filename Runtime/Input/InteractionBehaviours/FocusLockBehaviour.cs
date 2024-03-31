@@ -1,8 +1,9 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
+using UnityEngine;
 
 namespace RealityToolkit.Input.InteractionBehaviours
 {
@@ -10,6 +11,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// This <see cref="IInteractionBehaviour"/> will focus lock <see cref="IInteractor"/>s on the <see cref="Interactables.IInteractable"/>,
     /// when the <see cref="Interactables.IInteractable.IsSelected"/> or <see cref="Interactables.IInteractable.IsGrabbed"/>.
     /// </summary>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/focus-lock-behaviour")]
     public class FocusLockBehaviour : BaseInteractionBehaviour
     {
         /// <inheritdoc/>

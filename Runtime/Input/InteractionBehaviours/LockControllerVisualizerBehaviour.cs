@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.Extensions;
@@ -17,6 +17,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// Only supports <see cref="IControllerInteractor"/>s.
     /// Does not support <see cref="IPokeInteractor"/>s and will ignore them.
     /// </remarks>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lock-controller-visualizer-behaviour")]
     public class LockControllerVisualizerBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Optional local offset from the object's pivot.")]
