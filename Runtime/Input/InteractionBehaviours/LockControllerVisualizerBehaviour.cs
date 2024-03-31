@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.Extensions;
+using RealityToolkit.Input.Controllers;
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("Speed applied to smoothly rotate to the interactable rotation."), Min(1f)]
         private float syncRotationSpeed = 360f;
 
-        private readonly List<IControllerInteractor> syncedVisualizers = new List<IControllerInteractor>();
+        private readonly List<IControllerVisualizer> lockedVisualizers = new();
         private const float snapPoseEpsilon = .0001f;
 
         /// <inheritdoc/>
@@ -43,18 +44,18 @@ namespace RealityToolkit.Input.InteractionBehaviours
         {
             var syncPose = GetSyncPose();
 
-            for (int i = 0; i < syncedVisualizers.Count; i++)
+            for (int i = 0; i < lockedVisualizers.Count; i++)
             {
-                var interactor = syncedVisualizers[i];
-                var shouldSnap = snapToInteractable || HasReachedSnapPose(interactor, syncPose);
+                var visualizer = lockedVisualizers[i];
+                var shouldSnap = snapToInteractable || HasReachedSnapPose(visualizer, syncPose);
 
                 if (!shouldSnap)
                 {
-                    syncPose.position = Vector3.MoveTowards(interactor.Controller.Visualizer.PoseDriver.position, syncPose.position, syncPositionSpeed * Time.deltaTime);
-                    syncPose.rotation = Quaternion.RotateTowards(interactor.Controller.Visualizer.PoseDriver.rotation, syncPose.rotation, syncRotationSpeed * Time.deltaTime);
+                    syncPose.position = Vector3.MoveTowards(visualizer.PoseDriver.position, syncPose.position, syncPositionSpeed * Time.deltaTime);
+                    syncPose.rotation = Quaternion.RotateTowards(visualizer.PoseDriver.rotation, syncPose.rotation, syncRotationSpeed * Time.deltaTime);
                 }
 
-                interactor.Controller.Visualizer.PoseDriver.SetPositionAndRotation(syncPose.position, syncPose.rotation);
+                visualizer.Controller.Visualizer.PoseDriver.SetPositionAndRotation(syncPose.position, syncPose.rotation);
             }
         }
 
@@ -67,7 +68,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            SyncVisualizer(controllerInteractor);
+            LockVisualizer(controllerInteractor.Controller.Visualizer);
         }
 
         /// <inheritdoc/>
@@ -79,7 +80,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            UnsyncVisualizer(controllerInteractor);
+            UnlockVisualizer(controllerInteractor.Controller.Visualizer);
         }
 
         /// <inheritdoc/>
@@ -91,7 +92,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            SyncVisualizer(controllerInteractor);
+            LockVisualizer(controllerInteractor.Controller.Visualizer);
         }
 
         /// <inheritdoc/>
@@ -103,28 +104,28 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            UnsyncVisualizer(controllerInteractor);
+            UnlockVisualizer(controllerInteractor.Controller.Visualizer);
         }
 
-        private void SyncVisualizer(IControllerInteractor currentInteractor)
+        private void LockVisualizer(IControllerVisualizer visualizer)
         {
-            syncedVisualizers.EnsureListItem(currentInteractor);
-            currentInteractor.Controller.Visualizer.OverrideSourcePose = true;
+            lockedVisualizers.EnsureListItem(visualizer);
+            visualizer.OverrideSourcePose = true;
         }
 
-        private void UnsyncVisualizer(IControllerInteractor currentInteractor)
+        private void UnlockVisualizer(IControllerVisualizer visualizer)
         {
-            syncedVisualizers.SafeRemoveListItem(currentInteractor);
-            currentInteractor.Controller.Visualizer.OverrideSourcePose = false;
+            lockedVisualizers.SafeRemoveListItem(visualizer);
+            visualizer.OverrideSourcePose = false;
         }
 
         private Pose GetSyncPose() => new Pose(transform.TransformPoint(poseLocalPositionOffset), transform.rotation * Quaternion.Euler(poseLocalRotationOffset));
 
-        private bool HasReachedSnapPose(IControllerInteractor interactor, Pose snapPose)
+        private bool HasReachedSnapPose(IControllerVisualizer visualizer, Pose snapPose)
         {
             var currentPose = new Pose(
-                interactor.Controller.Visualizer.PoseDriver.position,
-                interactor.Controller.Visualizer.PoseDriver.rotation);
+                visualizer.PoseDriver.position,
+                visualizer.PoseDriver.rotation);
 
             return Vector3.SqrMagnitude(snapPose.position - currentPose.position) <= snapPoseEpsilon &&
                 Quaternion.Angle(snapPose.rotation, currentPose.rotation) <= snapPoseEpsilon;
