@@ -6,6 +6,7 @@ using RealityToolkit.Input.Controllers;
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RealityToolkit.Input.InteractionBehaviours
@@ -21,11 +22,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lock-controller-visualizer-behaviour")]
     public class LockControllerVisualizerBehaviour : BaseInteractionBehaviour
     {
-        [SerializeField, Tooltip("Optional local offset from the object's pivot.")]
-        private Vector3 poseLocalPositionOffset = Vector3.zero;
-
-        [SerializeField, Tooltip("Optional local offset from the object's pivot.")]
-        private Vector3 poseLocalRotationOffset = Vector3.zero;
+        [SerializeField, Tooltip("Optional offset pose applied to the visualizer.")]
+        private Pose localOffsetPose = Pose.identity;
 
         [SerializeField, Tooltip("If set, the controller visualizer will snap to the interactable instead of a smooth transition.")]
         private bool snapToLockPose = false;
@@ -36,21 +34,27 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("Speed applied to smoothly rotate to the interactable rotation."), Min(1f)]
         private float syncRotationSpeed = 360f;
 
-        private readonly List<IControllerVisualizer> lockedVisualizers = new();
-        private const float snapPoseEpsilon = .0001f;
+        private readonly Dictionary<IControllerVisualizer, bool> lockedVisualizers = new();
+        private const float snapPoseEpsilon = .001f;
 
         /// <inheritdoc/>
         protected override void Update()
         {
-            var lockPose = GetLockPose();
-
-            for (int i = 0; i < lockedVisualizers.Count; i++)
+            if (lockedVisualizers.Count == 0)
             {
-                var visualizer = lockedVisualizers[i];
-                var shouldSnap = snapToLockPose || HasFinishedSmoothTransition(visualizer, lockPose);
+                return;
+            }
 
-                if (!shouldSnap)
+            var lockPose = GetLockPose();
+            var visualizers = lockedVisualizers.Keys.ToList();
+
+            foreach (var visualizer in visualizers)
+            {
+                var shouldLock = HasFinishedSmoothTransition(visualizer, lockPose);
+
+                if (!shouldLock)
                 {
+                    Debug.Log("Smoothing...");
                     lockPose.position = Vector3.MoveTowards(visualizer.PoseDriver.position, lockPose.position, syncPositionSpeed * Time.deltaTime);
                     lockPose.rotation = Quaternion.RotateTowards(visualizer.PoseDriver.rotation, lockPose.rotation, syncRotationSpeed * Time.deltaTime);
                 }
@@ -109,20 +113,25 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private void LockVisualizer(IControllerVisualizer visualizer)
         {
-            lockedVisualizers.EnsureListItem(visualizer);
+            lockedVisualizers.EnsureDictionaryItem(visualizer, snapToLockPose, true);
             visualizer.OverrideSourcePose = true;
         }
 
         private void UnlockVisualizer(IControllerVisualizer visualizer)
         {
-            lockedVisualizers.SafeRemoveListItem(visualizer);
+            lockedVisualizers.SafeRemoveDictionaryItem(visualizer);
             visualizer.OverrideSourcePose = false;
         }
 
-        private Pose GetLockPose() => new Pose(transform.TransformPoint(poseLocalPositionOffset), transform.rotation * Quaternion.Euler(poseLocalRotationOffset));
+        private Pose GetLockPose() => new Pose(transform.TransformPoint(localOffsetPose.position), transform.rotation * Quaternion.Euler(localOffsetPose.rotation.eulerAngles));
 
         private bool HasFinishedSmoothTransition(IControllerVisualizer visualizer, Pose snapPose)
         {
+            if (lockedVisualizers[visualizer])
+            {
+                return true;
+            }
+
             if (Vector3.Distance(snapPose.position, visualizer.PoseDriver.position) > snapPoseEpsilon)
             {
                 return false;
@@ -133,6 +142,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return false;
             }
 
+            Debug.Log("Finished Smoothing");
+            lockedVisualizers[visualizer] = true;
             return true;
         }
     }
