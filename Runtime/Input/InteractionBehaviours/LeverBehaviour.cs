@@ -87,17 +87,17 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// <summary>
         /// Should we transform the x-axis on interaction?
         /// </summary>
-        protected bool TransformX => (axes & SnapAxis.X) > 0;
+        protected bool TransformX => (axes & SnapAxis.X) > 0 && ranges.x > 0f;
 
         /// <summary>
         /// Should we transform the y-axis on interaction?
         /// </summary>
-        protected bool TransformY => (axes & SnapAxis.Y) > 0;
+        protected bool TransformY => (axes & SnapAxis.Y) > 0 && ranges.y > 0f;
 
         /// <summary>
         /// Should we transform the z-axis on interaction?
         /// </summary>
-        protected bool TransformZ => (axes & SnapAxis.Z) > 0;
+        protected bool TransformZ => (axes & SnapAxis.Z) > 0 && ranges.z > 0f;
 
         /// <summary>
         /// The lever's <see cref="Value"/> has changed.
@@ -263,12 +263,20 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// <param name="leverPose">The updated lever position or rotation, depending on the <see cref="leverType"/>.</param>
         private void UpdateValue(Vector3 leverPose)
         {
-            var source = leverType == LeverType.Translate ? pivot.localPosition : pivot.localEulerAngles;
+            if (valueMapping == ValueMapping.Value0To1)
+            {
+                Value = new(
+                    TransformX ? leverPose.x / ranges.x + .5f : 0f,
+                    TransformY ? leverPose.y / ranges.y + .5f : 0f,
+                    TransformZ ? leverPose.z / ranges.z + .5f : 0f);
+
+                return;
+            }
 
             Value = new(
-                 ranges.x / (leverPose.x - source.x),
-                 ranges.y / (leverPose.y - source.y),
-                 ranges.z / (leverPose.z - source.z));
+                 TransformX ? leverPose.x / ranges.x * 2f : 0f,
+                 TransformY ? leverPose.y / ranges.y * 2f : 0f,
+                 TransformZ ? leverPose.z / ranges.z * 2f : 0f);
         }
 
         /// <summary>
