@@ -54,7 +54,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
                 if (!shouldLock)
                 {
-                    Debug.Log("Smoothing...");
                     lockPose.position = Vector3.MoveTowards(visualizer.PoseDriver.position, lockPose.position, syncPositionSpeed * Time.deltaTime);
                     lockPose.rotation = Quaternion.RotateTowards(visualizer.PoseDriver.rotation, lockPose.rotation, syncRotationSpeed * Time.deltaTime);
                 }
@@ -142,7 +141,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return false;
             }
 
-            Debug.Log("Finished Smoothing");
             lockedVisualizers[visualizer] = true;
             return true;
         }
