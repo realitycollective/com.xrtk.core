@@ -66,7 +66,6 @@ namespace RealityToolkit.Core.Samples.Interactions
         private IControllerInteractor currentInteractor;
         private Vector3 previousInteractorPosition;
         private Vector3 ranges;
-        private Vector3 delta;
 
         /// <summary>
         /// A normalized value per axis indicating the levers pose.
@@ -74,11 +73,14 @@ namespace RealityToolkit.Core.Samples.Interactions
         public Vector3 Value
         {
             get => new(valueX, valueY, valueZ);
-            private set
+            set
             {
-                valueX = value.x;
-                valueY = value.y;
-                valueZ = value.z;
+                valueX = MapValue(value.x);
+                valueY = MapValue(value.y);
+                valueZ = MapValue(value.z);
+
+                OnValueChanged();
+                ValueChanged?.Invoke(Value);
             }
         }
 
@@ -138,29 +140,36 @@ namespace RealityToolkit.Core.Samples.Interactions
             }
 
             var currentInteractorPosition = GetInteractorPosition();
+            var interactorPositionDelta = Vector3.zero;
 
             if (TransformX)
             {
-                delta.x += currentInteractorPosition.x - previousInteractorPosition.x;
+                interactorPositionDelta.x += currentInteractorPosition.x - previousInteractorPosition.x;
             }
 
             if (TransformY)
             {
-                delta.y += currentInteractorPosition.y - previousInteractorPosition.y;
+                interactorPositionDelta.y += currentInteractorPosition.y - previousInteractorPosition.y;
             }
 
             if (TransformZ)
             {
-                delta.z += currentInteractorPosition.z - previousInteractorPosition.z;
+                interactorPositionDelta.z += currentInteractorPosition.z - previousInteractorPosition.z;
             }
 
-            var leverPosition = pivot.localPosition + delta;
-            leverPosition.x = Mathf.Clamp(leverPosition.x, minimumValues.x, maximumValues.x);
-            leverPosition.y = Mathf.Clamp(leverPosition.y, minimumValues.y, maximumValues.y);
-            leverPosition.z = Mathf.Clamp(leverPosition.z, minimumValues.z, maximumValues.z);
+            Vector3 leverPose = Vector3.zero;
 
-            UpdateLeverPose(leverPosition);
-            UpdateValue(leverPosition);
+            if (leverType == LeverType.Translate)
+            {
+                leverPose = transform.localPosition + interactorPositionDelta;
+            }
+
+            leverPose.x = Mathf.Clamp(leverPose.x, minimumValues.x, maximumValues.x);
+            leverPose.y = Mathf.Clamp(leverPose.y, minimumValues.y, maximumValues.y);
+            leverPose.z = Mathf.Clamp(leverPose.z, minimumValues.z, maximumValues.z);
+
+            UpdateLeverPose(leverPose);
+            UpdateValue(leverPose);
 
             previousInteractorPosition = currentInteractorPosition;
         }
@@ -176,9 +185,10 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// <param name="value">The lever's new value.</param>
         public void SetValueWithoutNotify(Vector3 value)
         {
-            Value = value;
+            valueX = MapValue(value.x);
+            valueY = MapValue(value.y);
+            valueZ = MapValue(value.z);
 
-            RemapValue();
             UpdateLeverPose();
             OnValueChanged();
         }
@@ -199,7 +209,6 @@ namespace RealityToolkit.Core.Samples.Interactions
         protected override void OnLastGrabExited(InteractionExitEventArgs eventArgs)
         {
             currentInteractor = null;
-            delta = Vector3.zero;
         }
 
         /// <summary>
@@ -260,11 +269,6 @@ namespace RealityToolkit.Core.Samples.Interactions
                  ranges.x / (leverPose.x - source.x),
                  ranges.y / (leverPose.y - source.y),
                  ranges.z / (leverPose.z - source.z));
-
-            RemapValue();
-            OnValueChanged();
-
-            ValueChanged?.Invoke(Value);
         }
 
         /// <summary>
@@ -277,9 +281,9 @@ namespace RealityToolkit.Core.Samples.Interactions
         private void RemapValue()
         {
             Value = new(
-                TransformX ? MapValue(Value.x) : 0f,
-                TransformY ? MapValue(Value.y) : 0f,
-                TransformZ ? MapValue(Value.z) : 0f);
+                TransformX ? Value.x : 0f,
+                TransformY ? Value.y : 0f,
+                TransformZ ? Value.z : 0f);
         }
 
         private float MapValue(float value)
