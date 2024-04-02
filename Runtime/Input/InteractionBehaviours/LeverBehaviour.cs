@@ -40,10 +40,10 @@ namespace RealityToolkit.Core.Samples.Interactions
         private LeverType leverType = LeverType.Translate;
 
         [Header("Min / Max Configuration")]
-        [SerializeField, Tooltip("The lever's minimum local position on each axis.")]
+        [SerializeField, Tooltip("The lever's minimum local pose on each axis.")]
         private Vector3 minimumValues = new Vector3(0f, 0f, -.1f);
 
-        [SerializeField, Tooltip("The lever's maximum local position on each axis.")]
+        [SerializeField, Tooltip("The lever's maximum local pose on each axis.")]
         private Vector3 maximumValues = new Vector3(0f, 0f, .1f);
 
         [Header("Value")]
@@ -59,7 +59,7 @@ namespace RealityToolkit.Core.Samples.Interactions
         [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the z-axis.")]
         public float valueZ = 0f;
 
-        [SerializeField, Space, Tooltip("A normalized value per axis indicating the levers position.")]
+        [SerializeField, Space, Tooltip("A normalized value per axis indicating the levers pose.")]
         private UnityEvent<Vector3> valueChanged = null;
 
         private Transform pivot = null;
@@ -69,7 +69,7 @@ namespace RealityToolkit.Core.Samples.Interactions
         private Vector3 delta;
 
         /// <summary>
-        /// A normalized value per axis indicating the levers position.
+        /// A normalized value per axis indicating the levers pose.
         /// </summary>
         public Vector3 Value
         {
@@ -83,19 +83,19 @@ namespace RealityToolkit.Core.Samples.Interactions
         }
 
         /// <summary>
-        /// Should we translate the x-axis on interaction?
+        /// Should we transform the x-axis on interaction?
         /// </summary>
-        protected bool TranslateX => (axes & SnapAxis.X) > 0;
+        protected bool TransformX => (axes & SnapAxis.X) > 0;
 
         /// <summary>
-        /// Should we translate the y-axis on interaction?
+        /// Should we transform the y-axis on interaction?
         /// </summary>
-        protected bool TranslateY => (axes & SnapAxis.Y) > 0;
+        protected bool TransformY => (axes & SnapAxis.Y) > 0;
 
         /// <summary>
-        /// Should we translate the z-axis on interaction?
+        /// Should we transform the z-axis on interaction?
         /// </summary>
-        protected bool TranslateZ => (axes & SnapAxis.Z) > 0;
+        protected bool TransformZ => (axes & SnapAxis.Z) > 0;
 
         /// <summary>
         /// The lever's <see cref="Value"/> has changed.
@@ -103,9 +103,9 @@ namespace RealityToolkit.Core.Samples.Interactions
         public UnityEvent<Vector3> ValueChanged => valueChanged;
 
         /// <inheritdoc/>
-        protected override void Awake()
+        protected override void OnEnable()
         {
-            base.Awake();
+            base.OnEnable();
 
             pivot = transform.parent;
             if (pivot.IsNull())
@@ -119,7 +119,7 @@ namespace RealityToolkit.Core.Samples.Interactions
                 Mathf.Abs(maximumValues.z - minimumValues.z));
 
             RemapValue();
-            UpdateLeverPosition();
+            UpdateLeverPose();
         }
 
         /// <inheritdoc/>
@@ -128,7 +128,7 @@ namespace RealityToolkit.Core.Samples.Interactions
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                UpdateLeverPosition();
+                UpdateLeverPose();
             }
 #endif
 
@@ -139,17 +139,17 @@ namespace RealityToolkit.Core.Samples.Interactions
 
             var currentInteractorPosition = GetInteractorPosition();
 
-            if (TranslateX)
+            if (TransformX)
             {
                 delta.x += currentInteractorPosition.x - previousInteractorPosition.x;
             }
 
-            if (TranslateY)
+            if (TransformY)
             {
                 delta.y += currentInteractorPosition.y - previousInteractorPosition.y;
             }
 
-            if (TranslateZ)
+            if (TransformZ)
             {
                 delta.z += currentInteractorPosition.z - previousInteractorPosition.z;
             }
@@ -159,11 +159,16 @@ namespace RealityToolkit.Core.Samples.Interactions
             leverPosition.y = Mathf.Clamp(leverPosition.y, minimumValues.y, maximumValues.y);
             leverPosition.z = Mathf.Clamp(leverPosition.z, minimumValues.z, maximumValues.z);
 
-            UpdateLeverPosition(leverPosition);
+            UpdateLeverPose(leverPosition);
             UpdateValue(leverPosition);
 
             previousInteractorPosition = currentInteractorPosition;
         }
+
+        /// <summary>
+        /// See <see cref="MonoBehaviour"/>.
+        /// </summary>
+        protected override void OnValidate() => OnEnable();
 
         /// <summary>
         /// Sets the lever's <see cref="Value"/> without raising the <see cref="ValueChanged"/> event.
@@ -172,7 +177,9 @@ namespace RealityToolkit.Core.Samples.Interactions
         public void SetValueWithoutNotify(Vector3 value)
         {
             Value = value;
-            UpdateLeverPosition();
+
+            RemapValue();
+            UpdateLeverPose();
             OnValueChanged();
         }
 
@@ -196,49 +203,63 @@ namespace RealityToolkit.Core.Samples.Interactions
         }
 
         /// <summary>
-        /// Updates the lever position to <paramref name="leverPosition"/>.
+        /// Updates the lever pose to <paramref name="leverPose"/>.
         /// </summary>
-        /// <param name="leverPosition">The updated lever position.</param>
-        private void UpdateLeverPosition(Vector3 leverPosition) => transform.localPosition = leverPosition;
-
-        /// <summary>
-        /// Updates the lever positio based on <see cref="Value"/>.
-        /// </summary>
-        private void UpdateLeverPosition()
+        /// <param name="leverPose">The updated lever position or rotation, depending on the <see cref="leverType"/>.</param>
+        private void UpdateLeverPose(Vector3 leverPose)
         {
-            RemapValue();
-
-            Vector3 leverPosition;
-
-            if (valueMapping == ValueMapping.Value0To1)
+            if (leverType == LeverType.Translate)
             {
-                leverPosition = new Vector3(
-                TranslateX ? minimumValues.x + Value.x * ranges.x : 0f,
-                TranslateY ? minimumValues.y + Value.y * ranges.y : 0f,
-                TranslateZ ? minimumValues.z + Value.z * ranges.z : 0f);
-
-                UpdateLeverPosition(leverPosition);
+                transform.SetLocalPositionAndRotation(leverPose, Quaternion.identity);
                 return;
             }
 
-            leverPosition = new Vector3(
-                TranslateX ? Value.x * ranges.x / 2f : 0f,
-                TranslateY ? Value.y * ranges.y / 2f : 0f,
-                TranslateZ ? Value.z * ranges.z / 2f : 0f);
+            leverPose.x = WrapAngle(leverPose.x);
+            leverPose.y = WrapAngle(leverPose.y);
+            leverPose.z = WrapAngle(leverPose.z);
 
-            UpdateLeverPosition(leverPosition);
+            transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.Euler(leverPose));
         }
 
         /// <summary>
-        /// Updates <see cref="Value"/> based on <paramref name="leverPosition"/>.
+        /// Updates the lever pose based on <see cref="Value"/>.
         /// </summary>
-        /// <param name="leverPosition">The updated lever position.</param>
-        private void UpdateValue(Vector3 leverPosition)
+        private void UpdateLeverPose()
         {
+            RemapValue();
+
+            Vector3 leverPose;
+
+            if (valueMapping == ValueMapping.Value0To1)
+            {
+                leverPose = new Vector3(
+                minimumValues.x + Value.x * ranges.x,
+                minimumValues.y + Value.y * ranges.y,
+                minimumValues.z + Value.z * ranges.z);
+            }
+            else
+            {
+                leverPose = new Vector3(
+                Value.x * ranges.x / 2f,
+                Value.y * ranges.y / 2f,
+                Value.z * ranges.z / 2f);
+            }
+
+            UpdateLeverPose(leverPose);
+        }
+
+        /// <summary>
+        /// Updates <see cref="Value"/> based on <paramref name="leverPose"/>.
+        /// </summary>
+        /// <param name="leverPose">The updated lever position or rotation, depending on the <see cref="leverType"/>.</param>
+        private void UpdateValue(Vector3 leverPose)
+        {
+            var source = leverType == LeverType.Translate ? pivot.localPosition : pivot.localEulerAngles;
+
             Value = new(
-                 ranges.x / (leverPosition.x - pivot.localPosition.x),
-                 ranges.y / (leverPosition.y - pivot.localPosition.y),
-                 ranges.z / (leverPosition.z - pivot.localPosition.z));
+                 ranges.x / (leverPose.x - source.x),
+                 ranges.y / (leverPose.y - source.y),
+                 ranges.z / (leverPose.z - source.z));
 
             RemapValue();
             OnValueChanged();
@@ -256,9 +277,9 @@ namespace RealityToolkit.Core.Samples.Interactions
         private void RemapValue()
         {
             Value = new(
-                MapValue(Value.x),
-                MapValue(Value.y),
-                MapValue(Value.z));
+                TransformX ? MapValue(Value.x) : 0f,
+                TransformY ? MapValue(Value.y) : 0f,
+                TransformZ ? MapValue(Value.z) : 0f);
         }
 
         private float MapValue(float value)
@@ -267,8 +288,24 @@ namespace RealityToolkit.Core.Samples.Interactions
             {
                 return Mathf.Clamp01(value);
             }
+            else if (value >= -1 && value <= 1f)
+            {
+                return value;
+            }
 
             return Mathf.Clamp((value * 2) - 1, -1f, 1f);
+        }
+
+        private static float WrapAngle(float angle)
+        {
+            angle %= 360;
+
+            if (angle > 180)
+            {
+                return angle - 360;
+            }
+
+            return angle;
         }
     }
 }

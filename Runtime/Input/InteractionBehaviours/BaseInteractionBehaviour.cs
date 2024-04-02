@@ -69,6 +69,11 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// </summary>
         protected virtual void OnDestroy() { }
 
+        /// <summary>
+        /// <see cref="MonoBehaviour"/>.
+        /// </summary>
+        protected virtual void OnValidate() { }
+
         /// <inheritdoc/>
         void IInteractionBehaviour.OnActivated(InteractionEventArgs eventArgs)
         {
