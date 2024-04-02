@@ -50,13 +50,13 @@ namespace RealityToolkit.Core.Samples.Interactions
         [SerializeField, Tooltip("The value mapping determines how the lever's output value is calculated.")]
         private ValueMapping valueMapping = ValueMapping.Value0To1;
 
-        [SerializeField, Range(0f, 1f), Tooltip("The lever's value on the x-axis.")]
+        [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the x-axis.")]
         public float valueX = 0f;
 
-        [SerializeField, Range(0f, 1f), Tooltip("The lever's value on the y-axis.")]
+        [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the y-axis.")]
         public float valueY = 0f;
 
-        [SerializeField, Range(0f, 1f), Tooltip("The lever's value on the z-axis.")]
+        [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the z-axis.")]
         public float valueZ = 0f;
 
         [SerializeField, Space, Tooltip("A normalized value per axis indicating the levers position.")]
@@ -118,6 +118,7 @@ namespace RealityToolkit.Core.Samples.Interactions
                 Mathf.Abs(maximumValues.y - minimumValues.y),
                 Mathf.Abs(maximumValues.z - minimumValues.z));
 
+            RemapValue();
             UpdateLeverPosition();
         }
 
@@ -205,10 +206,25 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// </summary>
         private void UpdateLeverPosition()
         {
-            var leverPosition = new Vector3(
+            RemapValue();
+
+            Vector3 leverPosition;
+
+            if (valueMapping == ValueMapping.Value0To1)
+            {
+                leverPosition = new Vector3(
                 TranslateX ? minimumValues.x + Value.x * ranges.x : 0f,
                 TranslateY ? minimumValues.y + Value.y * ranges.y : 0f,
                 TranslateZ ? minimumValues.z + Value.z * ranges.z : 0f);
+
+                UpdateLeverPosition(leverPosition);
+                return;
+            }
+
+            leverPosition = new Vector3(
+                TranslateX ? Value.x * ranges.x / 2f : 0f,
+                TranslateY ? Value.y * ranges.y / 2f : 0f,
+                TranslateZ ? Value.z * ranges.z / 2f : 0f);
 
             UpdateLeverPosition(leverPosition);
         }
@@ -220,19 +236,39 @@ namespace RealityToolkit.Core.Samples.Interactions
         private void UpdateValue(Vector3 leverPosition)
         {
             Value = new(
-                 Mathf.Clamp01(ranges.x / (leverPosition.x - pivot.localPosition.x)),
-                 Mathf.Clamp01(ranges.y / (leverPosition.y - pivot.localPosition.y)),
-                 Mathf.Clamp01(ranges.z / (leverPosition.z - pivot.localPosition.z)));
+                 ranges.x / (leverPosition.x - pivot.localPosition.x),
+                 ranges.y / (leverPosition.y - pivot.localPosition.y),
+                 ranges.z / (leverPosition.z - pivot.localPosition.z));
 
+            RemapValue();
             OnValueChanged();
+
             ValueChanged?.Invoke(Value);
         }
 
         /// <summary>
-        /// The <see cref="Value"/>  has changed.
+        /// The <see cref="Value"/> has changed.
         /// </summary>
         protected virtual void OnValueChanged() { }
 
         private Vector3 GetInteractorPosition() => pivot.InverseTransformPoint(currentInteractor.GameObject.transform.position);
+
+        private void RemapValue()
+        {
+            Value = new(
+                MapValue(Value.x),
+                MapValue(Value.y),
+                MapValue(Value.z));
+        }
+
+        private float MapValue(float value)
+        {
+            if (valueMapping == ValueMapping.Value0To1)
+            {
+                return Mathf.Clamp01(value);
+            }
+
+            return Mathf.Clamp((value * 2) - 1, -1f, 1f);
+        }
     }
 }
