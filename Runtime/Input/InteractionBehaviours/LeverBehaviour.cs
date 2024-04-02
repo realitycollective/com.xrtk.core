@@ -8,6 +8,10 @@ using UnityEngine.Events;
 
 namespace RealityToolkit.Core.Samples.Interactions
 {
+    /// <summary>
+    /// The <see cref="LeverBehaviour"/> is as versatile <see cref="IInteractionBehaviour"/> component used to
+    /// simulate all kinds of levers the user can interacth with in a virtual world.
+    /// </summary>
     [ExecuteInEditMode]
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/translate-lever-behaviour")]
     public class LeverBehaviour : BaseInteractionBehaviour
@@ -140,28 +144,50 @@ namespace RealityToolkit.Core.Samples.Interactions
             }
 
             var currentInteractorPosition = GetInteractorPosition();
-            var interactorPositionDelta = Vector3.zero;
-
-            if (TransformX)
-            {
-                interactorPositionDelta.x += currentInteractorPosition.x - previousInteractorPosition.x;
-            }
-
-            if (TransformY)
-            {
-                interactorPositionDelta.y += currentInteractorPosition.y - previousInteractorPosition.y;
-            }
-
-            if (TransformZ)
-            {
-                interactorPositionDelta.z += currentInteractorPosition.z - previousInteractorPosition.z;
-            }
-
             Vector3 leverPose = Vector3.zero;
 
             if (leverType == LeverType.Translate)
             {
+                var interactorPositionDelta = Vector3.zero;
+
+                if (TransformX)
+                {
+                    interactorPositionDelta.x += currentInteractorPosition.x - previousInteractorPosition.x;
+                }
+
+                if (TransformY)
+                {
+                    interactorPositionDelta.y += currentInteractorPosition.y - previousInteractorPosition.y;
+                }
+
+                if (TransformZ)
+                {
+                    interactorPositionDelta.z += currentInteractorPosition.z - previousInteractorPosition.z;
+                }
+
                 leverPose = transform.localPosition + interactorPositionDelta;
+            }
+            else
+            {
+                var direction = currentInteractorPosition;
+                var interactorRotationDelta = Vector3.zero;
+
+                if (TransformX)
+                {
+                    interactorRotationDelta.x = Vector2.SignedAngle(pivot.forward, direction);
+                }
+
+                if (TransformY)
+                {
+                    interactorRotationDelta.y = Vector2.SignedAngle(pivot.right, direction);
+                }
+
+                if (TransformZ)
+                {
+                    interactorRotationDelta.z = Vector2.SignedAngle(pivot.up, direction);
+                }
+
+                leverPose = interactorRotationDelta;
             }
 
             leverPose.x = Mathf.Clamp(leverPose.x, minimumValues.x, maximumValues.x);
