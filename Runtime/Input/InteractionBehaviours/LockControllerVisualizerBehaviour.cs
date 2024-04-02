@@ -35,7 +35,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private float syncRotationSpeed = 360f;
 
         private readonly Dictionary<IControllerVisualizer, bool> lockedVisualizers = new();
-        private const float snapPoseEpsilon = .001f;
+        private const float lockPositionTolerance = .001f;
+        private const float lockRotationTolerance = 0.1f;
 
         /// <inheritdoc/>
         protected override void Update()
@@ -131,12 +132,14 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return true;
             }
 
-            if (Vector3.Distance(snapPose.position, visualizer.PoseDriver.position) > snapPoseEpsilon)
+            if (Vector3.Distance(snapPose.position, visualizer.PoseDriver.position) > lockPositionTolerance)
             {
                 return false;
             }
 
-            if (Quaternion.Angle(snapPose.rotation, visualizer.PoseDriver.rotation) > snapPoseEpsilon)
+            var rotationDifference = Quaternion.FromToRotation(visualizer.PoseDriver.forward, snapPose.forward);
+            var angleDifference = Quaternion.Angle(visualizer.PoseDriver.rotation, snapPose.rotation * rotationDifference);
+            if (angleDifference > lockRotationTolerance)
             {
                 return false;
             }
