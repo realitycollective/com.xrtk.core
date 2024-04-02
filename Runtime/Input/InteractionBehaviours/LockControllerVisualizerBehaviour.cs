@@ -11,8 +11,8 @@ using UnityEngine;
 namespace RealityToolkit.Input.InteractionBehaviours
 {
     /// <summary>
-    /// Syncs the <see cref="IControllerInteractor"/>'s <see cref="Controllers.IControllerVisualizer"/>
-    /// to the <see cref="Interactables.IInteractable"/> using <see cref="Controllers.IControllerVisualizer.OverrideSourcePose"/>.
+    /// Syncs the <see cref="IControllerInteractor"/>'s <see cref="IControllerVisualizer"/>
+    /// to the <see cref="Interactables.IInteractable"/> using <see cref="IControllerVisualizer.OverrideSourcePose"/>.
     /// </summary>
     /// <remarks>
     /// Only supports <see cref="IControllerInteractor"/>s.
@@ -28,7 +28,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private Vector3 poseLocalRotationOffset = Vector3.zero;
 
         [SerializeField, Tooltip("If set, the controller visualizer will snap to the interactable instead of a smooth transition.")]
-        private bool snapToInteractable = false;
+        private bool snapToLockPose = false;
 
         [SerializeField, Tooltip("Speed applied to smoothly move to the interactable position."), Min(1f)]
         private float syncPositionSpeed = 2f;
@@ -42,20 +42,20 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <inheritdoc/>
         protected override void Update()
         {
-            var syncPose = GetSyncPose();
+            var lockPose = GetLockPose();
 
             for (int i = 0; i < lockedVisualizers.Count; i++)
             {
                 var visualizer = lockedVisualizers[i];
-                var shouldSnap = snapToInteractable || HasReachedSnapPose(visualizer, syncPose);
+                var shouldSnap = snapToLockPose || HasFinishedSmoothTransition(visualizer, lockPose);
 
                 if (!shouldSnap)
                 {
-                    syncPose.position = Vector3.MoveTowards(visualizer.PoseDriver.position, syncPose.position, syncPositionSpeed * Time.deltaTime);
-                    syncPose.rotation = Quaternion.RotateTowards(visualizer.PoseDriver.rotation, syncPose.rotation, syncRotationSpeed * Time.deltaTime);
+                    lockPose.position = Vector3.MoveTowards(visualizer.PoseDriver.position, lockPose.position, syncPositionSpeed * Time.deltaTime);
+                    lockPose.rotation = Quaternion.RotateTowards(visualizer.PoseDriver.rotation, lockPose.rotation, syncRotationSpeed * Time.deltaTime);
                 }
 
-                visualizer.Controller.Visualizer.PoseDriver.SetPositionAndRotation(syncPose.position, syncPose.rotation);
+                visualizer.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
             }
         }
 
@@ -119,16 +119,21 @@ namespace RealityToolkit.Input.InteractionBehaviours
             visualizer.OverrideSourcePose = false;
         }
 
-        private Pose GetSyncPose() => new Pose(transform.TransformPoint(poseLocalPositionOffset), transform.rotation * Quaternion.Euler(poseLocalRotationOffset));
+        private Pose GetLockPose() => new Pose(transform.TransformPoint(poseLocalPositionOffset), transform.rotation * Quaternion.Euler(poseLocalRotationOffset));
 
-        private bool HasReachedSnapPose(IControllerVisualizer visualizer, Pose snapPose)
+        private bool HasFinishedSmoothTransition(IControllerVisualizer visualizer, Pose snapPose)
         {
-            var currentPose = new Pose(
-                visualizer.PoseDriver.position,
-                visualizer.PoseDriver.rotation);
+            if (Vector3.Distance(snapPose.position, visualizer.PoseDriver.position) > snapPoseEpsilon)
+            {
+                return false;
+            }
 
-            return Vector3.SqrMagnitude(snapPose.position - currentPose.position) <= snapPoseEpsilon &&
-                Quaternion.Angle(snapPose.rotation, currentPose.rotation) <= snapPoseEpsilon;
+            if (Quaternion.Angle(snapPose.rotation, visualizer.PoseDriver.rotation) > snapPoseEpsilon)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

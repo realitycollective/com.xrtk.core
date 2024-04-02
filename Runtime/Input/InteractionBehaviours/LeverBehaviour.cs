@@ -13,7 +13,7 @@ namespace RealityToolkit.Core.Samples.Interactions
     /// simulate all kinds of levers the user can interacth with in a virtual world.
     /// </summary>
     [ExecuteInEditMode]
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/translate-lever-behaviour")]
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lever-behaviour")]
     public class LeverBehaviour : BaseInteractionBehaviour
     {
         /// <summary>
