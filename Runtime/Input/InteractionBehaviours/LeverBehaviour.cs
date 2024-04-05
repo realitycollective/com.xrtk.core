@@ -174,17 +174,17 @@ namespace RealityToolkit.Core.Samples.Interactions
 
                 if (TransformX)
                 {
-                    interactorRotationDelta.x = Vector2.SignedAngle(pivot.forward, direction);
+                    interactorRotationDelta.x = Vector3.SignedAngle(previousInteractorPosition, direction, Vector3.right);
                 }
 
                 if (TransformY)
                 {
-                    interactorRotationDelta.y = Vector2.SignedAngle(pivot.right, direction);
+                    interactorRotationDelta.y = Vector3.SignedAngle(previousInteractorPosition, direction, Vector3.up);
                 }
 
                 if (TransformZ)
                 {
-                    interactorRotationDelta.z = Vector2.SignedAngle(pivot.up, direction);
+                    interactorRotationDelta.z = Vector3.SignedAngle(previousInteractorPosition, direction, Vector3.forward);
                 }
 
                 leverPose = interactorRotationDelta;
@@ -267,10 +267,20 @@ namespace RealityToolkit.Core.Samples.Interactions
 
             if (valueMapping == ValueMapping.Value0To1)
             {
-                leverPose = new Vector3(
-                minimumValues.x + Value.x * ranges.x,
-                minimumValues.y + Value.y * ranges.y,
-                minimumValues.z + Value.z * ranges.z);
+                if (leverType == LeverType.Translate)
+                {
+                    leverPose = new Vector3(
+                        minimumValues.x + Value.x * ranges.x,
+                        minimumValues.y + Value.y * ranges.y,
+                        minimumValues.z + Value.z * ranges.z);
+                }
+                else
+                {
+                    leverPose = new Vector3(
+                        Value.x * ranges.x,
+                        Value.y * ranges.y,
+                        Value.z * ranges.z);
+                }
             }
             else
             {
