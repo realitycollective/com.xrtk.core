@@ -21,24 +21,6 @@ namespace RealityToolkit.Input.Definitions
         #region Global Input System Options
 
         [SerializeField]
-        [Tooltip("Should near interaction be enabled at startup?")]
-        private bool directInteraction = true;
-
-        /// <summary>
-        /// Should direct interaction be enabled at startup?
-        /// </summary>
-        public bool DirectInteraction => directInteraction;
-
-        [SerializeField]
-        [Tooltip("Should far interaction be enabled at startup?")]
-        private bool farInteraction = true;
-
-        /// <summary>
-        /// Should far interaction be enabled at startup?
-        /// </summary>
-        public bool FarInteraction => farInteraction;
-
-        [SerializeField]
         [Tooltip("How should the gaze provider behave by default?")]
         private GazeProviderBehaviour gazeProviderBehaviour = GazeProviderBehaviour.Auto;
 
@@ -75,23 +57,33 @@ namespace RealityToolkit.Input.Definitions
         /// </summary>
         public GameObject GazeCursorPrefab => gazeCursorPrefab;
 
-        [SerializeField]
-        [Tooltip("Global configuration settings for pointers in the input service.")]
-        private PointersProfile pointersProfile;
+        #endregion Global Input System Options
+
+        #region Interactions
 
         /// <summary>
-        /// Global configuration settings for pointers in the input service.
+        /// Should direct interaction be enabled at startup?
         /// </summary>
-        public PointersProfile PointersProfile
-        {
-            get => pointersProfile;
-            set => pointersProfile = value;
-        }
+        [field: SerializeField, Header("Interactions"), Tooltip("Should near interaction be enabled at startup?")]
+        public bool DirectInteraction { get; private set; } = true;
 
-        #endregion Global Input System Options
+        /// <summary>
+        /// Should far interaction be enabled at startup?
+        /// </summary>
+        [field: SerializeField, Tooltip("Should far interaction be enabled at startup?")]
+        public bool FarInteraction { get; private set; } = true;
+
+        /// <summary>
+        /// Global configuration for <see cref="Interactors.IInteractor"/>s.
+        /// </summary>
+        [field: SerializeField, Tooltip("Global configuration for interactors.")]
+        public InteractorsProfile InteractorsProfile { get; private set; }
+
+        #endregion Interactions
 
         #region Profile Options
 
+        [Space]
         [SerializeField]
         [Tooltip("Gloabl settings for hand controllers.")]
         private HandControllerSettings handControllerSettings = null;

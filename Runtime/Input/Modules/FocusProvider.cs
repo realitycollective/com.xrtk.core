@@ -37,10 +37,10 @@ namespace RealityToolkit.Input.Modules
                 throw new Exception($"Unable to start {name}! An {nameof(InputServiceProfile)} is required for this feature.");
             }
 
-            focusLayerMasks = inputServiceProfile.PointersProfile.PointerRaycastLayerMasks;
-            globalPointingExtent = inputServiceProfile.PointersProfile.PointingExtent;
-            debugPointingRayColors = inputServiceProfile.PointersProfile.DebugPointingRayColors;
-            Raycaster.DebugEnabled = inputServiceProfile.PointersProfile.DrawDebugPointingRays;
+            focusLayerMasks = inputServiceProfile.InteractorsProfile.PointerRaycastLayerMasks;
+            globalPointingExtent = inputServiceProfile.InteractorsProfile.PointingExtent;
+            debugPointingRayColors = inputServiceProfile.InteractorsProfile.DebugPointingRayColors;
+            Raycaster.DebugEnabled = inputServiceProfile.InteractorsProfile.DrawDebugPointingRays;
         }
 
         private readonly HashSet<InteractorResult> pointers = new HashSet<InteractorResult>();
