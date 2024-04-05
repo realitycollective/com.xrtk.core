@@ -7,6 +7,7 @@ using RealityCollective.ServiceFramework.Attributes;
 using RealityCollective.ServiceFramework.Definitions;
 using RealityCollective.ServiceFramework.Definitions.Utilities;
 using RealityToolkit.Input.Hands;
+using RealityToolkit.Input.Interactors;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.Input.Interfaces.Modules;
 using UnityEngine;
@@ -74,7 +75,7 @@ namespace RealityToolkit.Input.Definitions
         public bool FarInteraction { get; private set; } = true;
 
         /// <summary>
-        /// Global configuration for <see cref="Interactors.IInteractor"/>s.
+        /// Global configuration for <see cref="IInteractor"/>s.
         /// </summary>
         [field: SerializeField, Tooltip("Global configuration for interactors.")]
         public InteractorsProfile InteractorsProfile { get; private set; }

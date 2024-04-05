@@ -2,14 +2,13 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.ServiceFramework.Definitions;
-using RealityToolkit.Input.Interactors;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace RealityToolkit.Input.Definitions
+namespace RealityToolkit.Input.Interactors
 {
     /// <summary>
-    /// This configuration profile is for global <see cref="Interactors.IInteractor"/>s configuration
+    /// This configuration profile is for global <see cref="IInteractor"/>s configuration
     /// within the <see cref="Interfaces.IInputService"/>.
     /// </summary>
     public class InteractorsProfile : BaseProfile

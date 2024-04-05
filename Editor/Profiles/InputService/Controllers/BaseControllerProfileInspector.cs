@@ -11,13 +11,14 @@ using UnityEngine;
 namespace RealityToolkit.Editor.Profiles.Input.Controllers
 {
     [CustomEditor(typeof(ControllerProfile))]
-    public class BaseControllerMappingProfileInspector : BaseProfileInspector
+    public class BaseControllerProfileInspector : BaseProfileInspector
     {
         private static readonly GUIContent EditButtonContent = new GUIContent("Edit Button Mappings");
 
         private SerializedProperty controllerType;
         private SerializedProperty handedness;
         private SerializedProperty controllerPrefab;
+        private SerializedProperty overrideControllerInteractors;
         private SerializedProperty controllerInteractors;
         private SerializedProperty useCustomInteractions;
         private SerializedProperty interactionMappingProfiles;
@@ -36,6 +37,7 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
             controllerType = serializedObject.FindProperty(nameof(controllerType));
             handedness = serializedObject.FindProperty(nameof(handedness));
             controllerPrefab = serializedObject.FindProperty(nameof(controllerPrefab));
+            overrideControllerInteractors = serializedObject.FindProperty(nameof(overrideControllerInteractors));
             controllerInteractors = serializedObject.FindProperty(nameof(controllerInteractors));
             useCustomInteractions = serializedObject.FindProperty(nameof(useCustomInteractions));
             interactionMappingProfiles = serializedObject.FindProperty(nameof(interactionMappingProfiles));
@@ -82,7 +84,12 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Interactors", EditorStyles.boldLabel);
-            interactorsList.DoLayoutList();
+            EditorGUILayout.PropertyField(overrideControllerInteractors);
+
+            if (overrideControllerInteractors.boolValue)
+            {
+                interactorsList.DoLayoutList();
+            }
 
             serializedObject.ApplyModifiedProperties();
         }

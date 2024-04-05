@@ -6,6 +6,7 @@ using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Services;
 using RealityToolkit.Definitions.Controllers;
 using RealityToolkit.Definitions.Devices;
+using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Interactors;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.Input.Interfaces.Modules;
@@ -55,7 +56,9 @@ namespace RealityToolkit.Input.Controllers
             }
 
             controllerPrefab = controllerProfile.ControllerPrefab;
-            controllerInteractors = controllerProfile.ControllerInteractors;
+            controllerInteractors = (!controllerProfile.OverrideControllerInteractors || !ServiceManager.Instance.TryGetServiceProfile<InputService, InputServiceProfile>(out var inputServiceProfile)) ?
+                controllerProfile.ControllerInteractors :
+                inputServiceProfile.InteractorsProfile.DefaultControllerInteractors;
 
             AssignControllerMappings(controllerProfile.InteractionMappingProfiles);
 
