@@ -56,7 +56,7 @@ namespace RealityToolkit.Input.Controllers
             }
 
             controllerPrefab = controllerProfile.ControllerPrefab;
-            controllerInteractors = (!controllerProfile.OverrideControllerInteractors || !ServiceManager.Instance.TryGetServiceProfile<InputService, InputServiceProfile>(out var inputServiceProfile)) ?
+            controllerInteractors = (controllerProfile.OverrideControllerInteractors || !ServiceManager.Instance.TryGetServiceProfile<IInputService, InputServiceProfile>(out var inputServiceProfile)) ?
                 controllerProfile.ControllerInteractors :
                 inputServiceProfile.InteractorsProfile.DefaultControllerInteractors;
 
