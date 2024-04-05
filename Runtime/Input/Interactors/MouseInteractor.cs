@@ -108,21 +108,21 @@ namespace RealityToolkit.Input.Interactors
         {
             if (TryGetPointingRay(out var pointingRay))
             {
-                Rays[0].CopyRay(pointingRay, PointerExtent);
+                Rays[0].CopyRay(pointingRay, Extent);
 
                 if (RayStabilizer != null)
                 {
                     RayStabilizer.UpdateStability(Rays[0].Origin, Rays[0].Direction);
-                    Rays[0].CopyRay(RayStabilizer.StableRay, PointerExtent);
+                    Rays[0].CopyRay(RayStabilizer.StableRay, Extent);
 
                     if (Raycaster.DebugEnabled)
                     {
-                        Debug.DrawRay(RayStabilizer.StableRay.origin, RayStabilizer.StableRay.direction * PointerExtent, Color.yellow);
+                        Debug.DrawRay(RayStabilizer.StableRay.origin, RayStabilizer.StableRay.direction * Extent, Color.yellow);
                     }
                 }
                 else if (Raycaster.DebugEnabled)
                 {
-                    Debug.DrawRay(pointingRay.origin, pointingRay.direction * PointerExtent, Color.yellow);
+                    Debug.DrawRay(pointingRay.origin, pointingRay.direction * Extent, Color.yellow);
                 }
             }
         }

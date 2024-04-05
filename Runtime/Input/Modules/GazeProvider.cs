@@ -186,7 +186,7 @@ namespace RealityToolkit.Input.Modules
             private float pointerExtent;
 
             /// <inheritdoc />
-            public override float PointerExtent
+            public override float Extent
             {
                 get => pointerExtent;
                 set => pointerExtent = value;

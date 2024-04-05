@@ -38,7 +38,6 @@ namespace RealityToolkit.Input.Modules
             }
 
             focusLayerMasks = inputServiceProfile.InteractorsProfile.PointerRaycastLayerMasks;
-            globalPointingExtent = inputServiceProfile.InteractorsProfile.PointingExtent;
             debugPointingRayColors = inputServiceProfile.InteractorsProfile.DebugPointingRayColors;
             Raycaster.DebugEnabled = inputServiceProfile.InteractorsProfile.DrawDebugPointingRays;
         }
@@ -65,11 +64,6 @@ namespace RealityToolkit.Input.Modules
 
         /// <inheritdoc />
         public override uint Priority => 2;
-
-        private readonly float globalPointingExtent;
-
-        /// <inheritdoc />
-        float IFocusProvider.GlobalPointingExtent => globalPointingExtent;
 
         private readonly LayerMask[] focusLayerMasks;
 

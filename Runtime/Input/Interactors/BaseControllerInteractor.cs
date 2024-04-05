@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.Extensions;
@@ -53,10 +53,7 @@ namespace RealityToolkit.Input.Interactors
 
         [Min(0.01f)]
         [SerializeField]
-        protected float defaultPointerExtent = 10f;
-
-        [SerializeField]
-        protected bool overrideGlobalPointerExtent = false;
+        protected float defaultExtent = 10f;
 
         [SerializeField]
         [Range(0f, 360f)]
@@ -242,38 +239,31 @@ namespace RealityToolkit.Input.Interactors
         /// <inheritdoc />
         public Vector3? OverrideGrabPoint { get; set; } = null;
 
-        private float pointerExtent;
+        private float extent;
         /// <inheritdoc />
-        public float PointerExtent
+        public float Extent
         {
             get
             {
-                if (overrideGlobalPointerExtent)
+                if (extent.Equals(0f))
                 {
-                    if (InputService?.FocusProvider != null)
-                    {
-                        return InputService.FocusProvider.GlobalPointingExtent;
-                    }
+                    extent = defaultExtent;
                 }
 
-                if (pointerExtent.Equals(0f))
-                {
-                    pointerExtent = defaultPointerExtent;
-                }
-
-                Debug.Assert(pointerExtent > 0f);
-                return pointerExtent;
+                Debug.Assert(extent > 0f);
+                return extent;
             }
             set
             {
-                pointerExtent = value;
-                Debug.Assert(pointerExtent > 0f, "Cannot set the pointer extent to 0. Resetting to the default pointer extent");
-                overrideGlobalPointerExtent = false;
+                if (value <= 0f)
+                {
+                    Debug.LogError($"Cannot set the extent to {value}. Resetting to the default extent {defaultExtent}.");
+                    value = defaultExtent;
+                }
+
+                extent = value;
             }
         }
-
-        /// <inheritdoc />
-        public float DefaultPointerExtent => defaultPointerExtent;
 
         /// <inheritdoc />
         public RayStep[] Rays { get; protected set; } = { new RayStep(Vector3.zero, Vector3.forward) };

@@ -15,15 +15,6 @@ namespace RealityToolkit.Input.Definitions
     public class InteractorsProfile : BaseProfile
     {
         [SerializeField]
-        [Tooltip("Maximum distance at which all pointers can collide with a GameObject, unless it has an override extent.")]
-        private float pointingExtent = 10f;
-
-        /// <summary>
-        /// Maximum distance at which all pointers can collide with a GameObject, unless it has an override extent.
-        /// </summary>
-        public float PointingExtent => pointingExtent;
-
-        [SerializeField]
         [Tooltip("The Physics Layers, in prioritized order, that are used to determine the pointers target when raycasting.")]
         [FormerlySerializedAs("pointingRaycastLayerMasks")]
         private LayerMask[] pointerRaycastLayerMasks = { Physics.DefaultRaycastLayers };

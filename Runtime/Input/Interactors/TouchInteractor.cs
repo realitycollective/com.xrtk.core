@@ -43,21 +43,21 @@ namespace RealityToolkit.Input.Interactors
         {
             if (TryGetPointingRay(out var pointingRay))
             {
-                Rays[0].CopyRay(pointingRay, PointerExtent);
+                Rays[0].CopyRay(pointingRay, Extent);
 
                 if (RayStabilizer != null)
                 {
                     RayStabilizer.UpdateStability(Rays[0].Origin, Rays[0].Direction);
-                    Rays[0].CopyRay(RayStabilizer.StableRay, PointerExtent);
+                    Rays[0].CopyRay(RayStabilizer.StableRay, Extent);
 
                     if (Raycaster.DebugEnabled)
                     {
-                        Debug.DrawRay(RayStabilizer.StableRay.origin, RayStabilizer.StableRay.direction * PointerExtent, Color.green);
+                        Debug.DrawRay(RayStabilizer.StableRay.origin, RayStabilizer.StableRay.direction * Extent, Color.green);
                     }
                 }
                 else if (Raycaster.DebugEnabled)
                 {
-                    Debug.DrawRay(pointingRay.origin, pointingRay.direction * PointerExtent, Color.yellow);
+                    Debug.DrawRay(pointingRay.origin, pointingRay.direction * Extent, Color.yellow);
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace RealityToolkit.Input.Interactors
             var playerCamera = Camera.main;
             position = Result.CurrentTarget != null
                 ? Result.EndPoint
-                : playerCamera.ScreenPointToRay(UnityEngine.Input.GetTouch(FingerId).position).GetPoint(PointerExtent);
+                : playerCamera.ScreenPointToRay(UnityEngine.Input.GetTouch(FingerId).position).GetPoint(Extent);
             return true;
         }
 

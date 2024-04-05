@@ -46,7 +46,7 @@ namespace RealityToolkit.Input.Interactors
         {
             sphereCollider = GetComponent<SphereCollider>();
             sphereCollider.isTrigger = true;
-            sphereCollider.radius = PointerExtent;
+            sphereCollider.radius = Extent;
         }
 
         /// <summary>

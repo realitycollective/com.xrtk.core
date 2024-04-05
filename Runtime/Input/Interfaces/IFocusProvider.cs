@@ -15,11 +15,6 @@ namespace RealityToolkit.Input.Interfaces
     public interface IFocusProvider : ISourceStateHandler, IInputServiceModule
     {
         /// <summary>
-        /// Maximum distance at which all pointers can collide with a <see cref="GameObject"/>, unless it has an override extent.
-        /// </summary>
-        float GlobalPointingExtent { get; }
-
-        /// <summary>
         /// The Physics Layers, in prioritized order, that are used to determine the <see cref="IInteractorResult.CurrentTarget"/> when raycasting.
         /// </summary>
         LayerMask[] GlobalPointerRaycastLayerMasks { get; }
