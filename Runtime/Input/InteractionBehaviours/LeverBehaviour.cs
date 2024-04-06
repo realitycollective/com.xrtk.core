@@ -2,7 +2,6 @@
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.InteractionBehaviours;
 using RealityToolkit.Input.Interactors;
-using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,7 +9,7 @@ namespace RealityToolkit.Core.Samples.Interactions
 {
     /// <summary>
     /// The <see cref="LeverBehaviour"/> is as versatile <see cref="IInteractionBehaviour"/> component used to
-    /// simulate all kinds of levers the user can interacth with in a virtual world.
+    /// simulate all kinds of levers the user can interacth with.
     /// </summary>
     [ExecuteInEditMode]
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lever-behaviour")]
@@ -21,7 +20,13 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// </summary>
         private enum LeverType
         {
-            Translate,
+            /// <summary>
+            /// A lever that is moved.
+            /// </summary>
+            Translate = 0,
+            /// <summary>
+            /// A lever that is rotated.
+            /// </summary>
             Rotate
         }
 
@@ -30,9 +35,13 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// </summary>
         private enum ValueMapping
         {
-            [Description("[0, 1]")]
-            Value0To1,
-            [Description("[-1, 1]")]
+            /// <summary>
+            /// Value will range from 0 to 1, inclusive respectively.
+            /// </summary>
+            Value0To1 = 0,
+            /// <summary>
+            /// Value will range from -1 to 1, inclusive respectively.
+            /// </summary>
             ValueNegative1To1
         }
 
@@ -174,28 +183,24 @@ namespace RealityToolkit.Core.Samples.Interactions
 
                 if (TransformX)
                 {
-                    interactorRotationDelta.x = Vector3.SignedAngle(previousInteractorPosition, direction, Vector3.right);
+                    interactorRotationDelta.x = Vector3.SignedAngle(previousInteractorPosition, direction, pivot.right);
                 }
 
                 if (TransformY)
                 {
-                    interactorRotationDelta.y = Vector3.SignedAngle(previousInteractorPosition, direction, Vector3.up);
+                    interactorRotationDelta.y = Vector3.SignedAngle(previousInteractorPosition, direction, pivot.up);
                 }
 
                 if (TransformZ)
                 {
-                    interactorRotationDelta.z = Vector3.SignedAngle(previousInteractorPosition, direction, Vector3.forward);
+                    interactorRotationDelta.z = Vector3.SignedAngle(previousInteractorPosition, direction, pivot.forward);
                 }
 
-                leverPose = interactorRotationDelta;
+                leverPose = (Quaternion.Euler(interactorRotationDelta) * transform.localRotation).eulerAngles;
             }
 
-            leverPose.x = Mathf.Clamp(leverPose.x, minimumValues.x, maximumValues.x);
-            leverPose.y = Mathf.Clamp(leverPose.y, minimumValues.y, maximumValues.y);
-            leverPose.z = Mathf.Clamp(leverPose.z, minimumValues.z, maximumValues.z);
-
             UpdateLeverPose(leverPose);
-            UpdateValue(leverPose);
+            UpdateValue();
 
             previousInteractorPosition = currentInteractorPosition;
         }
@@ -245,13 +250,16 @@ namespace RealityToolkit.Core.Samples.Interactions
         {
             if (leverType == LeverType.Translate)
             {
+                leverPose.x = Mathf.Clamp(leverPose.x, minimumValues.x, maximumValues.x);
+                leverPose.y = Mathf.Clamp(leverPose.y, minimumValues.y, maximumValues.y);
+                leverPose.z = Mathf.Clamp(leverPose.z, minimumValues.z, maximumValues.z);
                 transform.SetLocalPositionAndRotation(leverPose, Quaternion.identity);
                 return;
             }
 
-            leverPose.x = WrapAngle(leverPose.x);
-            leverPose.y = WrapAngle(leverPose.y);
-            leverPose.z = WrapAngle(leverPose.z);
+            leverPose.x = ClampAngle(leverPose.x, minimumValues.x, maximumValues.x);
+            leverPose.y = ClampAngle(leverPose.y, minimumValues.y, maximumValues.y);
+            leverPose.z = ClampAngle(leverPose.z, minimumValues.z, maximumValues.z);
 
             transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.Euler(leverPose));
         }
@@ -267,20 +275,10 @@ namespace RealityToolkit.Core.Samples.Interactions
 
             if (valueMapping == ValueMapping.Value0To1)
             {
-                if (leverType == LeverType.Translate)
-                {
-                    leverPose = new Vector3(
-                        minimumValues.x + Value.x * ranges.x,
-                        minimumValues.y + Value.y * ranges.y,
-                        minimumValues.z + Value.z * ranges.z);
-                }
-                else
-                {
-                    leverPose = new Vector3(
-                        Value.x * ranges.x,
-                        Value.y * ranges.y,
-                        Value.z * ranges.z);
-                }
+                leverPose = new Vector3(
+                    minimumValues.x + Value.x * ranges.x,
+                    minimumValues.y + Value.y * ranges.y,
+                    minimumValues.z + Value.z * ranges.z);
             }
             else
             {
@@ -296,9 +294,10 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// <summary>
         /// Updates <see cref="Value"/> based on <paramref name="leverPose"/>.
         /// </summary>
-        /// <param name="leverPose">The updated lever position or rotation, depending on the <see cref="leverType"/>.</param>
-        private void UpdateValue(Vector3 leverPose)
+        private void UpdateValue()
         {
+            var leverPose = leverType == LeverType.Translate ? transform.localPosition : transform.localEulerAngles;
+
             if (valueMapping == ValueMapping.Value0To1)
             {
                 Value = new(
@@ -344,16 +343,19 @@ namespace RealityToolkit.Core.Samples.Interactions
             return Mathf.Clamp((value * 2) - 1, -1f, 1f);
         }
 
-        private static float WrapAngle(float angle)
+        private float ClampAngle(float angle, float from, float to)
         {
-            angle %= 360;
-
-            if (angle > 180)
+            if (angle < 0f)
             {
-                return angle - 360;
+                angle = 360 + angle;
             }
 
-            return angle;
+            if (angle > 180f)
+            {
+                return Mathf.Max(angle, 360 + from);
+            }
+
+            return Mathf.Min(angle, to);
         }
     }
 }
