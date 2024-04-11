@@ -63,6 +63,9 @@ namespace RealityToolkit.Core.Samples.Interactions
         [SerializeField, Tooltip("The value mapping determines how the lever's output value is calculated.")]
         private ValueMapping valueMapping = ValueMapping.Value0To1;
 
+        [SerializeField, Tooltip("If set, the lever will snap into minimum / maximum value once released.")]
+        private bool snapsIntoPlace = true;
+
         [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the x-axis.")]
         public float valueX = 0f;
 
@@ -93,7 +96,12 @@ namespace RealityToolkit.Core.Samples.Interactions
                 valueZ = MapValue(value.z);
 
                 OnValueChanged();
-                ValueChanged?.Invoke(Value);
+
+                if (!snapsIntoPlace ||
+                    (snapsIntoPlace && (IsAtMinimum() || IsInBetween() || IsAtMaximum())))
+                {
+                    ValueChanged?.Invoke(Value);
+                }
             }
         }
 
@@ -240,6 +248,11 @@ namespace RealityToolkit.Core.Samples.Interactions
         protected override void OnLastGrabExited(InteractionExitEventArgs eventArgs)
         {
             currentInteractor = null;
+
+            if (snapsIntoPlace)
+            {
+                SnapIntoPlace();
+            }
         }
 
         /// <summary>
@@ -319,7 +332,103 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// </summary>
         protected virtual void OnValueChanged() { }
 
+        private void SnapIntoPlace()
+        {
+            var halfway = valueMapping == ValueMapping.Value0To1 ? .5f : 0f;
+
+            if (valueMapping == ValueMapping.Value0To1)
+            {
+
+                Value = new Vector3(
+                    TransformX ? (Value.x <= halfway ? 0f : 1f) : Value.x,
+                    TransformY ? (Value.y <= halfway ? 0f : 1f) : Value.y,
+                    TransformZ ? (Value.z <= halfway ? 0f : 1f) : Value.z);
+            }
+            else
+            {
+                const float tolerance = .01f;
+                Value = new Vector3(
+                        TransformX ? (Value.x.Approximately(halfway, tolerance) ? halfway : (Value.x < halfway ? -1f : 1f)) : Value.x,
+                        TransformY ? (Value.y.Approximately(halfway, tolerance) ? halfway : (Value.y < halfway ? -1f : 1f)) : Value.y,
+                        TransformZ ? (Value.z.Approximately(halfway, tolerance) ? halfway : (Value.z < halfway ? -1f : 1f)) : Value.z);
+            }
+
+            UpdateLeverPose();
+        }
+
         private Vector3 GetInteractorPosition() => pivot.InverseTransformPoint(currentInteractor.GameObject.transform.position);
+
+        private bool IsAtMinimum()
+        {
+            var minimumValue = valueMapping == ValueMapping.Value0To1 ? 0 : -1;
+
+            if (TransformX && Value.x != minimumValue)
+            {
+                return false;
+            }
+
+            if (TransformY && Value.y != minimumValue)
+            {
+                return false;
+            }
+
+            if (TransformZ && Value.z != minimumValue)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsInBetween()
+        {
+            if (valueMapping == ValueMapping.Value0To1)
+            {
+                return false;
+            }
+
+            const float halfway = 0f;
+            const float tolerance = .01f;
+
+            if (TransformX && !Value.x.Approximately(halfway, tolerance))
+            {
+                return false;
+            }
+
+            if (TransformY && !Value.y.Approximately(halfway, tolerance))
+            {
+                return false;
+            }
+
+            if (TransformZ && !Value.z.Approximately(halfway, tolerance))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool IsAtMaximum()
+        {
+            const float maximumValue = 1f;
+
+            if (TransformX && Value.x != maximumValue)
+            {
+                return false;
+            }
+
+            if (TransformY && Value.y != maximumValue)
+            {
+                return false;
+            }
+
+            if (TransformZ && Value.z != maximumValue)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         private void RemapValue()
         {
