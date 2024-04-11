@@ -66,6 +66,12 @@ namespace RealityToolkit.Core.Samples.Interactions
         [SerializeField, Tooltip("If set, the lever will snap into minimum / maximum value once released.")]
         private bool snapsIntoPlace = true;
 
+        [SerializeField, Tooltip("If set, the lever will snap smoothly snap into place instead of instantly.")]
+        private bool smoothSnap = true;
+
+        [SerializeField, Tooltip("Determines how fast the lever will snap into place upon release, if smooth snap is enabled.")]
+        private float smoothSnapSpeed = 5f;
+
         [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the x-axis.")]
         public float valueX = 0f;
 
@@ -82,6 +88,8 @@ namespace RealityToolkit.Core.Samples.Interactions
         private IControllerInteractor currentInteractor;
         private Vector3 previousInteractorPosition;
         private Vector3 ranges;
+        private bool isSnapping;
+        private Vector3 snapTargetValue;
 
         /// <summary>
         /// A normalized value per axis indicating the levers pose.
@@ -100,6 +108,7 @@ namespace RealityToolkit.Core.Samples.Interactions
                 if (!snapsIntoPlace ||
                     (snapsIntoPlace && (IsAtMinimum() || IsInBetween() || IsAtMaximum())))
                 {
+                    isSnapping = false;
                     ValueChanged?.Invoke(Value);
                 }
             }
@@ -157,6 +166,11 @@ namespace RealityToolkit.Core.Samples.Interactions
 
             if (currentInteractor == null)
             {
+                if (isSnapping)
+                {
+                    SnapIntoPlace();
+                }
+
                 return;
             }
 
@@ -240,6 +254,7 @@ namespace RealityToolkit.Core.Samples.Interactions
                 return;
             }
 
+            isSnapping = false;
             currentInteractor = controllerInteractor;
             previousInteractorPosition = GetInteractorPosition();
         }
@@ -251,7 +266,7 @@ namespace RealityToolkit.Core.Samples.Interactions
 
             if (snapsIntoPlace)
             {
-                SnapIntoPlace();
+                StartSnapIntoPlace();
             }
         }
 
@@ -332,14 +347,16 @@ namespace RealityToolkit.Core.Samples.Interactions
         /// </summary>
         protected virtual void OnValueChanged() { }
 
-        private void SnapIntoPlace()
+        #region Snap Into Place
+
+        private void StartSnapIntoPlace()
         {
             var halfway = valueMapping == ValueMapping.Value0To1 ? .5f : 0f;
+            Vector3 snapTargetValue;
 
             if (valueMapping == ValueMapping.Value0To1)
             {
-
-                Value = new Vector3(
+                snapTargetValue = new Vector3(
                     TransformX ? (Value.x <= halfway ? 0f : 1f) : Value.x,
                     TransformY ? (Value.y <= halfway ? 0f : 1f) : Value.y,
                     TransformZ ? (Value.z <= halfway ? 0f : 1f) : Value.z);
@@ -347,14 +364,33 @@ namespace RealityToolkit.Core.Samples.Interactions
             else
             {
                 const float tolerance = .01f;
-                Value = new Vector3(
+                snapTargetValue = new Vector3(
                         TransformX ? (Value.x.Approximately(halfway, tolerance) ? halfway : (Value.x < halfway ? -1f : 1f)) : Value.x,
                         TransformY ? (Value.y.Approximately(halfway, tolerance) ? halfway : (Value.y < halfway ? -1f : 1f)) : Value.y,
                         TransformZ ? (Value.z.Approximately(halfway, tolerance) ? halfway : (Value.z < halfway ? -1f : 1f)) : Value.z);
             }
 
+            if (smoothSnap)
+            {
+                isSnapping = true;
+                this.snapTargetValue = snapTargetValue;
+            }
+            else
+            {
+                Value = snapTargetValue;
+                UpdateLeverPose();
+            }
+        }
+
+        private void SnapIntoPlace()
+        {
+            Value = Vector3.MoveTowards(Value, snapTargetValue, smoothSnapSpeed * Time.deltaTime);
             UpdateLeverPose();
         }
+
+        #endregion Snap Into Place
+
+        #region Utilities
 
         private Vector3 GetInteractorPosition() => pivot.InverseTransformPoint(currentInteractor.GameObject.transform.position);
 
@@ -466,5 +502,7 @@ namespace RealityToolkit.Core.Samples.Interactions
 
             return Mathf.Min(angle, to);
         }
+
+        #endregion Utilities
     }
 }
