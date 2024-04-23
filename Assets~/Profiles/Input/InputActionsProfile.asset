@@ -77,3 +77,11 @@ MonoBehaviour:
     id: 3
     description: Grip Pose
     axisConstraint: 7
+  - profileGuid: 399335ccc89c4d12b79f3539ca7771db
+    id: 17
+    description: X/A
+    axisConstraint: 2
+  - profileGuid: 399335ccc89c4d12b79f3539ca7771db
+    id: 18
+    description: Y/B
+    axisConstraint: 2
