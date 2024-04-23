@@ -79,9 +79,9 @@ MonoBehaviour:
     axisConstraint: 7
   - profileGuid: 399335ccc89c4d12b79f3539ca7771db
     id: 17
-    description: X/A
+    description: X_A
     axisConstraint: 2
   - profileGuid: 399335ccc89c4d12b79f3539ca7771db
     id: 18
-    description: Y/B
+    description: Y_B
     axisConstraint: 2
