@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
@@ -14,6 +14,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <remarks>
     /// Consider implementing a custom <see cref="BaseInteractionBehaviour"/> instead.
     /// </remarks>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/interaction-events-behaviour")]
     public class InteractionEventsBehaviour : BaseInteractionBehaviour
     {
         [Space]

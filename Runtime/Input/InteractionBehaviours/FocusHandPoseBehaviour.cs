@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
@@ -12,6 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// The <see cref="FocusHandPoseBehaviour"/> will animate the <see cref="RiggedHandControllerVisualizer"/>
     /// into the assigned <see cref="focusPose"/>, when the <see cref="Interactables.IInteractable"/> is focused.
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/focus-hand-pose-behaviour")]
     public class FocusHandPoseBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Hand pose applied when focusing the interactable.")]

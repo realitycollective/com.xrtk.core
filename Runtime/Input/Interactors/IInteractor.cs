@@ -63,14 +63,9 @@ namespace RealityToolkit.Input.Interactors
         bool IsInteractionEnabled { get; }
 
         /// <summary>
-        /// The pointer's extent when raycasting.
+        /// The <see cref="IInteractor"/>'s extent when raycasting.
         /// </summary>
-        float PointerExtent { get; set; }
-
-        /// <summary>
-        /// The default pointer extent.
-        /// </summary>
-        float DefaultPointerExtent { get; }
+        float Extent { get; set; }
 
         /// <summary>
         /// The pointers raycast collection.

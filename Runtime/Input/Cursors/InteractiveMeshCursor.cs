@@ -160,7 +160,7 @@ namespace RealityToolkit.Input.Cursors
 
             // handle scale of main cursor go
             float distance = Vector3.Distance(InputService.GazeProvider.GazeOrigin, transform.position);
-            float smoothScaling = 1 - Pointer.PointerExtent * distanceScaleFactor;
+            float smoothScaling = 1 - Pointer.Extent * distanceScaleFactor;
             transform.localScale = initialScale * (distance * distanceScaleFactor + smoothScaling);
         }
 

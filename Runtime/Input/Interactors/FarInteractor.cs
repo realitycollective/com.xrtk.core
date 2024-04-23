@@ -121,7 +121,7 @@ namespace RealityToolkit.Input.Interactors
             if (RayStabilizer != null)
             {
                 RayStabilizer.UpdateStability(Rays[0].Origin, Rays[0].Direction);
-                Rays[0].CopyRay(RayStabilizer.StableRay, PointerExtent);
+                Rays[0].CopyRay(RayStabilizer.StableRay, Extent);
             }
 
             TryGetPointerPosition(out var pointerPosition);
@@ -135,7 +135,7 @@ namespace RealityToolkit.Input.Interactors
                 if (SyncedTarget != null)
                 {
                     // Now raycast out like nothing happened so we can get an updated pointer position.
-                    lineBase.LastPoint = pointerPosition + pointerRotation * (Vector3.forward * PointerExtent);
+                    lineBase.LastPoint = pointerPosition + pointerRotation * (Vector3.forward * Extent);
                 }
                 else
                 {
@@ -145,7 +145,7 @@ namespace RealityToolkit.Input.Interactors
             }
             else
             {
-                lineBase.LastPoint = pointerPosition + pointerRotation * (Vector3.forward * PointerExtent);
+                lineBase.LastPoint = pointerPosition + pointerRotation * (Vector3.forward * Extent);
             }
 
             // Make sure our array will hold
@@ -196,7 +196,7 @@ namespace RealityToolkit.Input.Interactors
 
             // The distance the ray travels through the world before it hits something.
             // Measured in world-units (as opposed to normalized distance).
-            var clearWorldLength = (Result?.CurrentTarget != null) ? Result.RayDistance : PointerExtent;
+            var clearWorldLength = (Result?.CurrentTarget != null) ? Result.RayDistance : Extent;
 
             lineColor = IsInputDown ? LineColorInputDown : DefaultLineColor;
 

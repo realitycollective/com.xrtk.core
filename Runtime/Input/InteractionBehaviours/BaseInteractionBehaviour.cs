@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.Definitions.Utilities;
@@ -12,6 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// Base implementation for <see cref="IInteractionBehaviour"/>s.
     /// </summary>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/custom-behaviours")]
     [RequireComponent(typeof(Interactable))]
     public abstract class BaseInteractionBehaviour : MonoBehaviour, IInteractionBehaviour
     {
@@ -32,6 +33,11 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <see cref="MonoBehaviour"/>.
         /// </summary>
         protected virtual void Awake() { }
+
+        /// <summary>
+        /// <see cref="MonoBehaviour"/>.
+        /// </summary>
+        protected virtual void Start() { }
 
         /// <summary>
         /// <see cref="MonoBehaviour"/>.
@@ -62,6 +68,11 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <see cref="MonoBehaviour"/>.
         /// </summary>
         protected virtual void OnDestroy() { }
+
+        /// <summary>
+        /// <see cref="MonoBehaviour"/>.
+        /// </summary>
+        protected virtual void OnValidate() { }
 
         /// <inheritdoc/>
         void IInteractionBehaviour.OnActivated(InteractionEventArgs eventArgs)

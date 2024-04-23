@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
@@ -10,6 +10,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// This <see cref="IInteractionBehaviour"/> will update the <see cref="Rigidbody"/> on the <see cref="Interactables.IInteractable"/>
     /// when interacted with.
     /// </summary>
+    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/update-rigidbody-behaviour")]
     public class UpdateRigidbodyBehaviour : BaseInteractionBehaviour
     {
         private new Rigidbody rigidbody;

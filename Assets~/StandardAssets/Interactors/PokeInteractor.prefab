@@ -95,8 +95,7 @@ MonoBehaviour:
     axisConstraint: 2
   requiresHoldAction: 0
   enablePointerOnStart: 1
-  defaultPointerExtent: 0.01
-  overrideGlobalPointerExtent: 0
+  defaultExtent: 0.01
   pointerOrientation: 0
   cursorPrefab: {fileID: 0}
   disableCursorOnStart: 0

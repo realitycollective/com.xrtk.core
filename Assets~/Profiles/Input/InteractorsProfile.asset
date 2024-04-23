@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f1708952b3739a47908a0fb9a103a7e, type: 3}
-  m_Name: PointersProfile
+  m_Name: InteractorsProfile
   m_EditorClassIdentifier: 
   pointingExtent: 10
   pointerRaycastLayerMasks:
@@ -19,3 +19,7 @@ MonoBehaviour:
   drawDebugPointingRays: 1
   debugPointingRayColors:
   - {r: 0, g: 1, b: 0, a: 1}
+  <DefaultControllerInteractors>k__BackingField:
+  - {fileID: 8432135464014371632, guid: c61f3eb595c636c438edf4452a4ef65e, type: 3}
+  - {fileID: 3487613484555030544, guid: eb885e83bbe8cc24a87d61670583a82d, type: 3}
+  - {fileID: 2507312044101632756, guid: 54d78dc3333741c5b7f30fe3506096ba, type: 3}

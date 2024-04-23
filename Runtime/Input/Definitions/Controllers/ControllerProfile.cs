@@ -68,17 +68,22 @@ namespace RealityToolkit.Definitions.Controllers
             set => interactionMappingProfiles = value;
         }
 
-        [SerializeField, Tooltip("Interactors created for this controller.")]
+        [SerializeField, Tooltip("If set, this controller will ignore default controller interactors and specify its own list.")]
+        private bool overrideControllerInteractors = false;
+
+        /// <summary>
+        /// If set, this <see cref="IController"/> will ignore default controller interactors in the <see cref="Input.Definitions.InteractorsProfile"/>
+        /// and specify its own list in <see cref="ControllerInteractors"/>.
+        /// </summary>
+        public bool OverrideControllerInteractors => overrideControllerInteractors;
+
+        [SerializeField, Tooltip("This controllers customized interactors list.")]
         private BaseControllerInteractor[] controllerInteractors = null;
 
         /// <summary>
         /// The <see cref="IControllerInteractor"/>s that will be created for this <see cref="IController"/>.
         /// </summary>
-        public BaseControllerInteractor[] ControllerInteractors
-        {
-            get => controllerInteractors;
-            internal set => controllerInteractors = value;
-        }
+        public BaseControllerInteractor[] ControllerInteractors => controllerInteractors;
 
         #region Fields hidden in non-debug inspector
 

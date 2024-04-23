@@ -886,9 +886,9 @@ namespace RealityToolkit.Input.Handlers
             else
             {
                 // update the pointer extent to prevent the object from popping to the end of the pointer
-                prevPointerExtent = PrimaryPointer.PointerExtent;
+                prevPointerExtent = PrimaryPointer.Extent;
                 var currentRaycastDistance = PrimaryPointer.Result.RayDistance;
-                PrimaryPointer.PointerExtent = currentRaycastDistance;
+                PrimaryPointer.Extent = currentRaycastDistance;
             }
 
             prevScale = manipulationTarget.localScale;
@@ -932,7 +932,7 @@ namespace RealityToolkit.Input.Handlers
 
             if (prevPosition != Vector3.zero)
             {
-                PrimaryPointer.PointerExtent = prevPointerExtent;
+                PrimaryPointer.Extent = prevPointerExtent;
             }
 
             if (isCanceled)
@@ -971,7 +971,7 @@ namespace RealityToolkit.Input.Handlers
 
         private static float GetCurrentExtent(IInteractor pointer)
         {
-            var extent = pointer.PointerExtent;
+            var extent = pointer.Extent;
             var currentRaycastDistance = pointer.Result.RayDistance;
 
             // Reset the cursor extent to the nearest value in case we're hitting something close
@@ -1189,7 +1189,7 @@ namespace RealityToolkit.Input.Handlers
             }
             else if (IsNudgePossible)
             {
-                PrimaryPointer.PointerExtent = updatedExtent;
+                PrimaryPointer.Extent = updatedExtent;
             }
             else if (IsScalingPossible)
             {

@@ -169,7 +169,7 @@ namespace RealityToolkit.Input.Interactors
         public Vector3? OverrideGrabPoint { get; set; } = null;
 
         /// <inheritdoc />
-        public virtual float PointerExtent { get; set; } = 10f;
+        public virtual float Extent { get; set; } = 10f;
 
         /// <inheritdoc />
         public virtual float DefaultPointerExtent { get; } = 10f;
@@ -203,13 +203,13 @@ namespace RealityToolkit.Input.Interactors
         {
             if (TryGetPointingRay(out var pointingRay))
             {
-                Rays[0].CopyRay(pointingRay, PointerExtent);
+                Rays[0].CopyRay(pointingRay, Extent);
             }
 
             if (RayStabilizer != null)
             {
                 RayStabilizer.UpdateStability(Rays[0].Origin, Rays[0].Direction);
-                Rays[0].CopyRay(RayStabilizer.StableRay, PointerExtent);
+                Rays[0].CopyRay(RayStabilizer.StableRay, Extent);
             }
         }
 
