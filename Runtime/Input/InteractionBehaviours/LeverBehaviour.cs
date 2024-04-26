@@ -5,7 +5,7 @@ using RealityToolkit.Input.Interactors;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace RealityToolkit.Core.Samples.Interactions
+namespace RealityToolkit.Input.InteractionBehaviours
 {
     /// <summary>
     /// The <see cref="LeverBehaviour"/> is as versatile <see cref="IInteractionBehaviour"/> component used to
