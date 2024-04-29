@@ -303,9 +303,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
             if (valueMapping == ValueMapping.Value0To1)
             {
                 leverPose = new Vector3(
-                    minimumValues.x + Value.x * ranges.x,
-                    minimumValues.y + Value.y * ranges.y,
-                    minimumValues.z + Value.z * ranges.z);
+                    minimumValues.x + (minimumValues.x > maximumValues.x ? -1f : 1f) * Value.x * ranges.x,
+                    minimumValues.y + (minimumValues.y > maximumValues.y ? -1f : 1f) * Value.y * ranges.y,
+                    minimumValues.z + (minimumValues.z > maximumValues.z ? -1f : 1f) * Value.z * ranges.z);
             }
             else
             {
@@ -489,6 +489,13 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private float ClampAngle(float angle, float from, float to)
         {
+            if (from > to)
+            {
+                var temp = to;
+                to = from;
+                from = temp;
+            }
+
             if (angle < 0f)
             {
                 angle = 360 + angle;
