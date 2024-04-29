@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.InteractionBehaviours;
@@ -16,6 +16,11 @@ namespace RealityToolkit.Input.Interactables
         /// identify the interactable or categorize it
         /// </summary>
         string Label { get; set; }
+
+        /// <summary>
+        /// A display name for the <see cref="IInteractable"/>.
+        /// </summary>
+        string Name { get; }
 
         /// <summary>
         /// Is the <see cref="IInteractable"/> valid for interaciton?

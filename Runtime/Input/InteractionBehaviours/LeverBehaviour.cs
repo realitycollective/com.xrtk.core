@@ -1,6 +1,5 @@
 ﻿using RealityCollective.Extensions;
 using RealityToolkit.Input.Events;
-using RealityToolkit.Input.InteractionBehaviours;
 using RealityToolkit.Input.Interactors;
 using UnityEngine;
 using UnityEngine.Events;
