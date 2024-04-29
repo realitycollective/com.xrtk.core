@@ -18,7 +18,12 @@ namespace RealityToolkit.Utilities
         /// <returns>The <see cref="Definitions.Utilities.RenderPipeline"/> used by the project.</returns>
         public static RenderPipeline GetActiveRenderingPipeline()
         {
+#if UNITY_6000_0_OR_NEWER
+            var renderPipelineAsset = GraphicsSettings.defaultRenderPipeline;
+#else
             var renderPipelineAsset = GraphicsSettings.renderPipelineAsset;
+#endif
+
             if (renderPipelineAsset.IsNull())
             {
                 return RenderPipeline.Legacy;
