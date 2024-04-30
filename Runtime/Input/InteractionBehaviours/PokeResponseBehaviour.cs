@@ -14,6 +14,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// in response to being poked by a <see cref="IPokeInteractor"/>.
     /// </summary>
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/poke-response-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(PokeResponseBehaviour))]
     public class PokeResponseBehaviour : BaseInteractionBehaviour
     {
         [Serializable]

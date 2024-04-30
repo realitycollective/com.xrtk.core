@@ -14,8 +14,8 @@ namespace RealityToolkit.Editor.Utilities
     [InitializeOnLoad]
     public class RealityToolkitEditorSettings : IActiveBuildTargetChanged
     {
-        private static readonly string ignoreKey = $"{Application.productName}_XRTK_Editor_IgnoreSettingsPrompts";
-        private static readonly string sessionKey = $"{Application.productName}_XRTK_Editor_ShownSettingsPrompts";
+        private static readonly string ignoreKey = $"{Application.productName}_RealityToolkit_Editor_IgnoreSettingsPrompts";
+        private static readonly string sessionKey = $"{Application.productName}_RealityToolkit_Editor_ShownSettingsPrompts";
         private static readonly string visibleMetaVersionControlMode = "Visible Meta Files";
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace RealityToolkit.Editor.Utilities
         /// </summary>
         public static void CheckSettings()
         {
-            EditorPrefs.SetBool($"{Application.productName}_XRTK", true);
+            EditorPrefs.SetBool($"{Application.productName}_RealityToolkit", true);
 
             if (Application.isPlaying ||
                 EditorPrefs.GetBool(ignoreKey, false) ||

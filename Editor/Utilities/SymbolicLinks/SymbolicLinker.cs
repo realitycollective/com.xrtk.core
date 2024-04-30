@@ -116,7 +116,7 @@ namespace RealityToolkit.Editor.Utilities.SymbolicLinks
             {
                 if (!string.IsNullOrEmpty(RealityToolkitPreferences.SymbolicLinkSettingsPath))
                 {
-                    Debug.LogWarning("Symbolic link settings not found! Auto load links has been turned off.\nYou can enable this again in the xrtk preferences.");
+                    Debug.LogWarning("Symbolic link settings not found! Auto load links has been turned off.\nYou can enable this again in the Reality Toolkit preferences.");
                 }
 
                 RealityToolkitPreferences.AutoLoadSymbolicLinks = false;

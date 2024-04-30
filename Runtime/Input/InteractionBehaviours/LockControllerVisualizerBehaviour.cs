@@ -20,6 +20,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// Does not support <see cref="IPokeInteractor"/>s and will ignore them.
     /// </remarks>
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lock-controller-visualizer-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LockControllerVisualizerBehaviour))]
     public class LockControllerVisualizerBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Optional offset pose applied to the visualizer.")]

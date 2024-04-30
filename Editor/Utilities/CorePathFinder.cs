@@ -7,7 +7,7 @@ using UnityEngine;
 namespace RealityToolkit.Editor.Utilities
 {
     /// <summary>
-    /// Dummy scriptable object used to find the relative path to com.xrtk.core.
+    /// Dummy scriptable object used to find the relative path to com.realitytoolkit.core.
     /// </summary>
     /// <inheritdoc cref="IPathFinder" />
     public class CorePathFinder : ScriptableObject, IPathFinder

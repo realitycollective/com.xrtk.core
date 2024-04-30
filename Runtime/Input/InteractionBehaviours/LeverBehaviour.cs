@@ -12,6 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// </summary>
     [ExecuteInEditMode]
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lever-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LeverBehaviour))]
     public class LeverBehaviour : BaseInteractionBehaviour
     {
         /// <summary>
@@ -311,7 +312,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                     interactorRotationDelta.z = currentInteractorPose.z;
                 }
 
-                leverPose = transform.localEulerAngles + interactorRotationDelta;
+                leverPose = interactorRotationDelta;
             }
 
             return leverPose;

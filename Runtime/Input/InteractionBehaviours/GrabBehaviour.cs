@@ -13,6 +13,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// and carry it around.
     /// </summary>
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/grab-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(GrabBehaviour))]
     public class GrabBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Optional local offset from the object's pivot.")]

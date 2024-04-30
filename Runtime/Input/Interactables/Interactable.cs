@@ -20,6 +20,7 @@ namespace RealityToolkit.Input.Interactables
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Collider))]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(Interactable), -1)]
     public class Interactable : MonoBehaviour,
         IInteractable,
         IFocusHandler,

@@ -11,6 +11,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// when interacted with.
     /// </summary>
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/update-rigidbody-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(UpdateRigidbodyBehaviour))]
     public class UpdateRigidbodyBehaviour : BaseInteractionBehaviour
     {
         private new Rigidbody rigidbody;

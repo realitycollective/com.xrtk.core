@@ -13,6 +13,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// The <see cref="FocusHandPoseBehaviour"/> will animate the <see cref="RiggedHandControllerVisualizer"/>
     /// into the assigned <see cref="focusPose"/>, when the <see cref="Interactables.IInteractable"/> is focused.
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/focus-hand-pose-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(FocusHandPoseBehaviour))]
     public class FocusHandPoseBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Hand pose applied when focusing the interactable.")]
