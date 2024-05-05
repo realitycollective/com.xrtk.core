@@ -74,12 +74,12 @@ namespace RealityToolkit.Editor
             };
         }
 
-        private static ServiceManagerInstance SetupServiceManager()
+        private static GlobalServiceManager SetupServiceManager()
         {
 #if UNITY_2023_1_OR_NEWER
-            var serviceManagerInstance = Object.FindFirstObjectByType<ServiceManagerInstance>();
+            var serviceManagerInstance = Object.FindFirstObjectByType<GlobalServiceManager>();
 #else
-            var serviceManagerInstance = Object.FindObjectOfType<ServiceManagerInstance>();
+            var serviceManagerInstance = Object.FindObjectOfType<GlobalServiceManager>();
 #endif
             if (serviceManagerInstance.IsNotNull() &&
                 serviceManagerInstance.Manager != null &&
@@ -92,7 +92,7 @@ namespace RealityToolkit.Editor
 
             if (serviceManagerInstance.IsNull())
             {
-                serviceManagerInstance = new GameObject(nameof(ServiceManagerInstance)).AddComponent<ServiceManagerInstance>();
+                serviceManagerInstance = new GameObject(nameof(GlobalServiceManager)).AddComponent<GlobalServiceManager>();
             }
 
             if (serviceManagerInstance.Manager == null)

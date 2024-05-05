@@ -4,10 +4,8 @@
 using NUnit.Framework;
 using RealityCollective.ServiceFramework.Definitions;
 using RealityCollective.ServiceFramework.Services;
-using System.Text.RegularExpressions;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace RealityToolkit.Tests
 {
@@ -34,7 +32,7 @@ namespace RealityToolkit.Tests
         /// </summary>
         public static void InitializeRealityToolkit()
         {
-#if UNITY_2022_1_OR_NEWER
+#if UNITY_2023_1_OR_NEWER
             LogAssert.Expect(LogType.Error, new Regex("Selected Scene name to load is null or empty."));
 #endif
 
