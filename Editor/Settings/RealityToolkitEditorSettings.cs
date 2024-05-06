@@ -10,7 +10,7 @@ namespace RealityToolkit.Editor.Settings
     /// <summary>
     /// Reality Toolkit specific Unity editor settings for the open project.
     /// </summary>
-    [ScriptableSettingsPath("")]
+    [ScriptableSettingsPath("Assets/RealityToolkit/Settings")]
     public class RealityToolkitEditorSettings : EditorScriptableSettings<RealityToolkitEditorSettings>
     {
         private const string defaultAssetImportPath = "Assets/RealityToolkit.Generated/";
