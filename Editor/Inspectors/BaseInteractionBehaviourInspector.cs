@@ -3,8 +3,14 @@ using UnityEngine.UIElements;
 
 namespace RealityToolkit.Editor.Inspectors
 {
+    /// <summary>
+    /// Base inspector for <see cref="RealityToolkit.Input.InteractionBehaviours.BaseInteractionBehaviour"/>s.
+    /// </summary>
     public abstract class BaseInteractionBehaviourInspector : UnityEditor.Editor
     {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public override VisualElement CreateInspectorGUI()
         {
             var inspector = new VisualElement();

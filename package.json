@@ -1,18 +1,21 @@
 {
   "name": "com.realitytoolkit.core",
   "displayName": "RealityToolkit.Core",
-  "description": "The core framework of the Reality Toolkit by the Reality Collective",
+  "description": "The core framework of the Reality Toolkit by the Reality Collective.",
+  "version": "1.0.0-pre.47",
+  "documentationUrl": "https://realitytoolkit.io",
+  "changelogUrl": "https://github.com/realitycollective/com.realitytoolkit.core/releases",
+  "licensesUrl": "https://github.com/realitycollective/com.realitytoolkit.core/blob/main/LICENSE.md",
   "keywords": [
     "VR",
     "AR",
     "XR",
     "Mixed Reality"
   ],
-  "version": "1.0.0-pre.47",
   "unity": "2022.3",
-  "homepage": "https://github.com/realitycollective",
+  "homepage": "https://realitytoolkit.io",
   "bugs": {
-    "url": "https://github.com/realitycollective/realitytoolkit.dev/issues"
+    "url": "https://github.com/realitycollective/com.realitytoolkit.core/issues"
   },
   "license": "MIT",
   "repository": {
@@ -23,6 +26,9 @@
     "name": "Reality Collective",
     "email": "realitycollectivedev@gmail.com",
     "url": "https://github.com/realitycollective"
+  },
+  "publishConfig": {
+    "registry": "https://package.openupm.com"
   },
   "dependencies": {
     "com.unity.xr.management": "4.4.0",
