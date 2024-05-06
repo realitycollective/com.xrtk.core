@@ -1,8 +1,8 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information. 
 
-using RealityCollective.Editor.Utilities;
 using RealityCollective.ServiceFramework.Services;
+using RealityCollective.Utilities.Editor;
 using RealityToolkit.Editor.Utilities;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.SpatialAwareness.Definitions;

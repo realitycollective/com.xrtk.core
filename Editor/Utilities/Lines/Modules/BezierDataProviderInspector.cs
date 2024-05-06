@@ -1,5 +1,4 @@
-﻿using RealityCollective.Editor.Extensions;
-using RealityToolkit.Utilities.Lines;
+﻿using RealityToolkit.Utilities.Lines;
 using UnityEditor;
 using UnityEngine;
 

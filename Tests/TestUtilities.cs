@@ -33,7 +33,7 @@ namespace RealityToolkit.Tests
         public static void InitializeRealityToolkit()
         {
 #if UNITY_2023_1_OR_NEWER
-            LogAssert.Expect(LogType.Error, new Regex("Selected Scene name to load is null or empty."));
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("Selected Scene name to load is null or empty."));
 #endif
 
             // Setup

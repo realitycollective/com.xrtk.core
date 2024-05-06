@@ -1,9 +1,7 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Editor.Extensions;
-using RealityCollective.Editor.Utilities;
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
 using RealityCollective.ServiceFramework;
 using RealityCollective.ServiceFramework.Definitions;
 using RealityCollective.ServiceFramework.Editor;
@@ -14,6 +12,8 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
+using RealityCollective.Utilities.Editor;
+
 
 #if UNITY_EDITOR && !UNITY_2021_1_OR_NEWER
 using SceneManagement = UnityEditor.Experimental.SceneManagement;

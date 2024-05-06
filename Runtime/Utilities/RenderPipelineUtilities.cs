@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
+using RealityToolkit.Definitions.Utilities;
 using UnityEngine.Rendering;
-using RenderPipeline = RealityCollective.Definitions.Utilities.RenderPipeline;
 
 namespace RealityToolkit.Utilities
 {
@@ -13,10 +13,10 @@ namespace RealityToolkit.Utilities
         private const string hdrpAssetTypeName = "HDRenderPipelineAsset";
 
         /// <summary>
-        /// Gets the <see cref="Definitions.Utilities.RenderPipeline"/> used by the project.
+        /// Gets the <see cref="UnityRenderPipeline"/> used by the project.
         /// </summary>
-        /// <returns>The <see cref="Definitions.Utilities.RenderPipeline"/> used by the project.</returns>
-        public static RenderPipeline GetActiveRenderingPipeline()
+        /// <returns>The <see cref="UnityRenderPipeline"/> used by the project.</returns>
+        public static UnityRenderPipeline GetActiveRenderingPipeline()
         {
 #if UNITY_6000_0_OR_NEWER
             var renderPipelineAsset = GraphicsSettings.defaultRenderPipeline;
@@ -26,18 +26,18 @@ namespace RealityToolkit.Utilities
 
             if (renderPipelineAsset.IsNull())
             {
-                return RenderPipeline.Legacy;
+                return UnityRenderPipeline.Legacy;
             }
 
             switch (renderPipelineAsset.GetType().Name)
             {
                 case urpAssetTypeName:
-                    return RenderPipeline.UniversalRenderPipeline;
+                    return UnityRenderPipeline.UniversalRenderPipeline;
                 case hdrpAssetTypeName:
-                    return RenderPipeline.HighDefinitionRenderPipeline;
+                    return UnityRenderPipeline.HighDefinitionRenderPipeline;
             }
 
-            return RenderPipeline.Custom;
+            return UnityRenderPipeline.Custom;
         }
     }
 }

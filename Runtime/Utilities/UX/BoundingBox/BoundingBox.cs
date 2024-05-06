@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Attributes;
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Services;
+using RealityCollective.Utilities.Attributes;
+using RealityCollective.Utilities.Definitions;
+using RealityCollective.Utilities.Extensions;
+using RealityToolkit.Definitions.Utilities;
 using RealityToolkit.EventDatum.Input;
 using RealityToolkit.Input.Handlers;
 using RealityToolkit.Input.Interactors;

@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Editor.Extensions;
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework;
 using RealityCollective.ServiceFramework.Editor.Profiles;
 using RealityCollective.ServiceFramework.Editor.PropertyDrawers;
+using RealityCollective.ServiceFramework.Editor.Utilities;
+using RealityCollective.Utilities.Editor;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Controllers;
 using RealityToolkit.Definitions.Devices;
 using RealityToolkit.Editor.Utilities;
 using RealityToolkit.Input.Controllers;
+using RealityToolkit.Input.Definitions;
 using System;
 using System.Collections.Generic;
 using System.IO;

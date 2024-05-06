@@ -1,8 +1,7 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Utilities;
 using System;
 using System.Collections.Generic;
@@ -211,7 +210,7 @@ namespace RealityToolkit.Utilities.Solvers
 
         protected virtual void AttachToNewTrackedObject()
         {
-            Handedness = Handedness.None;
+            Handedness = Input.Definitions.Handedness.None;
 
             switch (TrackedObjectToReference)
             {
@@ -219,10 +218,10 @@ namespace RealityToolkit.Utilities.Solvers
                     TrackTransform(Camera.main.transform);
                     break;
                 case TrackedObjectType.LeftHandOrController:
-                    Handedness = Handedness.Left;
+                    Handedness = Input.Definitions.Handedness.Left;
                     break;
                 case TrackedObjectType.RightHandOrController:
-                    Handedness = Handedness.Right;
+                    Handedness = Input.Definitions.Handedness.Right;
                     break;
                 case TrackedObjectType.Rig:
                     if (Camera.main.transform.parent.IsNotNull())

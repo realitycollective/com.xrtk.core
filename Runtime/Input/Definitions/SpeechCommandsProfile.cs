@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
 using RealityCollective.ServiceFramework.Definitions;
+using RealityCollective.ServiceFramework.Definitions.Utilities;
 using UnityEngine;
 
 namespace RealityToolkit.Input.Definitions

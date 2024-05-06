@@ -1,10 +1,11 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
+using RealityToolkit.Input.Definitions;
+
 
 #if UNITY_EDITOR
 using System.Linq;

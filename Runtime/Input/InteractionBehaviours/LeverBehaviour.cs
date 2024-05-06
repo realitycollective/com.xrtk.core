@@ -1,4 +1,4 @@
-﻿using RealityCollective.Extensions;
+﻿using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
 using UnityEngine;
@@ -15,21 +15,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LeverBehaviour))]
     public class LeverBehaviour : BaseInteractionBehaviour
     {
-        /// <summary>
-        /// Supported interactor tracking modes.
-        /// </summary>
-        private enum InteractorTrackingMode
-        {
-            /// <summary>
-            /// We are tracking the interactors position to determine lever movement.
-            /// </summary>
-            Position = 0,
-            /// <summary>
-            /// We are tracking the interactors rotation to determine lever movement.
-            /// </summary>
-            Rotation
-        }
-
         /// <summary>
         /// Supported lever types.
         /// </summary>

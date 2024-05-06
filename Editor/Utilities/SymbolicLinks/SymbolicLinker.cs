@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Extensions;
 using RealityCollective.Utilities.Editor;
+using RealityCollective.Utilities.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,7 +38,19 @@ namespace RealityToolkit.Editor.Utilities.SymbolicLinks
 
         private static GUIStyle symbolicLinkMarkerStyle;
 
-        internal static string ProjectRoot => GitUtilities.RepositoryRootDir.ForwardSlashes();
+        private static string projectRootDir;
+        internal static string ProjectRoot
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(projectRootDir))
+                {
+                    projectRootDir = Directory.GetParent(EditorPreferences.ApplicationDataPath).FullName;
+                }
+
+                return projectRootDir.ForwardSlashes();
+            }
+        }
 
         /// <summary>
         /// Is the sync task running?
@@ -50,8 +62,8 @@ namespace RealityToolkit.Editor.Utilities.SymbolicLinks
         /// </summary>
         private static bool DebugEnabled
         {
-            get => ToolkitPreferences.DebugSymbolicInfo;
-            set => ToolkitPreferences.DebugSymbolicInfo = value;
+            get => DebugSymbolicInfo;
+            set => DebugSymbolicInfo = value;
         }
 
         /// <summary>
@@ -165,10 +177,6 @@ namespace RealityToolkit.Editor.Utilities.SymbolicLinks
 
                     continue;
                 }
-
-                // Make sure all of our Submodules are initialized and updated.
-                // if they didn't get updated then we probably have some pending changes so we will skip.
-                if (!GitUtilities.UpdateSubmodules()) { continue; }
 
                 if (Directory.Exists(link.SourceAbsolutePath))
                 {
@@ -521,5 +529,32 @@ namespace RealityToolkit.Editor.Utilities.SymbolicLinks
 
             return targetPath;
         }
+
+        #region Debug Symbolic Links
+
+        //private static readonly GUIContent DebugSymbolicContent = new GUIContent("Debug symbolic linking", "Enable or disable the debug information for symbolic linking.\n\nThis setting only applies to the currently running project.");
+        private const string SYMBOLIC_DEBUG_KEY = "EnablePackageDebug";
+        private static bool isSymbolicDebugPrefLoaded;
+        private static bool debugSymbolicInfo;
+
+        /// <summary>
+        /// Enabled debugging info for the symbolic linking.
+        /// </summary>
+        public static bool DebugSymbolicInfo
+        {
+            get
+            {
+                if (!isSymbolicDebugPrefLoaded)
+                {
+                    debugSymbolicInfo = EditorPreferences.Get(SYMBOLIC_DEBUG_KEY, Application.isBatchMode);
+                    isSymbolicDebugPrefLoaded = true;
+                }
+
+                return debugSymbolicInfo;
+            }
+            set => EditorPreferences.Set(SYMBOLIC_DEBUG_KEY, debugSymbolicInfo = value);
+        }
+
+        #endregion Debug Symbolic Links
     }
 }

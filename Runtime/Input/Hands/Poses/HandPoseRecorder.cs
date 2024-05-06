@@ -1,9 +1,9 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using Newtonsoft.Json;
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
+using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Hands.Visualizers;
 using System;
 using System.Collections.Generic;
