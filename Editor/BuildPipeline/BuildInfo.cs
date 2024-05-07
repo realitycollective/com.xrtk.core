@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.ServiceFramework.Attributes;
@@ -36,7 +36,7 @@ namespace RealityToolkit.Editor.BuildPipeline
         }
 
         [SerializeField]
-        [Tooltip("The bundle or application identifier\n(i.e. 'com.xrtk.core')")]
+        [Tooltip("The bundle or application identifier\n(i.e. 'com.realitytoolkit.core')")]
         private string bundleIdentifier;
 
         /// <inheritdoc />

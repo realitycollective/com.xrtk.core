@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Services;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Input.Interactors;
 using RealityToolkit.Input.Interfaces;
 using UnityEngine;
@@ -55,7 +54,7 @@ namespace RealityToolkit.Input.Interactables
             ServiceManager.Initialized -= OnServiceManagerInitialized;
             AssignWorldCanvasCamera();
         }
-        
+
         private void AssignWorldCanvasCamera()
         {
             if (ServiceManager.IsActiveAndInitialized &&

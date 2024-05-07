@@ -1,12 +1,12 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using JetBrains.Annotations;
-using RealityCollective.Editor.Extensions;
-using RealityCollective.Editor.Utilities;
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Attributes;
+using RealityCollective.Utilities.Editor;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Editor.BuildPipeline.Logging;
+using RealityToolkit.Editor.Settings;
 using RealityToolkit.Editor.Utilities.SymbolicLinks;
 using System;
 using System.Collections.Generic;
@@ -132,7 +132,7 @@ namespace RealityToolkit.Editor.BuildPipeline
                     return null;
                 }
 
-                var buildAsset = buildInfoInstance.GetOrCreateAsset($"{RealityToolkitPreferences.ProfileGenerationPath}{Path.DirectorySeparatorChar}BuildInfo{Path.DirectorySeparatorChar}");
+                var buildAsset = buildInfoInstance.GetOrCreateAsset($"{RealityToolkitEditorSettings.Instance.AssetImportPath}{Path.DirectorySeparatorChar}BuildInfo{Path.DirectorySeparatorChar}");
                 Debug.Assert(buildAsset.IsNotNull());
                 buildInfo = buildInfoInstance;
                 Debug.Assert(buildInfo != null);

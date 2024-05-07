@@ -1,11 +1,10 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Attributes;
 using RealityCollective.ServiceFramework.Definitions.Platforms;
 using RealityCollective.ServiceFramework.Services;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Devices;
 using RealityToolkit.EventDatum.Input;
 using RealityToolkit.Input.Controllers;
@@ -93,11 +92,7 @@ namespace RealityToolkit.Input
         /// <inheritdoc />
         public IGazeProvider GazeProvider { get; private set; }
 
-#if INPUT_SYSTEM_INSTALLED
         private Type InputModuleType => typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule);
-#else
-        private Type InputModuleType => typeof(UnityEngine.EventSystems.StandaloneInputModule);
-#endif
 
         private GazeProviderBehaviour gazeProviderBehaviour;
         private readonly Type gazeProviderType;
@@ -398,7 +393,7 @@ namespace RealityToolkit.Input
             }
         }
 
-#endregion IService Implementation
+        #endregion IService Implementation
 
         #region IEventSystemManager Implementation
 

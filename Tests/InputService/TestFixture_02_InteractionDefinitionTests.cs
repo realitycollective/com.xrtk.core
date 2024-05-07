@@ -2,9 +2,8 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using NUnit.Framework;
-using RealityCollective.Definitions.Utilities;
 using RealityToolkit.Definitions.Devices;
-using RealityToolkit.Definitions.Utilities;
+using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Processors;
 using System.Collections.Generic;
 using System.Diagnostics;

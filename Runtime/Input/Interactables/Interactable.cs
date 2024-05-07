@@ -1,8 +1,8 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Services;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.EventDatum.Input;
 using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.InteractionBehaviours;
@@ -20,6 +20,7 @@ namespace RealityToolkit.Input.Interactables
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Collider))]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(Interactable), -1)]
     public class Interactable : MonoBehaviour,
         IInteractable,
         IFocusHandler,
@@ -66,6 +67,9 @@ namespace RealityToolkit.Input.Interactables
         /// </summary>
         protected IInputService InputService
             => inputService ?? (inputService = ServiceManager.Instance.GetService<IInputService>());
+
+        /// <inheritdoc/>
+        public string Name => gameObject.name;
 
         /// <inheritdoc/>
         public string Label

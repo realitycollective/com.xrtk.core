@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.﻿
 
-using RealityCollective.Extensions;
 using RealityCollective.ServiceFramework.Editor.Profiles;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Input.Definitions;
 using System.Linq;
 using UnityEditor;

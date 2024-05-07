@@ -2,12 +2,12 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using NUnit.Framework;
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Controllers;
 using RealityToolkit.Definitions.Controllers.UnityInput.Profiles;
 using RealityToolkit.Editor.Utilities;
 using RealityToolkit.Input.Controllers.UnityInput;
+using RealityToolkit.Input.Definitions;
 using RealityToolkit.Utilities;
 using UnityEngine;
 

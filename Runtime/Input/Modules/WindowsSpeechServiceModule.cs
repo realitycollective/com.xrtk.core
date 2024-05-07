@@ -2,11 +2,12 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using System;
-using RealityCollective.Definitions.Utilities;
 using UnityEngine;
 using RealityToolkit.Input.Definitions;
 using RealityCollective.ServiceFramework.Services;
 using RealityToolkit.Input.Interfaces;
+using RealityCollective.ServiceFramework.Definitions.Utilities;
+
 
 #if UNITY_STANDALONE_WIN || UNITY_WSA || UNITY_EDITOR_WIN
 using UnityEngine.Windows.Speech;

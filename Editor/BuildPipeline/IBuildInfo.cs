@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.ServiceFramework.Interfaces;
@@ -24,7 +24,7 @@ namespace RealityToolkit.Editor.BuildPipeline
         bool AutoIncrement { get; set; }
 
         /// <summary>
-        /// The build Bundle Identifier (i.e. 'com.xrtk.core')
+        /// The build Bundle Identifier (i.e. 'com.realitytoolkit.core')
         /// </summary>
         string BundleIdentifier { get; set; }
 
@@ -114,7 +114,7 @@ namespace RealityToolkit.Editor.BuildPipeline
         /// -autoIncrement<para/>
         /// -versionName "0.1.0"<para/>
         /// -versionCode "1"<para/>
-        /// -bundleIdentifier "com.xrtk.core"<para/>
+        /// -bundleIdentifier "com.realitytoolkit.core"<para/>
         /// -sceneList (CSV format)<para/>
         /// -sceneListFile (CSV format)<para/>
         /// -buildOutputDirectory <para/>

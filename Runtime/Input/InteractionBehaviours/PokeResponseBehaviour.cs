@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
 using System;
@@ -14,6 +14,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// in response to being poked by a <see cref="IPokeInteractor"/>.
     /// </summary>
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/poke-response-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(PokeResponseBehaviour))]
     public class PokeResponseBehaviour : BaseInteractionBehaviour
     {
         [Serializable]

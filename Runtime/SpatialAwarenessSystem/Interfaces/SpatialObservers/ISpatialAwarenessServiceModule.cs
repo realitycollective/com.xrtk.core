@@ -1,8 +1,7 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.ServiceFramework.Interfaces;
+using RealityCollective.ServiceFramework.Definitions.Utilities;
 using RealityToolkit.Interfaces.Events;
 
 namespace RealityToolkit.SpatialAwareness.Interfaces.SpatialObservers
@@ -10,7 +9,7 @@ namespace RealityToolkit.SpatialAwareness.Interfaces.SpatialObservers
     /// <summary>
     /// The Mixed Reality Spatial Observer service module contract.
     /// </summary>
-    public interface ISpatialAwarenessServiceModule : IServiceModule, IEventSource
+    public interface ISpatialAwarenessServiceModule : IRealityToolkitServiceModule, IEventSource
     {
         /// <summary>
         /// The startup behavior of the hardware resource.

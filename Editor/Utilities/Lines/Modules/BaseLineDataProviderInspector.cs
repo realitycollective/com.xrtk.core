@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Editor.Extensions;
+using RealityCollective.ServiceFramework.Editor.Utilities;
 using RealityToolkit.Utilities.Lines.DataProviders;
 using RealityToolkit.Utilities.Lines.Renderers;
 using RealityToolkit.Utilities.Physics.Distorters;
@@ -14,13 +14,13 @@ namespace RealityToolkit.Editor.Utilities.Lines.DataProviders
     [CustomEditor(typeof(BaseLineDataProvider))]
     public class BaseLineDataProviderInspector : UnityEditor.Editor
     {
-        private const string DrawLinePointsKey = "XRTK_Line_Inspector_DrawLinePoints";
-        private const string DrawLineRotationsKey = "XRTK_Line_Inspector_DrawLineRotations";
-        private const string EditorSettingsFoldoutKey = "XRTK_Line_Inspector_EditorSettings";
-        private const string RotationArrowLengthKey = "XRTK_Line_Inspector_RotationArrowLength";
-        private const string ManualUpVectorLengthKey = "XRTK_Line_Inspector_ManualUpVectorLength";
-        private const string LinePreviewResolutionKey = "XRTK_Line_Inspector_LinePreviewResolution";
-        private const string DrawLineManualUpVectorsKey = "XRTK_Line_Inspector_DrawLineManualUpVectors";
+        private const string DrawLinePointsKey = "RealityToolkit_Line_Inspector_DrawLinePoints";
+        private const string DrawLineRotationsKey = "RealityToolkit_Line_Inspector_DrawLineRotations";
+        private const string EditorSettingsFoldoutKey = "RealityToolkit_Line_Inspector_EditorSettings";
+        private const string RotationArrowLengthKey = "RealityToolkit_Line_Inspector_RotationArrowLength";
+        private const string ManualUpVectorLengthKey = "RealityToolkit_Line_Inspector_ManualUpVectorLength";
+        private const string LinePreviewResolutionKey = "RealityToolkit_Line_Inspector_LinePreviewResolution";
+        private const string DrawLineManualUpVectorsKey = "RealityToolkit_Line_Inspector_DrawLineManualUpVectors";
 
         private const float ManualUpVectorHandleSizeModifier = 0.1f;
 

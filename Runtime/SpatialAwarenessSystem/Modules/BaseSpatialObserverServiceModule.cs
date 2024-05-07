@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
+using RealityCollective.ServiceFramework.Definitions.Utilities;
 using RealityCollective.ServiceFramework.Modules;
 using RealityCollective.ServiceFramework.Services;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.SpatialObservers;
 using RealityToolkit.SpatialAwareness.Definitions;
 using RealityToolkit.SpatialAwareness.Interfaces;

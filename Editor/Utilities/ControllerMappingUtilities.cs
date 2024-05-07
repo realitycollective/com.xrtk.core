@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
-using System.Collections.Generic;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Controllers;
 using RealityToolkit.Definitions.Devices;
-using RealityCollective.Definitions.Utilities;
+using RealityToolkit.Input.Definitions;
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using RealityCollective.Extensions;
 
 namespace RealityToolkit.Editor.Utilities
 {
@@ -69,7 +69,7 @@ namespace RealityToolkit.Editor.Utilities
         /// <param name="mappingProfile"></param>
         /// <returns>The texture for the controller profile, if none found then a generic texture is returned.</returns>
         /// <remarks>
-        /// The file name should be formatted as:<para/>XRTK/StandardAssets/Textures/{ControllerTypeName}_{handedness}_{theme}_{scaled}.png<para/>
+        /// The file name should be formatted as:<para/>RealityToolkit/StandardAssets/Textures/{ControllerTypeName}_{handedness}_{theme}_{scaled}.png<para/>
         /// scaled suffix is optional.<para/>
         /// </remarks>
         public static Texture2D GetControllerTexture(ControllerProfile mappingProfile) => GetControllerTextureCached(mappingProfile);
@@ -80,7 +80,7 @@ namespace RealityToolkit.Editor.Utilities
         /// <param name="mappingProfile"></param>
         /// <returns>The scaled texture for the controller profile, if none found then a generic texture is returned.</returns>
         /// <remarks>
-        /// The file name should be formatted as:<para/>XRTK/StandardAssets/Textures/{ControllerName}_{handedness}_{theme}_{scaled}.png<para/>
+        /// The file name should be formatted as:<para/>RealityToolkit/StandardAssets/Textures/{ControllerName}_{handedness}_{theme}_{scaled}.png<para/>
         /// </remarks>
         public static Texture2D GetControllerTextureScaled(ControllerProfile mappingProfile) => GetControllerTextureCached(mappingProfile, true);
 

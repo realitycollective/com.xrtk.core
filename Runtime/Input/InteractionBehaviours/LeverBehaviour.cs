@@ -1,6 +1,5 @@
-﻿using RealityCollective.Extensions;
+﻿using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Input.Events;
-using RealityToolkit.Input.InteractionBehaviours;
 using RealityToolkit.Input.Interactors;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,6 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// </summary>
     [ExecuteInEditMode]
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lever-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LeverBehaviour))]
     public class LeverBehaviour : BaseInteractionBehaviour
     {
         /// <summary>
@@ -48,6 +48,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [Header("Setup")]
         [SerializeField, Tooltip("The axes to translate upon interaction.")]
         private SnapAxis axes = SnapAxis.Z;
+
+        [SerializeField, Tooltip("Should the interactor position or rotation be tracked to determine lever movement?")]
+        private InteractorTrackingMode trackingMode = InteractorTrackingMode.Position;
 
         [SerializeField, Tooltip("A translating is moved upon interaction. A rotating lever stays in place but rotates.")]
         private LeverType leverType = LeverType.Translate;
@@ -86,7 +89,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private Transform pivot = null;
         private IControllerInteractor currentInteractor;
-        private Vector3 previousInteractorPosition;
+        private Vector3 previousInteractorPose;
         private Vector3 ranges;
         private bool isSnapping;
         private Vector3 snapTargetValue;
@@ -174,8 +177,34 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            var currentInteractorPosition = GetInteractorPosition();
-            Vector3 leverPose = Vector3.zero;
+            Vector3 currentInteractorPose;
+            Vector3 leverPose;
+
+            if (trackingMode == InteractorTrackingMode.Position)
+            {
+                currentInteractorPose = GetInteractorPosition();
+                leverPose = GetLeverPoseFromTrackedPosition(currentInteractorPose);
+            }
+            else
+            {
+                currentInteractorPose = GetInteractorRotation();
+                leverPose = GetLeverPoseFromTrackedRotation(currentInteractorPose);
+            }
+
+            UpdateLeverPose(leverPose);
+            UpdateValue();
+
+            previousInteractorPose = currentInteractorPose;
+        }
+
+        /// <summary>
+        /// See <see cref="MonoBehaviour"/>.
+        /// </summary>
+        protected override void OnValidate() => OnEnable();
+
+        private Vector3 GetLeverPoseFromTrackedPosition(Vector3 currentInteractorPose)
+        {
+            Vector3 leverPose;
 
             if (leverType == LeverType.Translate)
             {
@@ -183,54 +212,96 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
                 if (TransformX)
                 {
-                    interactorPositionDelta.x += currentInteractorPosition.x - previousInteractorPosition.x;
+                    interactorPositionDelta.x += currentInteractorPose.x - previousInteractorPose.x;
                 }
 
                 if (TransformY)
                 {
-                    interactorPositionDelta.y += currentInteractorPosition.y - previousInteractorPosition.y;
+                    interactorPositionDelta.y += currentInteractorPose.y - previousInteractorPose.y;
                 }
 
                 if (TransformZ)
                 {
-                    interactorPositionDelta.z += currentInteractorPosition.z - previousInteractorPosition.z;
+                    interactorPositionDelta.z += currentInteractorPose.z - previousInteractorPose.z;
                 }
 
                 leverPose = transform.localPosition + interactorPositionDelta;
             }
             else
             {
-                var direction = currentInteractorPosition;
+                var direction = currentInteractorPose;
                 var interactorRotationDelta = Vector3.zero;
 
                 if (TransformX)
                 {
-                    interactorRotationDelta.x = Vector3.SignedAngle(previousInteractorPosition, direction, pivot.right);
+                    interactorRotationDelta.x = Vector3.SignedAngle(previousInteractorPose, direction, pivot.right);
                 }
 
                 if (TransformY)
                 {
-                    interactorRotationDelta.y = Vector3.SignedAngle(previousInteractorPosition, direction, pivot.up);
+                    interactorRotationDelta.y = Vector3.SignedAngle(previousInteractorPose, direction, pivot.up);
                 }
 
                 if (TransformZ)
                 {
-                    interactorRotationDelta.z = Vector3.SignedAngle(previousInteractorPosition, direction, pivot.forward);
+                    interactorRotationDelta.z = Vector3.SignedAngle(previousInteractorPose, direction, pivot.forward);
                 }
 
                 leverPose = (Quaternion.Euler(interactorRotationDelta) * transform.localRotation).eulerAngles;
             }
 
-            UpdateLeverPose(leverPose);
-            UpdateValue();
-
-            previousInteractorPosition = currentInteractorPosition;
+            return leverPose;
         }
 
-        /// <summary>
-        /// See <see cref="MonoBehaviour"/>.
-        /// </summary>
-        protected override void OnValidate() => OnEnable();
+        private Vector3 GetLeverPoseFromTrackedRotation(Vector3 currentInteractorPose)
+        {
+            Vector3 leverPose;
+
+            if (leverType == LeverType.Translate)
+            {
+                var interactorPositionDelta = Vector3.zero;
+
+                if (TransformX)
+                {
+                    interactorPositionDelta.x += currentInteractorPose.x - previousInteractorPose.x;
+                }
+
+                if (TransformY)
+                {
+                    interactorPositionDelta.y += currentInteractorPose.y - previousInteractorPose.y;
+                }
+
+                if (TransformZ)
+                {
+                    interactorPositionDelta.z += currentInteractorPose.z - previousInteractorPose.z;
+                }
+
+                leverPose = transform.localPosition + interactorPositionDelta;
+            }
+            else
+            {
+                var interactorRotationDelta = Vector3.zero;
+
+                if (TransformX)
+                {
+                    interactorRotationDelta.x = currentInteractorPose.x;
+                }
+
+                if (TransformY)
+                {
+                    interactorRotationDelta.y = currentInteractorPose.y;
+                }
+
+                if (TransformZ)
+                {
+                    interactorRotationDelta.z = currentInteractorPose.z;
+                }
+
+                leverPose = interactorRotationDelta;
+            }
+
+            return leverPose;
+        }
 
         /// <summary>
         /// Sets the lever's <see cref="Value"/> without raising the <see cref="ValueChanged"/> event.
@@ -256,7 +327,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
             isSnapping = false;
             currentInteractor = controllerInteractor;
-            previousInteractorPosition = GetInteractorPosition();
+            previousInteractorPose = trackingMode == InteractorTrackingMode.Position ? GetInteractorPosition() : GetInteractorRotation();
         }
 
         /// <inheritdoc/>
@@ -304,9 +375,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
             if (valueMapping == ValueMapping.Value0To1)
             {
                 leverPose = new Vector3(
-                    minimumValues.x + Value.x * ranges.x,
-                    minimumValues.y + Value.y * ranges.y,
-                    minimumValues.z + Value.z * ranges.z);
+                    minimumValues.x + (minimumValues.x > maximumValues.x ? -1f : 1f) * Value.x * ranges.x,
+                    minimumValues.y + (minimumValues.y > maximumValues.y ? -1f : 1f) * Value.y * ranges.y,
+                    minimumValues.z + (minimumValues.z > maximumValues.z ? -1f : 1f) * Value.z * ranges.z);
             }
             else
             {
@@ -393,6 +464,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
         #region Utilities
 
         private Vector3 GetInteractorPosition() => pivot.InverseTransformPoint(currentInteractor.GameObject.transform.position);
+
+        private Vector3 GetInteractorRotation() => (Quaternion.Inverse(pivot.rotation) * currentInteractor.GameObject.transform.rotation).eulerAngles;
 
         private bool IsAtMinimum()
         {
@@ -490,6 +563,13 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private float ClampAngle(float angle, float from, float to)
         {
+            if (from > to)
+            {
+                var temp = to;
+                to = from;
+                from = temp;
+            }
+
             if (angle < 0f)
             {
                 angle = 360 + angle;

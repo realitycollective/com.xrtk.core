@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.﻿
 
-using RealityCollective.Definitions.Utilities;
-using RealityCollective.Extensions;
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Controllers;
 using RealityToolkit.Editor.Data;
 using RealityToolkit.Editor.PropertyDrawers;
 using RealityToolkit.Editor.Utilities;
 using RealityToolkit.Input.Controllers.UnityInput;
+using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Hands;
 using System;
 using System.Collections.Generic;
