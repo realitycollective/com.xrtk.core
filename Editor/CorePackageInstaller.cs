@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using RealityCollective.Utilities.Editor;
+using RealityToolkit.Editor.Settings;
 
 
 #if UNITY_EDITOR && !UNITY_2021_1_OR_NEWER
@@ -30,7 +31,7 @@ namespace RealityToolkit.Editor
     internal static class CorePackageInstaller
     {
         private const string CORE_PATH_FINDER = "/Editor/Utilities/CorePathFinder.cs";
-        private static readonly string defaultPath = $"{RealityToolkitPreferences.ProfileGenerationPath}Core";
+        private static readonly string defaultPath = Path.Combine(RealityToolkitEditorSettings.Instance.AssetImportPath, "Core");
         private static readonly string hiddenPath = Path.GetFullPath($"{PathFinderUtility.ResolvePath<IPathFinder>(typeof(CorePathFinder))}{Path.DirectorySeparatorChar}{RealityToolkitPreferences.HIDDEN_PACKAGE_ASSETS_PATH}");
         const string configureMenuItemPath = RealityToolkitPreferences.Editor_Menu_Keyword + "/Configure...";
 
@@ -106,7 +107,7 @@ namespace RealityToolkit.Editor
                 if (availableRootProfiles == null || availableRootProfiles.Length == 0)
                 {
                     var newProfile = ScriptableObject.CreateInstance<ServiceProvidersProfile>().GetOrCreateAsset(
-                        RealityToolkitPreferences.DEFAULT_GENERATION_PATH,
+                        RealityToolkitEditorSettings.Instance.AssetImportPath,
                         $"RealityToolkit{nameof(ServiceProvidersProfile)}", false);
                     serviceManagerInstance.Manager.ResetProfile(newProfile);
                 }

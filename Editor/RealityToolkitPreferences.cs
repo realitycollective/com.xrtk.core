@@ -10,7 +10,6 @@ using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Editor.Utilities.SymbolicLinks;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -83,49 +82,6 @@ namespace RealityToolkit.Editor
         /// The hidden assets path for each package.
         /// </summary>
         public const string HIDDEN_PACKAGE_ASSETS_PATH = "Assets~";
-
-        private static readonly GUIContent GeneratedProfilePathContent = new GUIContent("New Generated Profiles Default Path:", "When generating new profiles, their files are saved in this location.");
-        private const string PROFILE_GENERATION_PATH_KEY = "_RealityToolkit_Editor_Profile_Generation_Path";
-        public const string DEFAULT_GENERATION_PATH = "Assets/RealityToolkit.Generated/";
-        private static string profileGenerationPath;
-        private static bool isProfilePathPrefLoaded;
-
-        /// <summary>
-        /// The path where all profile files are created by default.
-        /// </summary>
-        public static string ProfileGenerationPath
-        {
-            get
-            {
-                if (!isProfilePathPrefLoaded ||
-                    string.IsNullOrWhiteSpace(profileGenerationPath))
-                {
-                    profileGenerationPath = EditorPreferences.Get(PROFILE_GENERATION_PATH_KEY, DEFAULT_GENERATION_PATH);
-                    isProfilePathPrefLoaded = true;
-                }
-
-                return profileGenerationPath;
-            }
-            set
-            {
-                var newPath = value;
-                var root = Path.GetFullPath(Application.dataPath).ForwardSlashes();
-
-                if (!newPath.Contains(root))
-                {
-                    Debug.LogWarning("Path must be in the Assets folder");
-                    newPath = DEFAULT_GENERATION_PATH;
-                }
-
-                newPath = newPath.Replace(root, "Assets");
-                if (!newPath.EndsWith("/"))
-                {
-                    newPath += "/";
-                }
-
-                EditorPreferences.Set(PROFILE_GENERATION_PATH_KEY, profileGenerationPath = newPath);
-            }
-        }
 
         #endregion Custom Profile Generation Path
 
@@ -354,18 +310,6 @@ namespace RealityToolkit.Editor
             }
 
             #endregion Show Canvas Prompt Preference
-
-            #region Generated Profile path Preference
-
-            EditorGUILayout.LabelField(GeneratedProfilePathContent);
-            EditorGUILayout.LabelField(ProfileGenerationPath);
-
-            if (GUILayout.Button("Choose a new default path"))
-            {
-                ProfileGenerationPath = EditorUtility.OpenFolderPanel("Default Profile Generation Location", profileGenerationPath, string.Empty);
-            }
-
-            #endregion Generated Profile path Preference
 
             #region Script Reloading Preference
 
