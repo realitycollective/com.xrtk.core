@@ -38,7 +38,7 @@ namespace RealityToolkit.Editor
 
             inspector.Add(frameField);
             inspector.Add(serializedPoseField);
-            inspector.Add(UIElementsUtilities.Space());
+            inspector.Add(UIElementsUtilities.VerticalSpace());
             inspector.Add(new Button(Preview) { text = "Preview" });
 
             return inspector;

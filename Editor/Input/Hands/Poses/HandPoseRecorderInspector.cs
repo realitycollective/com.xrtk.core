@@ -33,7 +33,7 @@ namespace RealityToolkit.Editor.Input.Hands.Poses
             };
 
             inspector.Add(serializedPoseField);
-            inspector.Add(UIElementsUtilities.Space());
+            inspector.Add(UIElementsUtilities.VerticalSpace());
             inspector.Add(new Button(Convert) { text = "Convert" });
             inspector.Add(new Button(Record) { text = "Record" });
 

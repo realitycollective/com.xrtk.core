@@ -39,7 +39,7 @@ namespace RealityToolkit.Editor.Input.Hands.Poses
             posesListView.style.flexGrow = 1;
 
             inspector.Add(posesListView);
-            inspector.Add(UIElementsUtilities.Space());
+            inspector.Add(UIElementsUtilities.VerticalSpace());
             inspector.Add(new Button(Mirror) { text = "Create Mirror Pose" });
 
             return inspector;

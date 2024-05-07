@@ -4,6 +4,7 @@
 using RealityCollective.Utilities.Extensions;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -28,8 +29,13 @@ namespace RealityToolkit.Editor.Settings
         {
             base.OnActivate(searchContext, rootElement);
 
-            realityToolkitSettingsEditor = UnityEditor.Editor.CreateEditor(RealityToolkitEditorSettings.Instance);
-            rootElement.Add(realityToolkitSettingsEditor.CreateInspectorGUI());
+            var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(RealityToolkitEditorSettingsEditor.UxmlPath);
+            var visualElement = visualTreeAsset.Instantiate();
+
+            rootElement.Add(visualElement);
+
+            var settings = new SerializedObject(AssetDatabase.LoadAssetAtPath<Object>(RealityToolkitEditorSettings.AssetPath));
+            rootElement.Bind(settings);
         }
 
         /// <inheritdoc />
