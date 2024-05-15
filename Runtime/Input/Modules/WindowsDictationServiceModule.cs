@@ -51,7 +51,7 @@ namespace RealityToolkit.Input.Modules
         #region IService Implementation
 
         /// <inheritdoc />
-        public override void Enable()
+        public override void Start()
         {
             if (!Application.isPlaying || dictationRecognizer == null) { return; }
 
@@ -85,9 +85,9 @@ namespace RealityToolkit.Input.Modules
         }
 
         /// <inheritdoc />
-        public override async void Disable()
+        public override async void Destroy()
         {
-            base.Disable();
+            base.Destroy();
 
             if (!Application.isPlaying || dictationRecognizer == null) { return; }
 

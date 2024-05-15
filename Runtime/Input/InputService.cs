@@ -357,22 +357,6 @@ namespace RealityToolkit.Input
         }
 
         /// <inheritdoc />
-        public override void Enable()
-        {
-            base.Enable();
-
-            InputEnabled?.Invoke();
-        }
-
-        /// <inheritdoc />
-        public override void Disable()
-        {
-            base.Disable();
-
-            InputDisabled?.Invoke();
-        }
-
-        /// <inheritdoc />
         protected override void OnDispose(bool finalizing)
         {
             base.OnDispose(finalizing);

@@ -84,9 +84,9 @@ namespace RealityToolkit.Input.Modules
         #region IService Implementation
 
         /// <inheritdoc />
-        public override void Enable()
+        public override void Start()
         {
-            base.Enable();
+            base.Start();
 
             if (!Application.isPlaying || commands.Length == 0 || keywordRecognizer == null) { return; }
 
@@ -117,9 +117,9 @@ namespace RealityToolkit.Input.Modules
         }
 
         /// <inheritdoc />
-        public override void Disable()
+        public override void Destroy()
         {
-            base.Disable();
+            base.Destroy();
 
             if (!Application.isPlaying || commands.Length == 0 || keywordRecognizer == null) { return; }
 

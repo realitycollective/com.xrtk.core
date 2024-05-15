@@ -9,8 +9,6 @@ using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Interactors;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.Input.Interfaces.Handlers;
-using RealityToolkit.SpatialAwareness.Definitions;
-using RealityToolkit.SpatialAwareness.Interfaces;
 using RealityToolkit.Utilities;
 using RealityToolkit.Utilities.Physics;
 using RealityToolkit.Utilities.UX;
@@ -146,19 +144,6 @@ namespace RealityToolkit.Input.Handlers
                     manipulationTarget = value;
                 }
             }
-        }
-
-        [SerializeField]
-        [Tooltip("The spatial mesh visibility while manipulating an object.")]
-        private SpatialMeshDisplayOptions spatialMeshVisibility = SpatialMeshDisplayOptions.Visible;
-
-        /// <summary>
-        /// The spatial mesh visibility while manipulating an object.
-        /// </summary>
-        public SpatialMeshDisplayOptions SpatialMeshVisibility
-        {
-            get => spatialMeshVisibility;
-            set => spatialMeshVisibility = value;
         }
 
         [SerializeField]
@@ -546,8 +531,6 @@ namespace RealityToolkit.Input.Handlers
 
         private IInputSource primaryInputSource;
 
-        private SpatialMeshDisplayOptions prevSpatialMeshDisplay;
-
         private float updatedAngle;
         private float updatedExtent;
         private float prevPointerExtent;
@@ -871,12 +854,6 @@ namespace RealityToolkit.Input.Handlers
 
             InputService?.PushModalInputHandler(gameObject);
 
-            if (ServiceManager.Instance.TryGetService<ISpatialAwarenessService>(out var spatialAwarenessSystem))
-            {
-                prevSpatialMeshDisplay = spatialAwarenessSystem.SpatialMeshVisibility;
-                spatialAwarenessSystem.SpatialMeshVisibility = spatialMeshVisibility;
-            }
-
             prevPosition = manipulationTarget.position;
 
             if (prevPosition == Vector3.zero)
@@ -924,11 +901,6 @@ namespace RealityToolkit.Input.Handlers
         public virtual void EndHold(bool isCanceled = false)
         {
             if (!IsBeingHeld) { return; }
-
-            if (ServiceManager.Instance.TryGetService<ISpatialAwarenessService>(out var spatialAwarenessSystem))
-            {
-                spatialAwarenessSystem.SpatialMeshVisibility = prevSpatialMeshDisplay;
-            }
 
             if (prevPosition != Vector3.zero)
             {
