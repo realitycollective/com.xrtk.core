@@ -48,9 +48,9 @@ namespace RealityToolkit.SpatialAwareness.Modules
         #region IService Implementation
 
         /// <inheritdoc />
-        public override void Enable()
+        public override void Start()
         {
-            base.Enable();
+            base.Start();
 
             SpatialAwarenessSystem.RaiseSpatialAwarenessObserverDetected(this);
 
@@ -61,9 +61,9 @@ namespace RealityToolkit.SpatialAwareness.Modules
         }
 
         /// <inheritdoc />
-        public override void Disable()
+        public override void Destroy()
         {
-            base.Disable();
+            base.Destroy();
 
             StopObserving();
 

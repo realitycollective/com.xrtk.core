@@ -96,9 +96,9 @@ namespace RealityToolkit.SpatialAwareness.Modules
         }
 
         /// <inheritdoc />
-        public override void Enable()
+        public override void Start()
         {
-            base.Enable();
+            base.Start();
 
             if (!Application.isPlaying) { return; }
 
@@ -123,21 +123,6 @@ namespace RealityToolkit.SpatialAwareness.Modules
                 {
                     spatialMeshObjectPool.Push(new SpatialMeshObject(Guid.Empty, CreateBlankSpatialMeshGameObject()));
                 }
-            }
-        }
-
-        /// <inheritdoc />
-        public override void Disable()
-        {
-            base.Disable();
-
-            if (!Application.isPlaying) { return; }
-
-            // Disable any spatial meshes we might have.
-            foreach (var meshObject in spatialMeshObjects.Values)
-            {
-                Debug.Assert(meshObject.GameObject != null);
-                meshObject.GameObject.SetActive(false);
             }
         }
 

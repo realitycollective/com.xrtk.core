@@ -29,7 +29,7 @@ namespace RealityToolkit.Input.Controllers.UnityInput
         public MouseController Controller { get; private set; }
 
         /// <inheritdoc />
-        public override void Enable()
+        public override void Start()
         {
             if (MouseController.IsInGameWindow && Controller == null)
             {
@@ -56,7 +56,7 @@ namespace RealityToolkit.Input.Controllers.UnityInput
         }
 
         /// <inheritdoc />
-        public override void Disable()
+        public override void Destroy()
         {
             if (Controller != null)
             {

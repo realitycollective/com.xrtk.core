@@ -50,9 +50,9 @@ namespace RealityToolkit.Input.Controllers.UnityInput
         }
 
         /// <inheritdoc />
-        public override void Disable()
+        public override void Destroy()
         {
-            base.Disable();
+            base.Destroy();
 
             foreach (var controller in ActiveGenericControllers)
             {
