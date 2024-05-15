@@ -2,11 +2,8 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information. 
 
 using RealityCollective.ServiceFramework.Services;
-using RealityCollective.Utilities.Editor;
 using RealityToolkit.Editor.Utilities;
 using RealityToolkit.Input.Interfaces;
-using RealityToolkit.SpatialAwareness.Definitions;
-using RealityToolkit.SpatialAwareness.Interfaces;
 using UnityEditor;
 using UnityEngine;
 
@@ -33,17 +30,6 @@ namespace RealityToolkit.Editor
                          InputMappingAxisUtility.RemoveMappings(ControllerMappingUtilities.UnityInputManagerAxes))
                 {
                     Debug.Log($"{nameof(IInputService)} was disabled, removed input axis mappings.");
-                }
-
-                if (ServiceManager.Instance.TryGetService<ISpatialAwarenessService>(out _) &&
-                    LayerUtilities.CheckLayers(SpatialAwarenessSystemProfile.SpatialAwarenessLayers))
-                {
-                    Debug.Log($"{nameof(ISpatialAwarenessService)} was enabled, spatial mapping layers added to project.");
-                }
-                else if (!ServiceManager.Instance.TryGetService<ISpatialAwarenessService>(out _) &&
-                         LayerUtilities.RemoveLayers(SpatialAwarenessSystemProfile.SpatialAwarenessLayers))
-                {
-                    Debug.Log($"{nameof(ISpatialAwarenessService)} was disabled, spatial mapping layers removed to project.");
                 }
             }
         }
