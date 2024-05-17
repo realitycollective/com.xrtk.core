@@ -606,7 +606,12 @@ namespace RealityToolkit.Input.Modules
             uiRaycastCamera.allowMSAA = false;
             uiRaycastCamera.allowDynamicResolution = false;
             uiRaycastCamera.targetDisplay = 0;
-            uiRaycastCamera.stereoTargetEye = StereoTargetEyeMask.Both;
+
+            if (RenderPipelineUtilities.GetActiveRenderingPipeline() == RealityToolkit.Definitions.Utilities.UnityRenderPipeline.Legacy)
+            {
+                uiRaycastCamera.stereoTargetEye = StereoTargetEyeMask.Both;
+            }
+
             uiRaycastCamera.cullingMask = Camera.main.cullingMask;
 
             if (uiRaycastCameraTargetTexture == null)
