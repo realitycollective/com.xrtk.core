@@ -18,7 +18,7 @@ namespace RealityToolkit.Editor.Settings
         /// </summary>
         public const string AssetPath = "Assets/RealityToolkit/Settings";
 
-        private const string defaultAssetImportPath = "Assets/RealityToolkit.Generated/";
+        private const string defaultAssetImportPath = "Assets/RealityToolkit/";
         [SerializeField, Tooltip("This is the path default toolkit assets will be imported to, to make them mutable.")]
         private string assetImportPath = defaultAssetImportPath;
 
@@ -28,7 +28,7 @@ namespace RealityToolkit.Editor.Settings
         public string AssetImportPath
         {
             get => assetImportPath;
-            set => assetImportPath = value;
+            private set => assetImportPath = value;
         }
     }
 }
