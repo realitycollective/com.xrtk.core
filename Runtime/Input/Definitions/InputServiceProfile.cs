@@ -111,19 +111,6 @@ namespace RealityToolkit.Input.Definitions
             set => inputActionsProfile = value;
         }
 
-        [SerializeField]
-        [Tooltip("Gesture Mapping Profile for recognizing gestures across all platforms.")]
-        private GesturesProfile gesturesProfile;
-
-        /// <summary>
-        /// Gesture Mapping Profile for recognizing gestures across all platforms.
-        /// </summary>
-        public GesturesProfile GesturesProfile
-        {
-            get => gesturesProfile;
-            set => gesturesProfile = value;
-        }
-
         #endregion Profile Options
     }
 }

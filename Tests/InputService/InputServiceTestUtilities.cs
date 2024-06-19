@@ -23,7 +23,6 @@ namespace RealityToolkit.Tests.Input
             inputServiceProfile.GazeProviderBehaviour = GazeProviderBehaviour.Auto;
             inputServiceProfile.GazeProviderType = typeof(GazeProvider);
             inputServiceProfile.InputActionsProfile = ScriptableObject.CreateInstance<InputActionsProfile>();
-            inputServiceProfile.GesturesProfile = ScriptableObject.CreateInstance<GesturesProfile>();
             inputServiceProfile.AddConfiguration(new ServiceConfiguration<IFocusProvider>(typeof(FocusProvider), nameof(FocusProvider), 0, AllPlatforms.Platforms, null));
 
             return inputServiceProfile;
