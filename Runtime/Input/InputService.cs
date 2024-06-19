@@ -124,9 +124,6 @@ namespace RealityToolkit.Input
         private InputEventData<Quaternion> rotationInputEventData;
         private InputEventData<Pose> poseInputEventData;
 
-        private SpeechEventData speechEventData;
-        private DictationEventData dictationEventData;
-
         /// <inheritdoc/>
         public bool TryGetInputSource(uint sourceId, out IInputSource inputSource)
         {
@@ -297,9 +294,6 @@ namespace RealityToolkit.Input
                 positionInputEventData = new InputEventData<Vector3>(eventSystem);
                 rotationInputEventData = new InputEventData<Quaternion>(eventSystem);
                 poseInputEventData = new InputEventData<Pose>(eventSystem);
-
-                speechEventData = new SpeechEventData(eventSystem);
-                dictationEventData = new DictationEventData(eventSystem);
 
                 UpdateGazeProvider();
             }
@@ -1322,74 +1316,6 @@ namespace RealityToolkit.Input
         }
 
         #endregion Gesture Events
-
-        #region Speech Keyword Events
-
-        /// <inheritdoc />
-        public void RaiseSpeechCommandRecognized(IInputSource source, InputAction inputAction, RecognitionConfidenceLevel confidence, TimeSpan phraseDuration, DateTime phraseStartTime, string text)
-        {
-            Debug.Assert(detectedInputSources.Contains(source));
-
-            // Create input event
-            speechEventData.Initialize(source, inputAction, confidence, phraseDuration, phraseStartTime, text);
-
-            // Pass handler through HandleEvent to perform modal/fallback logic
-            HandleEvent(speechEventData, InputServiceEventHandlers.OnSpeechKeywordRecognizedEventHandler);
-        }
-
-        #endregion Speech Keyword Events
-
-        #region Dictation Events
-
-        /// <inheritdoc />
-        public void RaiseDictationHypothesis(IInputSource source, string dictationHypothesis, AudioClip dictationAudioClip = null)
-        {
-            Debug.Assert(detectedInputSources.Contains(source));
-
-            // Create input event
-            dictationEventData.Initialize(source, dictationHypothesis, dictationAudioClip);
-
-            // Pass handler through HandleEvent to perform modal/fallback logic
-            HandleEvent(dictationEventData, InputServiceEventHandlers.OnDictationHypothesisEventHandler);
-        }
-
-        /// <inheritdoc />
-        public void RaiseDictationResult(IInputSource source, string dictationResult, AudioClip dictationAudioClip = null)
-        {
-            Debug.Assert(detectedInputSources.Contains(source));
-
-            // Create input event
-            dictationEventData.Initialize(source, dictationResult, dictationAudioClip);
-
-            // Pass handler through HandleEvent to perform modal/fallback logic
-            HandleEvent(dictationEventData, InputServiceEventHandlers.OnDictationResultEventHandler);
-        }
-
-        /// <inheritdoc />
-        public void RaiseDictationComplete(IInputSource source, string dictationResult, AudioClip dictationAudioClip)
-        {
-            Debug.Assert(detectedInputSources.Contains(source));
-
-            // Create input event
-            dictationEventData.Initialize(source, dictationResult, dictationAudioClip);
-
-            // Pass handler through HandleEvent to perform modal/fallback logic
-            HandleEvent(dictationEventData, InputServiceEventHandlers.OnDictationCompleteEventHandler);
-        }
-
-        /// <inheritdoc />
-        public void RaiseDictationError(IInputSource source, string dictationResult, AudioClip dictationAudioClip = null)
-        {
-            Debug.Assert(detectedInputSources.Contains(source));
-
-            // Create input event
-            dictationEventData.Initialize(source, dictationResult, dictationAudioClip);
-
-            // Pass handler through HandleEvent to perform modal/fallback logic
-            HandleEvent(dictationEventData, InputServiceEventHandlers.OnDictationErrorEventHandler);
-        }
-
-        #endregion Dictation Events
 
         #endregion Input Events
     }

@@ -40,15 +40,6 @@ namespace RealityToolkit.Input.Hands.Poses
         public bool IsDefault => isDefault;
 
         [SerializeField]
-        [Tooltip("Key used to trigger the gesture simulation.")]
-        private KeyCode keyCode = KeyCode.None;
-
-        /// <summary>
-        /// Gets the key code used to trigger this gesture simulation.
-        /// </summary>
-        public KeyCode KeyCode => keyCode;
-
-        [SerializeField]
         [Tooltip("Assign JSON definition file containing simulated gesture information.")]
         private TextAsset data = null;
 

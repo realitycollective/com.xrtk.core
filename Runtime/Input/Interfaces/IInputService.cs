@@ -667,57 +667,6 @@ namespace RealityToolkit.Input.Interfaces
 
         #endregion
 
-        #region Speech Keyword Events
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="inputAction"></param>
-        /// <param name="confidence"></param>
-        /// <param name="phraseDuration"></param>
-        /// <param name="phraseStartTime"></param>
-        /// <param name="text"></param>
-        void RaiseSpeechCommandRecognized(IInputSource source, InputAction inputAction, RecognitionConfidenceLevel confidence, TimeSpan phraseDuration, DateTime phraseStartTime, string text);
-
-        #endregion Speech Keyword Events
-
-        #region Dictation Events
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="dictationHypothesis"></param>
-        /// <param name="dictationAudioClip"></param>
-        void RaiseDictationHypothesis(IInputSource source, string dictationHypothesis, AudioClip dictationAudioClip = null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="dictationResult"></param>
-        /// <param name="dictationAudioClip"></param>
-        void RaiseDictationResult(IInputSource source, string dictationResult, AudioClip dictationAudioClip = null);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="dictationResult"></param>
-        /// <param name="dictationAudioClip"></param>
-        void RaiseDictationComplete(IInputSource source, string dictationResult, AudioClip dictationAudioClip);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="dictationResult"></param>
-        /// <param name="dictationAudioClip"></param>
-        void RaiseDictationError(IInputSource source, string dictationResult, AudioClip dictationAudioClip = null);
-
-        #endregion Dictation Events
-
         #endregion Input Events
     }
 }

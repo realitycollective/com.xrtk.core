@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityCollective.ServiceFramework.Definitions;
@@ -24,7 +24,6 @@ namespace RealityToolkit.Tests.Input
             inputServiceProfile.GazeProviderType = typeof(GazeProvider);
             inputServiceProfile.InputActionsProfile = ScriptableObject.CreateInstance<InputActionsProfile>();
             inputServiceProfile.GesturesProfile = ScriptableObject.CreateInstance<GesturesProfile>();
-            inputServiceProfile.SpeechCommandsProfile = ScriptableObject.CreateInstance<SpeechCommandsProfile>();
             inputServiceProfile.AddConfiguration(new ServiceConfiguration<IFocusProvider>(typeof(FocusProvider), nameof(FocusProvider), 0, AllPlatforms.Platforms, null));
 
             return inputServiceProfile;

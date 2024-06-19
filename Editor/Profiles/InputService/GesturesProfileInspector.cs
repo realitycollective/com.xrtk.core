@@ -113,12 +113,12 @@ namespace RealityToolkit.Editor.Profiles.Input
             if (GUILayout.Button(AddButtonContent, EditorStyles.miniButton))
             {
                 list.arraySize += 1;
-                var speechCommand = list.GetArrayElementAtIndex(list.arraySize - 1);
-                var keyword = speechCommand.FindPropertyRelative("description");
+                var gesture = list.GetArrayElementAtIndex(list.arraySize - 1);
+                var keyword = gesture.FindPropertyRelative("description");
                 keyword.stringValue = string.Empty;
-                var gestureType = speechCommand.FindPropertyRelative("gestureType");
+                var gestureType = gesture.FindPropertyRelative("gestureType");
                 gestureType.intValue = (int)GestureInputType.None;
-                var action = speechCommand.FindPropertyRelative("action");
+                var action = gesture.FindPropertyRelative("action");
                 var actionId = action.FindPropertyRelative("id");
                 actionId.intValue = 0;
                 var profileGuidProperty = action.FindPropertyRelative("profileGuid");

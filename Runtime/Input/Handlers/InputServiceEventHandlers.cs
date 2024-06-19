@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Definitions.Devices;
@@ -302,43 +302,5 @@ namespace RealityToolkit.Input.Handlers
                 handler.OnGestureCanceled(casted);
             };
         #endregion Gesture Events
-
-        #region Speech Keyword Events
-
-        internal static readonly ExecuteEvents.EventFunction<ISpeechHandler> OnSpeechKeywordRecognizedEventHandler =
-            delegate (ISpeechHandler handler, BaseEventData eventData)
-            {
-                var casted = ExecuteEvents.ValidateEventData<SpeechEventData>(eventData);
-                handler.OnSpeechKeywordRecognized(casted);
-            };
-
-        internal static readonly ExecuteEvents.EventFunction<IDictationHandler> OnDictationHypothesisEventHandler =
-            delegate (IDictationHandler handler, BaseEventData eventData)
-            {
-                var casted = ExecuteEvents.ValidateEventData<DictationEventData>(eventData);
-                handler.OnDictationHypothesis(casted);
-            };
-
-        internal static readonly ExecuteEvents.EventFunction<IDictationHandler> OnDictationResultEventHandler =
-            delegate (IDictationHandler handler, BaseEventData eventData)
-            {
-                var casted = ExecuteEvents.ValidateEventData<DictationEventData>(eventData);
-                handler.OnDictationResult(casted);
-            };
-
-        internal static readonly ExecuteEvents.EventFunction<IDictationHandler> OnDictationCompleteEventHandler =
-            delegate (IDictationHandler handler, BaseEventData eventData)
-            {
-                var casted = ExecuteEvents.ValidateEventData<DictationEventData>(eventData);
-                handler.OnDictationComplete(casted);
-            };
-
-        internal static readonly ExecuteEvents.EventFunction<IDictationHandler> OnDictationErrorEventHandler =
-            delegate (IDictationHandler handler, BaseEventData eventData)
-            {
-                var casted = ExecuteEvents.ValidateEventData<DictationEventData>(eventData);
-                handler.OnDictationError(casted);
-            };
-        #endregion Speech Keyword Events
     }
 }

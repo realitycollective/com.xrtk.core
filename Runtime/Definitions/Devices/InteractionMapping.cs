@@ -30,7 +30,6 @@ namespace RealityToolkit.Definitions.Devices
             inputName = string.Empty;
             axisType = AxisType.None;
             inputType = DeviceInputType.None;
-            keyCode = KeyCode.None;
             axisCodeX = string.Empty;
             axisCodeY = string.Empty;
 
@@ -83,20 +82,6 @@ namespace RealityToolkit.Definitions.Devices
         }
 
         /// <summary>
-        /// The constructor for a new Interaction Mapping definition
-        /// </summary>
-        /// <param name="description">The description of the interaction mapping.</param>
-        /// <param name="axisType">The axis that the mapping operates on, also denotes the data type for the mapping</param>
-        /// <param name="inputType">The physical input device / control type.</param>
-        /// <param name="keyCode">Optional KeyCode value to get input from Unity's old input system</param>
-        /// <param name="inputProcessors"></param>
-        public InteractionMapping(string description, AxisType axisType, DeviceInputType inputType, KeyCode keyCode, List<InputProcessor> inputProcessors = null)
-            : this(description, axisType, inputType, inputProcessors)
-        {
-            this.keyCode = keyCode;
-        }
-
-        /// <summary>
         /// Creates a copy of a <see cref="InteractionMapping"/>
         /// </summary>
         /// <param name="mapping"></param>
@@ -106,7 +91,6 @@ namespace RealityToolkit.Definitions.Devices
             axisType = mapping.axisType;
             inputType = mapping.inputType;
             inputAction = mapping.inputAction;
-            keyCode = mapping.keyCode;
             inputName = mapping.inputName;
             axisCodeX = mapping.axisCodeX;
             axisCodeY = mapping.axisCodeY;
@@ -176,15 +160,6 @@ namespace RealityToolkit.Definitions.Devices
             get => inputAction;
             set => inputAction = value;
         }
-
-        [SerializeField]
-        [Tooltip("Optional KeyCode value to get input from Unity's old input system.")]
-        private KeyCode keyCode;
-
-        /// <summary>
-        /// Optional KeyCode value to get input from Unity's old input system.
-        /// </summary>
-        public KeyCode KeyCode => keyCode;
 
         [SerializeField]
         [Tooltip("Optional inputName value to get input for a coded input identity from a provider.")]
