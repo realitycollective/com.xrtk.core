@@ -6,7 +6,7 @@ using RealityToolkit.Definitions.Physics;
 using System;
 using System.Collections.Generic;
 
-namespace RealityToolkit.Utilities.Physics
+namespace RealityToolkit.Input.Physics
 {
     /// <summary>
     /// Compares the Raycast Results from Unity's Graphic &amp; Physics Raycasters.

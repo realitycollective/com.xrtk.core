@@ -10,7 +10,7 @@ using RealityToolkit.Input.InputSources;
 using RealityToolkit.Input.Interactors;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.Input.Interfaces.Handlers;
-using RealityToolkit.Utilities.Physics;
+using RealityToolkit.Input.Physics;
 using System;
 using UnityEngine;
 
@@ -46,7 +46,7 @@ namespace RealityToolkit.Input.Modules
         /// </summary>
         [SerializeField]
         [Tooltip("The Physics layers, in prioritized order, that are used to determine the GazeTarget when raycasting.")]
-        private LayerMask[] raycastLayerMasks = { Physics.DefaultRaycastLayers };
+        private LayerMask[] raycastLayerMasks = { UnityEngine.Physics.DefaultRaycastLayers };
 
         /// <summary>
         /// Current stabilization method, used to smooth out the gaze ray data.

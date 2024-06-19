@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using RealityToolkit.Utilities.Physics;
 using System;
 using UnityEngine;
 
-namespace RealityToolkit.Utilities.Physics
+namespace RealityToolkit.Input.Physics
 {
     /// <summary>
     /// GenericStabilizer iterates over samples of Raycast data and
