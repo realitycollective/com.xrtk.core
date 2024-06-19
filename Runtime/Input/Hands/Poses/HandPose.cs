@@ -122,7 +122,7 @@ namespace RealityToolkit.Input.Hands.Poses
                 fileName = $"{nameof(HandPose)}_{RecordedHandedness}";
             }
 
-            UnityEditor.AssetDatabase.CreateAsset(this, System.IO.Path.Join("Assets", "RealityToolkit.Generated", $"{fileName}.asset"));
+            UnityEditor.AssetDatabase.CreateAsset(this, System.IO.Path.Join("Assets", "RealityToolkit", $"{fileName}.asset"));
             UnityEditor.AssetDatabase.Refresh();
         }
 

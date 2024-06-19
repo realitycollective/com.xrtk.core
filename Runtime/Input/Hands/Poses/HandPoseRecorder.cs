@@ -120,7 +120,7 @@ namespace RealityToolkit.Input.Hands.Poses
                     }).ToList()
                 });
 
-                System.IO.File.WriteAllText(System.IO.Path.Join(Application.dataPath, "RealityToolkit.Generated", $"{nameof(SerializedHandPose)}.txt"), json);
+                System.IO.File.WriteAllText(System.IO.Path.Join(Application.dataPath, "RealityToolkit", $"{nameof(SerializedHandPose)}.txt"), json);
                 return;
             }
 
