@@ -44,8 +44,6 @@ namespace RealityToolkit.Editor.BuildPipeline.Logging
         {
             @".android\repositories.cfg could not be loaded",
             @"Using symlinks in Unity projects may cause your project to become corrupted",
-            @"Skipping WindowsDictationDataProvider registration",
-            @"Skipping WindowsSpeechDataProvider registration",
             @"Cancelling DisplayDialog: Built in VR Detected XR Plug-in Management has detected that this project is using built in VR.",
             @"Reference Rewriter found some errors while running with command"
         };

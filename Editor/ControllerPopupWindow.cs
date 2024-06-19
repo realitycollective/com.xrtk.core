@@ -6,7 +6,6 @@ using RealityToolkit.Definitions.Controllers;
 using RealityToolkit.Editor.Data;
 using RealityToolkit.Editor.PropertyDrawers;
 using RealityToolkit.Editor.Utilities;
-using RealityToolkit.Input.Controllers.UnityInput;
 using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Hands;
 using System;
@@ -90,8 +89,7 @@ namespace RealityToolkit.Editor
         private Type ControllerType => controllerDataProviderProfile.ControllerType;
         private Handedness Handedness => controllerDataProviderProfile.Handedness;
 
-        private bool IsCustomController => ControllerType == typeof(GenericJoystickController) ||
-                                           ControllerType == typeof(IHandController);
+        private bool IsCustomController => ControllerType == typeof(IHandController);
 
         private static string EditorWindowOptionsPath => $"{CorePackageInstaller.RTK_Core_RelativeFolderPath}/Editor/Data/EditorWindowOptions.json";
 

@@ -111,32 +111,6 @@ namespace RealityToolkit.Input.Definitions
             set => inputActionsProfile = value;
         }
 
-        [SerializeField]
-        [Tooltip("Speech Command profile for wiring up Voice Input to Actions.")]
-        private SpeechCommandsProfile speechCommandsProfile;
-
-        /// <summary>
-        /// Speech commands profile for configured speech commands, for use by the speech recognition system
-        /// </summary>
-        public SpeechCommandsProfile SpeechCommandsProfile
-        {
-            get => speechCommandsProfile;
-            set => speechCommandsProfile = value;
-        }
-
-        [SerializeField]
-        [Tooltip("Gesture Mapping Profile for recognizing gestures across all platforms.")]
-        private GesturesProfile gesturesProfile;
-
-        /// <summary>
-        /// Gesture Mapping Profile for recognizing gestures across all platforms.
-        /// </summary>
-        public GesturesProfile GesturesProfile
-        {
-            get => gesturesProfile;
-            set => gesturesProfile = value;
-        }
-
         #endregion Profile Options
     }
 }

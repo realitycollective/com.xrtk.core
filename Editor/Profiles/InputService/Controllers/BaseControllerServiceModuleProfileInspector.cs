@@ -146,21 +146,17 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
                                 var interactionMappingProperty = interactionMappingProfileSerializedObject.FindProperty("interactionMapping");
 
                                 var descriptionProperty = interactionMappingProperty.FindPropertyRelative("description");
-                                //var stateChangeTypeProperty = interactionMappingProperty.FindPropertyRelative("stateChangeType");
                                 var inputNameProperty = interactionMappingProperty.FindPropertyRelative("inputName");
                                 var axisTypeProperty = interactionMappingProperty.FindPropertyRelative("axisType");
                                 var inputTypeProperty = interactionMappingProperty.FindPropertyRelative("inputType");
-                                var keyCodeProperty = interactionMappingProperty.FindPropertyRelative("keyCode");
                                 var axisCodeXProperty = interactionMappingProperty.FindPropertyRelative("axisCodeX");
                                 var axisCodeYProperty = interactionMappingProperty.FindPropertyRelative("axisCodeY");
                                 var inputProcessorsProperty = interactionMappingProperty.FindPropertyRelative("inputProcessors");
 
                                 descriptionProperty.stringValue = mapping.Description;
-                                //stateChangeTypeProperty.intValue = (int)mapping.StateChangeType;
                                 inputNameProperty.stringValue = mapping.InputName;
                                 axisTypeProperty.intValue = (int)mapping.AxisType;
                                 inputTypeProperty.intValue = (int)mapping.InputType;
-                                keyCodeProperty.intValue = (int)mapping.KeyCode;
                                 axisCodeXProperty.stringValue = mapping.AxisCodeX;
                                 axisCodeYProperty.stringValue = mapping.AxisCodeY;
 

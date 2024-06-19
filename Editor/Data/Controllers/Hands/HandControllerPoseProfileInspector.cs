@@ -18,7 +18,6 @@ namespace RealityToolkit.Editor.Data.Controllers.Hands
         private SerializedProperty id;
         private SerializedProperty description;
         private SerializedProperty isDefault;
-        private SerializedProperty keyCode;
         private SerializedProperty data;
 
         // Baked data.
@@ -42,7 +41,6 @@ namespace RealityToolkit.Editor.Data.Controllers.Hands
             id = serializedObject.FindProperty(nameof(id));
             description = serializedObject.FindProperty(nameof(description));
             isDefault = serializedObject.FindProperty(nameof(isDefault));
-            keyCode = serializedObject.FindProperty(nameof(keyCode));
             data = serializedObject.FindProperty(nameof(data));
 
             // Baked data.
@@ -78,7 +76,6 @@ namespace RealityToolkit.Editor.Data.Controllers.Hands
                 EditorGUI.indentLevel++;
 
                 EditorGUILayout.PropertyField(isDefault);
-                EditorGUILayout.PropertyField(keyCode);
 
                 EditorGUI.indentLevel--;
             }

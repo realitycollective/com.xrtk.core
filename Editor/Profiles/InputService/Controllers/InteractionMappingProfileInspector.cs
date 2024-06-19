@@ -24,7 +24,6 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
         private SerializedProperty axisType;
         private SerializedProperty inputType;
         private SerializedProperty inputAction;
-        private SerializedProperty keyCode;
         private SerializedProperty inputName;
         private SerializedProperty axisCodeX;
         private SerializedProperty axisCodeY;
@@ -44,7 +43,6 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
             axisType = interactionMapping.FindPropertyRelative(nameof(axisType));
             inputType = interactionMapping.FindPropertyRelative(nameof(inputType));
             inputAction = interactionMapping.FindPropertyRelative(nameof(inputAction));
-            keyCode = interactionMapping.FindPropertyRelative(nameof(keyCode));
             inputName = interactionMapping.FindPropertyRelative(nameof(inputName));
             axisCodeX = interactionMapping.FindPropertyRelative(nameof(axisCodeX));
             axisCodeY = interactionMapping.FindPropertyRelative(nameof(axisCodeY));
@@ -59,7 +57,6 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
 
             EditorGUILayout.PropertyField(description);
             EditorGUILayout.PropertyField(inputName);
-            // EditorGUILayout.PropertyField(stateChangeType); TODO Implement
             EditorGUILayout.PropertyField(axisType);
             EditorGUILayout.PropertyField(inputType);
             var currentAxisType = (AxisType)axisType.intValue;
@@ -67,9 +64,6 @@ namespace RealityToolkit.Editor.Profiles.Input.Controllers
 
             switch (currentAxisType)
             {
-                case AxisType.Digital:
-                    EditorGUILayout.PropertyField(keyCode);
-                    break;
                 case AxisType.SingleAxis:
                     EditorGUILayout.PropertyField(axisCodeX);
                     break;
