@@ -5,7 +5,7 @@ using RealityToolkit.Definitions.Physics;
 using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.Input.Interfaces.Handlers;
-using RealityToolkit.Interfaces.Physics;
+using RealityToolkit.Input.Physics;
 using System.Collections;
 using UnityEngine;
 

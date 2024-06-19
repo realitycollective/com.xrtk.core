@@ -16,7 +16,7 @@ namespace RealityToolkit.Input.Interactors
         [SerializeField]
         [Tooltip("The Physics Layers, in prioritized order, that are used to determine the pointers target when raycasting.")]
         [FormerlySerializedAs("pointingRaycastLayerMasks")]
-        private LayerMask[] pointerRaycastLayerMasks = { Physics.DefaultRaycastLayers };
+        private LayerMask[] pointerRaycastLayerMasks = { UnityEngine.Physics.DefaultRaycastLayers };
 
         /// <summary>
         /// The Physics Layers, in prioritized order, that are used to determine the <see cref="IPointerResult.CurrentPointerTarget"/> when raycasting.

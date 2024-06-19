@@ -5,7 +5,7 @@ using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Physics;
 using UnityEngine;
 
-namespace RealityToolkit.Utilities.Physics
+namespace RealityToolkit.Input.Physics
 {
     public static class Raycaster
     {

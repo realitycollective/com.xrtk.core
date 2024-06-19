@@ -3,7 +3,7 @@
 
 using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Physics;
-using RealityToolkit.Utilities.Physics;
+using RealityToolkit.Input.Physics;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;

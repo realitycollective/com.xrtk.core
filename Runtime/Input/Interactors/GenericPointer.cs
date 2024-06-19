@@ -6,7 +6,7 @@ using RealityToolkit.Definitions.Physics;
 using RealityToolkit.Input.Controllers;
 using RealityToolkit.Input.Interfaces;
 using RealityToolkit.Input.Interfaces.Handlers;
-using RealityToolkit.Interfaces.Physics;
+using RealityToolkit.Input.Physics;
 using System;
 using System.Collections;
 using UnityEngine;

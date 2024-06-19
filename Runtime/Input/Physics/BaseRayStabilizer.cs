@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using RealityToolkit.Interfaces.Physics;
 using UnityEngine;
 
-namespace RealityToolkit.Utilities.Physics
+namespace RealityToolkit.Input.Physics
 {
     /// <summary>
     /// A base class for a stabilizer that takes an input position and rotation,
