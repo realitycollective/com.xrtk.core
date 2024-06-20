@@ -65,13 +65,13 @@ namespace RealityToolkit.Input.Interactors
         [SerializeField]
         private bool disableCursorOnStart = false;
 
-        [SerializeField]
-        private BaseInteractorVisualizer visualizer = null;
-
         protected bool DisableCursorOnStart => disableCursorOnStart;
 
         [SerializeField]
         private bool setCursorVisibilityOnSourceDetected = false;
+
+        [SerializeField]
+        private BaseInteractorVisualizer visualizer = null;
 
         private GameObject cursorInstance = null;
         private Vector3 lastPointerPosition = Vector3.zero;
