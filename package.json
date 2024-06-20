@@ -37,6 +37,7 @@
     "com.realitycollective.service-framework": "1.0.8-pre.4",
     "com.unity.nuget.newtonsoft-json": "3.2.1",
     "com.unity.ugui": "1.0.0",
-    "com.unity.inputsystem": "1.7.0"
+    "com.unity.inputsystem": "1.7.0",
+    "com.unity.animation.rigging": "1.2.1"
   }
 }
