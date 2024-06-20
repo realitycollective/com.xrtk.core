@@ -13,7 +13,7 @@ namespace RealityToolkit.Utilities.Lines.Renderers
     /// </summary>
     [RequireComponent(typeof(UnityEngine.LineRenderer))]
     [RequireComponent(typeof(BaseLineDataProvider))]
-    public class LineRenderer : BaseLineRenderer
+    public class SimpleLineRenderer : BaseLineRenderer
     {
         [Header("Reality Toolkit Line Renderer Settings")]
 

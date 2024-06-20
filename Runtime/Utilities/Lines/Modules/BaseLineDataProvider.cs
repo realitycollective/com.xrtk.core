@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Lines;
 using RealityToolkit.Utilities.Physics.Distorters;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace RealityToolkit.Utilities.Lines.DataProviders
         /// </summary>
         public Transform LineTransform
         {
-            get => customLineTransform != null ? customLineTransform : transform;
+            get => customLineTransform.IsNotNull() ? customLineTransform : transform;
             set => customLineTransform = value;
         }
 

@@ -37,6 +37,11 @@ namespace RealityToolkit.Input.Interactors
         bool IsFarInteractor { get; }
 
         /// <summary>
+        /// <c>true</c>, if any <see cref="InputAction"/> is down on this <see cref="IInteractor"/>.
+        /// </summary>
+        bool IsInputDown { get; }
+
+        /// <summary>
         /// This pointer's input source parent.
         /// </summary>
         IInputSource InputSource { get; }

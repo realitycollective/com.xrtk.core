@@ -63,6 +63,9 @@ namespace RealityToolkit.Input.Interactors
         /// <inheritdoc/>
         public bool IsOverUI { get; } = false;
 
+        /// <inheritdoc/>
+        public bool IsInputDown { get; private set; }
+
         /// <inheritdoc />
         public virtual IInputSource InputSource
         {

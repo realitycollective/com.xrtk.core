@@ -70,6 +70,9 @@ namespace RealityToolkit.Input.Interactors
         [SerializeField]
         private bool setCursorVisibilityOnSourceDetected = false;
 
+        [SerializeField]
+        private BaseInteractorVisualizer visualizer = null;
+
         private GameObject cursorInstance = null;
         private Vector3 lastPointerPosition = Vector3.zero;
         private readonly List<InputAction> inputDownActions = new List<InputAction>();
@@ -91,10 +94,8 @@ namespace RealityToolkit.Input.Interactors
         /// </summary>
         protected bool IsSelectPressed { get; set; } = false;
 
-        /// <summary>
-        /// <c>true</c>, if any <see cref="InputAction"/> is down on this <see cref="IInteractor"/>.
-        /// </summary>
-        protected bool IsInputDown => inputDownActions.Count > 0;
+        /// <inheritdoc />
+        public bool IsInputDown => inputDownActions.Count > 0;
 
         /// <summary>
         /// True if select has been pressed once since this component was enabled
@@ -384,6 +385,11 @@ namespace RealityToolkit.Input.Interactors
         {
             base.Start();
             SetCursor();
+
+            if (visualizer.IsNotNull())
+            {
+                visualizer.Interactor = this;
+            }
         }
 
         /// <inheritdoc/>
@@ -419,12 +425,34 @@ namespace RealityToolkit.Input.Interactors
             }
         }
 
+        /// <inheritdoc/>
+        protected override void OnDestroy()
+        {
+            if (visualizer.IsNotNull())
+            {
+                visualizer.gameObject.Destroy();
+            }
+
+            base.OnDestroy();
+        }
+
         /// <inheritdoc />
-        public virtual void OnPreRaycast() { }
+        public virtual void OnPreRaycast()
+        {
+            if (visualizer.IsNotNull())
+            {
+                visualizer.OnPreRaycast();
+            }
+        }
 
         /// <inheritdoc />
         public virtual void OnPostRaycast()
         {
+            if (visualizer.IsNotNull())
+            {
+                visualizer.OnPostRaycast();
+            }
+
             if (grabAction != InputAction.None)
             {
                 if (IsGrabPressed)
@@ -437,7 +465,6 @@ namespace RealityToolkit.Input.Interactors
                 if (IsSelectPressed)
                 {
                     DragHandler(pointerAction);
-
                 }
             }
         }
