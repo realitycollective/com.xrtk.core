@@ -65,6 +65,9 @@ namespace RealityToolkit.Input.Interactors
         [SerializeField]
         private bool disableCursorOnStart = false;
 
+        [SerializeField]
+        private BaseInteractorVisualizer visualizer = null;
+
         protected bool DisableCursorOnStart => disableCursorOnStart;
 
         [SerializeField]
