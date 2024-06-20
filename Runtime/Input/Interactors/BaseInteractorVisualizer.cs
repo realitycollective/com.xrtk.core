@@ -7,6 +7,13 @@ namespace RealityToolkit.Input.Interactors
 {
     public abstract class BaseInteractorVisualizer : MonoBehaviour, IInteractorVisualizer
     {
+        /// <inheritdoc />
+        public virtual IInteractor Interactor { get; set; }
 
+        /// <inheritdoc />
+        public virtual void OnPreRaycast() { }
+
+        /// <inheritdoc />
+        public virtual void OnPostRaycast() { }
     }
 }
