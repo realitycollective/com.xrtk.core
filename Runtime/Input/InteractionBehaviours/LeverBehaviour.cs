@@ -349,9 +349,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
         {
             if (leverType == LeverType.Translate)
             {
-                leverPose.x = Mathf.Clamp(leverPose.x, minimumValues.x, maximumValues.x);
-                leverPose.y = Mathf.Clamp(leverPose.y, minimumValues.y, maximumValues.y);
-                leverPose.z = Mathf.Clamp(leverPose.z, minimumValues.z, maximumValues.z);
+                leverPose.x = Mathf.Clamp(leverPose.x, Mathf.Min(minimumValues.x, maximumValues.x), Mathf.Max(minimumValues.x, maximumValues.x));
+                leverPose.y = Mathf.Clamp(leverPose.y, Mathf.Min(minimumValues.y, maximumValues.y), Mathf.Max(minimumValues.y, maximumValues.y));
+                leverPose.z = Mathf.Clamp(leverPose.z, Mathf.Min(minimumValues.z, maximumValues.z), Mathf.Max(minimumValues.z, maximumValues.z));
                 transform.SetLocalPositionAndRotation(leverPose, Quaternion.identity);
                 return;
             }
