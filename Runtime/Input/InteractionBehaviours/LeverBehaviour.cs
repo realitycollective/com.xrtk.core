@@ -400,9 +400,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
             if (valueMapping == ValueMapping.Value0To1)
             {
                 Value = new(
-                    TransformX ? leverPose.x / ranges.x + .5f : 0f,
-                    TransformY ? leverPose.y / ranges.y + .5f : 0f,
-                    TransformZ ? leverPose.z / ranges.z + .5f : 0f);
+                    TransformX ? GetNormalizedAxisValue01(leverPose.x, minimumValues.x, maximumValues.x) : 0f,
+                    TransformY ? GetNormalizedAxisValue01(leverPose.y, minimumValues.y, maximumValues.y) : 0f,
+                    TransformZ ? GetNormalizedAxisValue01(leverPose.z, minimumValues.z, maximumValues.z) : 0f);
 
                 return;
             }
@@ -462,6 +462,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
         #endregion Snap Into Place
 
         #region Utilities
+
+        private float GetNormalizedAxisValue01(float leverPose, float minimumValue, float maximumValue) => (WrapAngle(leverPose) - minimumValue) / (maximumValue - minimumValue);
 
         private Vector3 GetInteractorPosition() => pivot.InverseTransformPoint(currentInteractor.GameObject.transform.position);
 
@@ -581,6 +583,18 @@ namespace RealityToolkit.Input.InteractionBehaviours
             }
 
             return Mathf.Min(angle, to);
+        }
+
+        private static float WrapAngle(float angle)
+        {
+            angle %= 360;
+
+            if (angle > 180)
+            {
+                return angle - 360;
+            }
+
+            return angle;
         }
 
         #endregion Utilities
