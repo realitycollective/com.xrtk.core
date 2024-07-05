@@ -2,7 +2,7 @@
   "name": "com.realitytoolkit.core",
   "displayName": "RealityToolkit.Core",
   "description": "The core framework of the Reality Toolkit by the Reality Collective.",
-  "version": "1.0.0-pre.60",
+  "version": "1.0.0-pre.61",
   "documentationUrl": "https://realitytoolkit.io",
   "changelogUrl": "https://github.com/realitycollective/com.realitytoolkit.core/releases",
   "licensesUrl": "https://github.com/realitycollective/com.realitytoolkit.core/blob/main/LICENSE.md",
