@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using RealityToolkit.Editor.Utilities;
 using RealityToolkit.Input.InteractionBehaviours;
 using UnityEditor;
 using UnityEditor.UIElements;
@@ -12,54 +13,58 @@ namespace RealityToolkit.Editor.Inspectors
     public class LockControllerVisualizerBehaviourInspector : BaseInteractionBehaviourInspector
     {
         private VisualElement inspector;
-        private Toggle snapToLockPose;
+        private PropertyField smoothSyncPose;
         private PropertyField syncPositionSpeed;
         private PropertyField syncRotationSpeed;
 
+        private const string grabOffsetPoseBindingPath = "localOffsetPose";
+        private const string smoothSyncPoseBindingPath = "smoothSyncPose";
+        private const string syncPositionSpeedBindingPath = "syncPositionSpeed";
+        private const string syncRotationSpeedBindingPath = "syncRotationSpeed";
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public override VisualElement CreateInspectorGUI()
         {
             inspector = base.CreateInspectorGUI();
 
-            inspector.Add(new PropertyField
-            {
-                label = "Grab Offset Pose",
-                bindingPath = "localOffsetPose"
-            });
+            inspector.Add(new PropertyField(serializedObject.FindProperty(grabOffsetPoseBindingPath)));
 
-            snapToLockPose = new Toggle("Snap To Lock Pose")
-            {
-                bindingPath = "snapToLockPose"
-            };
-            snapToLockPose.RegisterValueChangedCallback(SnapToLockPose_ValueChanged);
-            inspector.Add(snapToLockPose);
+            smoothSyncPose = new PropertyField(serializedObject.FindProperty(smoothSyncPoseBindingPath));
+            smoothSyncPose.RegisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
+            inspector.Add(smoothSyncPose);
 
-            syncPositionSpeed = new PropertyField
-            {
-                label = "Sync Position Speed",
-                bindingPath = "syncPositionSpeed"
-            };
+            syncPositionSpeed = new PropertyField(serializedObject.FindProperty(syncPositionSpeedBindingPath));
+            syncPositionSpeed.style.paddingLeft = UIElementsUtilities.DefaultInset;
 
-            syncRotationSpeed = new PropertyField
-            {
-                label = "Sync Rotation Speed",
-                bindingPath = "syncRotationSpeed"
-            };
+            syncRotationSpeed = new PropertyField(serializedObject.FindProperty(syncRotationSpeedBindingPath));
+            syncRotationSpeed.style.paddingLeft = UIElementsUtilities.DefaultInset;
 
-            if (!snapToLockPose.value)
-            {
-                inspector.Add(syncPositionSpeed);
-                inspector.Add(syncRotationSpeed);
-            }
+            UpdateSmoothSyncPoseFields(serializedObject.FindProperty(smoothSyncPoseBindingPath).boolValue);
 
             return inspector;
         }
 
-        private void SnapToLockPose_ValueChanged(ChangeEvent<bool> changeEvent)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        private void OnDestroy()
         {
-            if (!changeEvent.newValue)
+            if (smoothSyncPose != null)
+            {
+                smoothSyncPose.UnregisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
+            }
+        }
+
+        private void SmoothSyncPose_ValueChanged(ChangeEvent<bool> changeEvent) => UpdateSmoothSyncPoseFields(changeEvent.newValue);
+
+        private void UpdateSmoothSyncPoseFields(bool showFields)
+        {
+            if (showFields)
             {
                 inspector.Add(syncPositionSpeed);
-                syncPositionSpeed.PlaceInFront(snapToLockPose);
+                syncPositionSpeed.PlaceInFront(smoothSyncPose);
                 inspector.Add(syncRotationSpeed);
                 syncRotationSpeed.PlaceInFront(syncPositionSpeed);
                 return;

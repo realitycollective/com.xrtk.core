@@ -26,8 +26,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("Optional offset pose applied to the visualizer.")]
         private Pose localOffsetPose = Pose.identity;
 
-        [SerializeField, Tooltip("If set, the controller visualizer will snap to the interactable instead of a smooth transition.")]
-        private bool snapToLockPose = false;
+        [SerializeField, Tooltip("If set, the controller visualizer will smoothly attach to the interactable instead of instantly.")]
+        private bool smoothSyncPose = true;
 
         [SerializeField, Tooltip("Speed applied to smoothly move to the interactable position."), Min(1f)]
         private float syncPositionSpeed = 2f;
@@ -114,7 +114,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private void LockVisualizer(IControllerVisualizer visualizer)
         {
-            lockedVisualizers.EnsureDictionaryItem(visualizer, snapToLockPose, true);
+            lockedVisualizers.EnsureDictionaryItem(visualizer, !smoothSyncPose, true);
             visualizer.OverrideSourcePose = true;
         }
 

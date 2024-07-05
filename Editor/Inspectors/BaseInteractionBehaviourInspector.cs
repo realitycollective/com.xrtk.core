@@ -8,6 +8,9 @@ namespace RealityToolkit.Editor.Inspectors
     /// </summary>
     public abstract class BaseInteractionBehaviourInspector : UnityEditor.Editor
     {
+        private const string sortingOrderBindingPath = "sortingOrder";
+        private const string targetHandednessBindingPath = "targetHandedness";
+
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
@@ -15,17 +18,8 @@ namespace RealityToolkit.Editor.Inspectors
         {
             var inspector = new VisualElement();
 
-            inspector.Add(new PropertyField
-            {
-                label = "Sorting Order",
-                bindingPath = "sortingOrder"
-            });
-
-            inspector.Add(new PropertyField
-            {
-                label = "Target Handedness",
-                bindingPath = "targetHandedness"
-            });
+            inspector.Add(new PropertyField(serializedObject.FindProperty(sortingOrderBindingPath)));
+            inspector.Add(new PropertyField(serializedObject.FindProperty(targetHandednessBindingPath)));
 
             return inspector;
         }

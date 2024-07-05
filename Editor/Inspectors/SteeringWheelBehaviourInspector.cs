@@ -13,68 +13,68 @@ namespace RealityToolkit.Editor.Inspectors
     public class SteeringWheelBehaviourInspector : BaseInteractionBehaviourInspector
     {
         private VisualElement inspector;
-        private Toggle resetsToNeutral;
-        private Toggle smoothReset;
+        private PropertyField resetsToNeutral;
+        private PropertyField smoothReset;
         private PropertyField smoothResetDuration;
 
+        private const string steeringAngleLimitBindingPath = "steeringAngleLimit";
+        private const string upTransformBindingPath = "upTransform";
+        private const string resetsToNeutralBindingPath = "resetsToNeutral";
+        private const string smoothResetBindingPath = "smoothReset";
+        private const string smoothResetDurationBindingPath = "smoothResetDuration";
+        private const string steeringChangedBindingPath = "SteeringChanged";
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public override VisualElement CreateInspectorGUI()
         {
             inspector = base.CreateInspectorGUI();
 
-            inspector.Add(new PropertyField
-            {
-                label = "Steering Angle Limit",
-                bindingPath = "steeringAngleLimit"
-            });
+            inspector.Add(new PropertyField(serializedObject.FindProperty(steeringAngleLimitBindingPath)));
+            inspector.Add(new PropertyField(serializedObject.FindProperty(upTransformBindingPath)));
 
-            inspector.Add(new PropertyField
-            {
-                label = "Up Transform",
-                bindingPath = "upTransform"
-            });
-
-            resetsToNeutral = new Toggle("Resets To Neutral")
-            {
-                bindingPath = "resetsToNeutral"
-            };
-            resetsToNeutral.RegisterValueChangedCallback(ResetsToNeutral_ValueChanged);
+            resetsToNeutral = new PropertyField(serializedObject.FindProperty(resetsToNeutralBindingPath));
+            resetsToNeutral.RegisterCallback<ChangeEvent<bool>>(ResetsToNeutral_ValueChanged);
             inspector.Add(resetsToNeutral);
 
-            smoothReset = new Toggle("Smooth Reset")
-            {
-                bindingPath = "smoothReset"
-            };
-            smoothReset.RegisterValueChangedCallback(SmoothReset_ValueChanged);
+            smoothReset = new PropertyField(serializedObject.FindProperty(smoothResetBindingPath));
+            smoothReset.RegisterCallback<ChangeEvent<bool>>(SmoothReset_ValueChanged);
+            smoothReset.style.paddingLeft = UIElementsUtilities.DefaultInset;
 
-            if (resetsToNeutral.value)
-            {
-                inspector.Add(smoothReset);
-            }
+            smoothResetDuration = new PropertyField(serializedObject.FindProperty(smoothResetDurationBindingPath));
+            smoothResetDuration.style.paddingLeft = 2 * UIElementsUtilities.DefaultInset;
 
-            smoothResetDuration = new PropertyField
-            {
-                label = "Smooth Reset Duration",
-                bindingPath = "smoothResetDuration"
-            };
-
-            if (resetsToNeutral.value && smoothReset.value)
-            {
-                inspector.Add(smoothResetDuration);
-            }
+            UpdateResetsToNeutralFields(serializedObject.FindProperty(resetsToNeutralBindingPath).boolValue);
+            UpdateSmoothResetFields(serializedObject.FindProperty(smoothResetBindingPath).boolValue);
 
             inspector.Add(UIElementsUtilities.VerticalSpace());
-            inspector.Add(new PropertyField
-            {
-                label = "On Steering Changed",
-                bindingPath = "SteeringChanged"
-            });
+            inspector.Add(new PropertyField(serializedObject.FindProperty(steeringChangedBindingPath)));
 
             return inspector;
         }
 
-        private void ResetsToNeutral_ValueChanged(ChangeEvent<bool> changeEvent)
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        private void OnDestroy()
         {
-            if (changeEvent.newValue)
+            if (resetsToNeutral != null)
+            {
+                resetsToNeutral.UnregisterCallback<ChangeEvent<bool>>(ResetsToNeutral_ValueChanged);
+            }
+
+            if (smoothReset != null)
+            {
+                smoothReset.UnregisterCallback<ChangeEvent<bool>>(SmoothReset_ValueChanged);
+            }
+        }
+
+        private void ResetsToNeutral_ValueChanged(ChangeEvent<bool> changeEvent) => UpdateResetsToNeutralFields(changeEvent.newValue);
+
+        private void UpdateResetsToNeutralFields(bool showFields)
+        {
+            if (showFields)
             {
                 inspector.Add(smoothReset);
                 smoothReset.PlaceInFront(resetsToNeutral);
@@ -85,11 +85,18 @@ namespace RealityToolkit.Editor.Inspectors
             {
                 inspector.Remove(smoothReset);
             }
+
+            if (inspector.Contains(smoothResetDuration))
+            {
+                inspector.Remove(smoothResetDuration);
+            }
         }
 
-        private void SmoothReset_ValueChanged(ChangeEvent<bool> changeEvent)
+        private void SmoothReset_ValueChanged(ChangeEvent<bool> changeEvent) => UpdateSmoothResetFields(changeEvent.newValue);
+
+        private void UpdateSmoothResetFields(bool showFields)
         {
-            if (resetsToNeutral.value && changeEvent.newValue)
+            if (serializedObject.FindProperty(resetsToNeutralBindingPath).boolValue && showFields)
             {
                 inspector.Add(smoothResetDuration);
                 smoothResetDuration.PlaceInFront(smoothReset);
