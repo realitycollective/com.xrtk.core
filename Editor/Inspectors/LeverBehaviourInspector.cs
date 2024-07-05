@@ -1,4 +1,8 @@
-﻿using RealityToolkit.Input.InteractionBehaviours;
+﻿// Copyright (c) Reality Collective. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
+
+using RealityToolkit.Editor.Utilities;
+using RealityToolkit.Input.InteractionBehaviours;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
@@ -100,6 +104,7 @@ namespace RealityToolkit.Editor.Inspectors
                 bindingPath = "valueZ"
             });
 
+            inspector.Add(UIElementsUtilities.VerticalSpace());
             inspector.Add(new PropertyField
             {
                 label = "On Value Changed",

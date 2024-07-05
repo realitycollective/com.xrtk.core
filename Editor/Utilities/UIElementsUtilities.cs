@@ -13,6 +13,11 @@ namespace RealityToolkit.Editor.Utilities
         private const int defaultVerticalSpace = 10;
 
         /// <summary>
+        /// Inset in pixels per intendation level for custom inspectors.
+        /// </summary>
+        public const int DefaultInset = 16;
+
+        /// <summary>
         /// Creates an empty <see cref="VisualElement"/> to create vertical space.
         /// </summary>
         /// <param name="height">Space in pixels. Defaults to <c>10</c>.</param>
