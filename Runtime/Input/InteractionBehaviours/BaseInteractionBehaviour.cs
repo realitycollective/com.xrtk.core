@@ -16,7 +16,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     [RequireComponent(typeof(Interactable))]
     public abstract class BaseInteractionBehaviour : MonoBehaviour, IInteractionBehaviour
     {
-        [SerializeField, Range(0, 100), Tooltip("Behaviours with a higher sorting order will always be executed after the ones with a lower sorting order.")]
+        [SerializeField, Range(-100, 100), Tooltip("Behaviours with a higher sorting order will always be executed after the ones with a lower sorting order.")]
         private short sortingOrder = 0;
 
         [SerializeField, Tooltip("The handedness of the interactor to perform the Behaviour for." +
