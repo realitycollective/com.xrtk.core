@@ -29,15 +29,13 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("If set, the controller visualizer will smoothly attach to the interactable instead of instantly.")]
         private bool smoothSyncPose = true;
 
-        [SerializeField, Tooltip("Speed applied to smoothly move to the interactable position."), Min(1f)]
-        private float syncPositionSpeed = 2f;
-
-        [SerializeField, Tooltip("Speed applied to smoothly rotate to the interactable rotation."), Min(1f)]
-        private float syncRotationSpeed = 360f;
+        [SerializeField, Tooltip("Duration in seconds to sync the visualizer pose with the interactable."), Min(.01f)]
+        private float syncDuration = 1f;
 
         private readonly Dictionary<IControllerVisualizer, bool> lockedVisualizers = new();
-        private const float lockPositionTolerance = .001f;
-        private const float lockRotationTolerance = 0.1f;
+        private readonly Dictionary<IControllerVisualizer, Pose> smoothingStartPose = new();
+        private readonly Dictionary<IControllerVisualizer, float> smoothingStartTime = new();
+        private readonly Dictionary<IControllerVisualizer, float> smoothingProgress = new();
 
         /// <inheritdoc/>
         protected override void Update()
@@ -56,8 +54,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
                 if (!shouldLock)
                 {
-                    lockPose.position = Vector3.MoveTowards(visualizer.PoseDriver.position, lockPose.position, syncPositionSpeed * Time.deltaTime);
-                    lockPose.rotation = Quaternion.RotateTowards(visualizer.PoseDriver.rotation, lockPose.rotation, syncRotationSpeed * Time.deltaTime);
+                    lockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, lockPose.position, smoothingProgress[visualizer]);
+                    lockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, lockPose.rotation, smoothingProgress[visualizer]);
                 }
 
                 visualizer.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
@@ -115,12 +113,18 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private void LockVisualizer(IControllerVisualizer visualizer)
         {
             lockedVisualizers.EnsureDictionaryItem(visualizer, !smoothSyncPose, true);
+            smoothingStartPose.EnsureDictionaryItem(visualizer, new Pose(visualizer.PoseDriver.position, visualizer.PoseDriver.rotation), true);
+            smoothingStartTime.EnsureDictionaryItem(visualizer, Time.time, true);
+            smoothingProgress.EnsureDictionaryItem(visualizer, 0f, true);
             visualizer.OverrideSourcePose = true;
         }
 
         private void UnlockVisualizer(IControllerVisualizer visualizer)
         {
             lockedVisualizers.SafeRemoveDictionaryItem(visualizer);
+            smoothingStartPose.SafeRemoveDictionaryItem(visualizer);
+            smoothingStartTime.SafeRemoveDictionaryItem(visualizer);
+            smoothingProgress.SafeRemoveDictionaryItem(visualizer);
             visualizer.OverrideSourcePose = false;
         }
 
@@ -133,14 +137,10 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return true;
             }
 
-            if (Vector3.Distance(snapPose.position, visualizer.PoseDriver.position) > lockPositionTolerance)
-            {
-                return false;
-            }
+            var t = (Time.time - smoothingStartTime[visualizer]) / syncDuration;
+            smoothingProgress[visualizer] = t;
 
-            var rotationDifference = Quaternion.FromToRotation(visualizer.PoseDriver.forward, snapPose.forward);
-            var angleDifference = Quaternion.Angle(visualizer.PoseDriver.rotation, snapPose.rotation * rotationDifference);
-            if (angleDifference > lockRotationTolerance)
+            if (t < 1f)
             {
                 return false;
             }
