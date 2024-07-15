@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,7 +36,30 @@ namespace RealityToolkit.Input.Hands.Poses
         private readonly Dictionary<HandJoint, Pose> startFramePoses = new Dictionary<HandJoint, Pose>();
         private bool animating;
         private float animationStartTime;
-        private const float animationDuration = .2f;
+
+        /// <summary>
+        /// Default duration for <see cref="AnimationDuration"/>.
+        /// </summary>
+        public const float DefaultAnimationDuration = .2f;
+
+        private float animationDuration = DefaultAnimationDuration;
+        /// <summary>
+        /// The duration in seconds to transition from one pose to another.
+        /// </summary>
+        public float AnimationDuration
+        {
+            get => animationDuration;
+            set
+            {
+                if (value <= 0f)
+                {
+                    value = DefaultAnimationDuration;
+                    Debug.LogWarning($"{nameof(HandPoseAnimator)} animation duration cannot be below or equal 0. Reverting to default animation duration of {DefaultAnimationDuration} seconds.");
+                }
+
+                animationDuration = value;
+            }
+        }
 
         /// <summary>
         /// The current <see cref="HandPose"/> visualized.
@@ -54,7 +77,7 @@ namespace RealityToolkit.Input.Hands.Poses
                 return;
             }
 
-            var t = (Time.time - animationStartTime) / animationDuration;
+            var t = (Time.time - animationStartTime) / AnimationDuration;
             Slerp(t);
 
             if (t >= 1f)

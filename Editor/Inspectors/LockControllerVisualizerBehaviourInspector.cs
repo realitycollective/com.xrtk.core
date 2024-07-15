@@ -14,13 +14,11 @@ namespace RealityToolkit.Editor.Inspectors
     {
         private VisualElement inspector;
         private PropertyField smoothSyncPose;
-        private PropertyField syncPositionSpeed;
-        private PropertyField syncRotationSpeed;
+        private PropertyField syncDuration;
 
-        private const string grabOffsetPoseBindingPath = "localOffsetPose";
-        private const string smoothSyncPoseBindingPath = "smoothSyncPose";
-        private const string syncPositionSpeedBindingPath = "syncPositionSpeed";
-        private const string syncRotationSpeedBindingPath = "syncRotationSpeed";
+        private const string localOffsetPoseBindingPath = "localOffsetPose";
+        private const string smoothSyncPoseBindingPath = nameof(smoothSyncPose);
+        private const string syncPositionSpeedBindingPath = nameof(syncDuration);
 
         /// <summary>
         /// <inheritdoc/>
@@ -29,17 +27,14 @@ namespace RealityToolkit.Editor.Inspectors
         {
             inspector = base.CreateInspectorGUI();
 
-            inspector.Add(new PropertyField(serializedObject.FindProperty(grabOffsetPoseBindingPath)));
+            inspector.Add(new PropertyField(serializedObject.FindProperty(localOffsetPoseBindingPath)));
 
             smoothSyncPose = new PropertyField(serializedObject.FindProperty(smoothSyncPoseBindingPath));
             smoothSyncPose.RegisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
             inspector.Add(smoothSyncPose);
 
-            syncPositionSpeed = new PropertyField(serializedObject.FindProperty(syncPositionSpeedBindingPath));
-            syncPositionSpeed.style.paddingLeft = UIElementsUtilities.DefaultInset;
-
-            syncRotationSpeed = new PropertyField(serializedObject.FindProperty(syncRotationSpeedBindingPath));
-            syncRotationSpeed.style.paddingLeft = UIElementsUtilities.DefaultInset;
+            syncDuration = new PropertyField(serializedObject.FindProperty(syncPositionSpeedBindingPath));
+            syncDuration.style.paddingLeft = UIElementsUtilities.DefaultInset;
 
             UpdateSmoothSyncPoseFields(serializedObject.FindProperty(smoothSyncPoseBindingPath).boolValue);
 
@@ -63,21 +58,14 @@ namespace RealityToolkit.Editor.Inspectors
         {
             if (showFields)
             {
-                inspector.Add(syncPositionSpeed);
-                syncPositionSpeed.PlaceInFront(smoothSyncPose);
-                inspector.Add(syncRotationSpeed);
-                syncRotationSpeed.PlaceInFront(syncPositionSpeed);
+                inspector.Add(syncDuration);
+                syncDuration.PlaceInFront(smoothSyncPose);
                 return;
             }
 
-            if (inspector.Contains(syncPositionSpeed))
+            if (inspector.Contains(syncDuration))
             {
-                inspector.Remove(syncPositionSpeed);
-            }
-
-            if (inspector.Contains(syncRotationSpeed))
-            {
-                inspector.Remove(syncRotationSpeed);
+                inspector.Remove(syncDuration);
             }
         }
     }
