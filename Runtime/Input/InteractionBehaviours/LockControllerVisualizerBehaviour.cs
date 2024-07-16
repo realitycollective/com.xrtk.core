@@ -50,7 +50,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
             foreach (var visualizer in visualizers)
             {
-                var shouldLock = HasFinishedSmoothTransition(visualizer, lockPose);
+                var shouldLock = HasFinishedSmoothTransition(visualizer);
 
                 if (!shouldLock)
                 {
@@ -130,7 +130,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private Pose GetLockPose() => new Pose(transform.TransformPoint(localOffsetPose.position), transform.rotation * Quaternion.Euler(localOffsetPose.rotation.eulerAngles));
 
-        private bool HasFinishedSmoothTransition(IControllerVisualizer visualizer, Pose snapPose)
+        private bool HasFinishedSmoothTransition(IControllerVisualizer visualizer)
         {
             if (lockedVisualizers[visualizer])
             {
