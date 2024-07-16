@@ -21,6 +21,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [Serializable]
         public class ButtonClickEvent : UnityEvent { }
 
+        [SerializeField, Tooltip("If set, the button will raise click on input down instead of when input is released.")]
+        private bool raiseOnInputDown = false;
+
         [Space]
         [SerializeField, Tooltip("List of click delegates triggered on click.")]
         private ButtonClickEvent click = null;
@@ -31,9 +34,21 @@ namespace RealityToolkit.Input.InteractionBehaviours
         public ButtonClickEvent Click => click;
 
         /// <inheritdoc/>
-        protected override void OnActivated(InteractionEventArgs eventArgs)
+        protected override void OnSelectEntered(InteractionEventArgs eventArgs)
         {
-            Click?.Invoke();
+            if (raiseOnInputDown)
+            {
+                Click?.Invoke();
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnSelectExited(InteractionExitEventArgs eventArgs)
+        {
+            if (!raiseOnInputDown)
+            {
+                Click?.Invoke();
+            }
         }
     }
 }

@@ -75,30 +75,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
         protected virtual void OnValidate() { }
 
         /// <inheritdoc/>
-        void IInteractionBehaviour.OnActivated(InteractionEventArgs eventArgs)
-        {
-            if (ShouldPerformBehaviour(eventArgs))
-            {
-                OnActivated(eventArgs);
-            }
-        }
-
-        /// <inheritdoc cref="IInteractionBehaviour.OnActivated"/>
-        protected virtual void OnActivated(InteractionEventArgs eventArgs) { }
-
-        /// <inheritdoc/>
-        void IInteractionBehaviour.OnDeactivated(InteractionExitEventArgs eventArgs)
-        {
-            if (ShouldPerformBehaviour(eventArgs))
-            {
-                OnDeactivated(eventArgs);
-            }
-        }
-
-        /// <inheritdoc cref="IInteractionBehaviour.OnDeactivated"/>
-        protected virtual void OnDeactivated(InteractionExitEventArgs eventArgs) { }
-
-        /// <inheritdoc/>
         void IInteractionBehaviour.OnFirstFocusEntered(InteractionEventArgs eventArgs)
         {
             if (ShouldPerformBehaviour(eventArgs))

@@ -20,13 +20,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
     {
         [Space]
         [SerializeField]
-        private InteractionEvent activated = null;
-
-        [SerializeField]
-        private InteractionExitEvent deactivated = null;
-
-        [Space]
-        [SerializeField]
         private InteractionEvent firstFocusEntered = null;
 
         [SerializeField]
@@ -64,12 +57,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField]
         private InteractionExitEvent lastGrabExited = null;
 
-        /// <inheritdoc cref="OnActivated(InteractionEventArgs)"/>
-        public InteractionEvent Activated => activated;
-
-        /// <inheritdoc cref="OnDeactivated(InteractionExitEventArgs)"/>
-        public InteractionExitEvent Deactivated => deactivated;
-
         /// <inheritdoc cref="OnFirstFocusEntered(InteractionEventArgs)"/>
         public InteractionEvent FirstFocusEntered => firstFocusEntered;
 
@@ -105,12 +92,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         /// <inheritdoc cref="OnLastGrabExited(InteractionExitEventArgs)"/>
         public InteractionExitEvent LastGrabExited => lastGrabExited;
-
-        /// <inheritdoc/>
-        protected override void OnActivated(InteractionEventArgs eventArgs) => Activated?.Invoke(eventArgs);
-
-        /// <inheritdoc/>
-        protected override void OnDeactivated(InteractionExitEventArgs eventArgs) => Deactivated?.Invoke(eventArgs);
 
         /// <inheritdoc/>
         protected override void OnFirstFocusEntered(InteractionEventArgs eventArgs) => FirstFocusEntered?.Invoke(eventArgs);

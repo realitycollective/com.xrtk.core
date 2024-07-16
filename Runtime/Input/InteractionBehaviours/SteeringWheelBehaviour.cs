@@ -27,7 +27,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("If set, the steering will smoothly reset instead of instantly.")]
         private bool smoothReset = true;
 
-        [SerializeField, Tooltip("Time in seconds to return to neutral position.")]
+        [SerializeField, Tooltip("Time in seconds to return to neutral position."), Min(.01f)]
         private float smoothResetDuration = .5f;
 
         [SerializeField, Tooltip("Consistent up transform for the steering wheel.")]
@@ -146,7 +146,11 @@ namespace RealityToolkit.Input.InteractionBehaviours
         {
             currentAngle = FindSteeringWheelAngle();
             currentInteractor = null;
-            ReturnToNeutral();
+
+            if (resetsToNeutral)
+            {
+                ReturnToNeutral();
+            }
         }
 
         /// <summary>
@@ -184,9 +188,15 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            resetting = true;
-            elapsedResetTime = 0f;
-            resetStartRotation = Quaternion.Euler(0f, 0f, CurrentSteeringAngle);
+            if (smoothReset)
+            {
+                resetting = true;
+                elapsedResetTime = 0f;
+                resetStartRotation = Quaternion.Euler(0f, 0f, CurrentSteeringAngle);
+                return;
+            }
+
+            CurrentSteeringAngle = neutralSteeringRotation.eulerAngles.z;
         }
 
         private static float WrapAngle(float angle)
