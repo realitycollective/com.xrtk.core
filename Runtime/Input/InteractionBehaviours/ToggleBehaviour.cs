@@ -61,18 +61,36 @@ namespace RealityToolkit.Input.InteractionBehaviours
         public void SetIsOnWithoutNotify(bool isOn) => this.isOn = isOn;
 
         /// <inheritdoc/>
-        protected override void OnSelectEntered(InteractionEventArgs eventArgs)
+        protected override void OnFirstSelectEntered(InteractionEventArgs eventArgs)
         {
-            if (raiseOnInputDown)
+            if (raiseOnInputDown && !Interactable.IsGrabbed)
             {
                 IsOn = !IsOn;
             }
         }
 
         /// <inheritdoc/>
-        protected override void OnSelectExited(InteractionExitEventArgs eventArgs)
+        protected override void OnLastSelectExited(InteractionExitEventArgs eventArgs)
         {
-            if (!raiseOnInputDown)
+            if (!raiseOnInputDown && !Interactable.IsGrabbed)
+            {
+                IsOn = !IsOn;
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnFirstGrabEntered(InteractionEventArgs eventArgs)
+        {
+            if (raiseOnInputDown && !Interactable.IsSelected)
+            {
+                IsOn = !IsOn;
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnLastGrabExited(InteractionExitEventArgs eventArgs)
+        {
+            if (!raiseOnInputDown && !Interactable.IsSelected)
             {
                 IsOn = !IsOn;
             }
