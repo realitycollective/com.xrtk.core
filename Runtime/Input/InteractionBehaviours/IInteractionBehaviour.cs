@@ -1,4 +1,4 @@
-// Copyright (c) Reality Collective. All rights reserved.
+﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using RealityToolkit.Input.Events;
@@ -22,22 +22,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// The <see cref="IInteractable"/> the <see cref="IInteractionBehaviour"/> is attached to.
         /// </summary>
         IInteractable Interactable { get; }
-
-        #region Activate
-
-        /// <summary>
-        /// The <see cref="IInteractable"/> was activated.
-        /// </summary>
-        /// <param name="eventArgs"><see cref="InteractionEventArgs"/>.</param>
-        void OnActivated(InteractionEventArgs eventArgs);
-
-        /// <summary>
-        /// The <see cref="IInteractable"/> was deactivated.
-        /// </summary>
-        /// <param name="eventArgs"><see cref="InteractionExitEventArgs"/>.</param>
-        void OnDeactivated(InteractionExitEventArgs eventArgs);
-
-        #endregion Activate
 
         #region Focus
 

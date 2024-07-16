@@ -21,6 +21,12 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [Serializable]
         public class ToggleEvent : UnityEvent<bool> { }
 
+        [SerializeField, Tooltip("Is the toggle currently on or off?")]
+        private bool isOn = false;
+
+        [SerializeField, Tooltip("If set, the button will raise click on input down instead of when input is released.")]
+        private bool raiseOnInputDown = false;
+
         [Space]
         [SerializeField, Tooltip("List of delegates triggered on value change.")]
         private ToggleEvent valueChanged = null;
@@ -33,18 +39,43 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <summary>
         /// Is the toggle currently on or off?
         /// </summary>
-        public bool IsOn => Interactable.IsActivated;
+        public bool IsOn
+        {
+            get => isOn;
+            set
+            {
+                if (value == isOn)
+                {
+                    return;
+                }
+
+                isOn = value;
+                ValueChanged?.Invoke(isOn);
+            }
+        }
+
+        /// <summary>
+        /// Updates <see cref="IsOn"/> without raising <see cref="ValueChanged"/>.
+        /// </summary>
+        /// <param name="isOn">The new <see cref="IsOn"/> value.</param>
+        public void SetIsOnWithoutNotify(bool isOn) => this.isOn = isOn;
 
         /// <inheritdoc/>
-        protected override void OnActivated(InteractionEventArgs eventArgs)
+        protected override void OnSelectEntered(InteractionEventArgs eventArgs)
         {
-            ValueChanged?.Invoke(IsOn);
+            if (raiseOnInputDown)
+            {
+                IsOn = !IsOn;
+            }
         }
 
         /// <inheritdoc/>
-        protected override void OnDeactivated(InteractionExitEventArgs eventArgs)
+        protected override void OnSelectExited(InteractionExitEventArgs eventArgs)
         {
-            ValueChanged?.Invoke(IsOn);
+            if (!raiseOnInputDown)
+            {
+                IsOn = !IsOn;
+            }
         }
     }
 }
