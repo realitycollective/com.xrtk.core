@@ -19,6 +19,12 @@ namespace RealityToolkit.Input.Controllers
         GameObject GameObject { get; }
 
         /// <summary>
+        /// This is the actual pose of this controller, regardless of <see cref="OverrideSourcePose"/>
+        /// and the <see cref="IControllerPoseSynchronizer.PoseDriver"/> pose.
+        /// </summary>
+        Pose SourcePose { get; }
+
+        /// <summary>
         /// If set, the <see cref="IControllerPoseSynchronizer.PoseDriver"/>'s pose in the scene
         /// is override and the actual <see cref="IController.InputSource"/> pose is ignored.
         /// </summary>

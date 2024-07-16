@@ -33,6 +33,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private float syncDuration = 1f;
 
         private readonly Dictionary<IControllerVisualizer, bool> lockedVisualizers = new();
+        private readonly Dictionary<IControllerVisualizer, bool> pendingUnlockVisualizers = new();
         private readonly Dictionary<IControllerVisualizer, Pose> smoothingStartPose = new();
         private readonly Dictionary<IControllerVisualizer, float> smoothingStartTime = new();
         private readonly Dictionary<IControllerVisualizer, float> smoothingProgress = new();
@@ -50,15 +51,32 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
             foreach (var visualizer in visualizers)
             {
-                var shouldLock = HasFinishedSmoothTransition(visualizer, lockPose);
-
-                if (!shouldLock)
+                if (pendingUnlockVisualizers.TryGetValue(visualizer, out _))
                 {
-                    lockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, lockPose.position, smoothingProgress[visualizer]);
-                    lockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, lockPose.rotation, smoothingProgress[visualizer]);
-                }
+                    var finishedUnlock = HasFinishedSmoothTransition(pendingUnlockVisualizers, visualizer);
+                    if (finishedUnlock)
+                    {
+                        CleanUpVisualizer(visualizer);
+                        continue;
+                    }
 
-                visualizer.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
+                    var unlockPose = visualizer.SourcePose;
+                    unlockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, unlockPose.position, smoothingProgress[visualizer]);
+                    unlockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, unlockPose.rotation, smoothingProgress[visualizer]);
+                    visualizer.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
+                }
+                else
+                {
+                    var shouldLock = HasFinishedSmoothTransition(lockedVisualizers, visualizer);
+
+                    if (!shouldLock)
+                    {
+                        lockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, lockPose.position, smoothingProgress[visualizer]);
+                        lockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, lockPose.rotation, smoothingProgress[visualizer]);
+                    }
+
+                    visualizer.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
+                }
             }
         }
 
@@ -121,18 +139,33 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private void UnlockVisualizer(IControllerVisualizer visualizer)
         {
+            if (!smoothSyncPose)
+            {
+                CleanUpVisualizer(visualizer);
+                return;
+            }
+
+            pendingUnlockVisualizers.EnsureDictionaryItem(visualizer, false, true);
+            smoothingStartPose.EnsureDictionaryItem(visualizer, GetLockPose(), true);
+            smoothingStartTime.EnsureDictionaryItem(visualizer, Time.time, true);
+            smoothingProgress.EnsureDictionaryItem(visualizer, 0f, true);
+        }
+
+        private void CleanUpVisualizer(IControllerVisualizer visualizer)
+        {
             lockedVisualizers.SafeRemoveDictionaryItem(visualizer);
             smoothingStartPose.SafeRemoveDictionaryItem(visualizer);
             smoothingStartTime.SafeRemoveDictionaryItem(visualizer);
             smoothingProgress.SafeRemoveDictionaryItem(visualizer);
+            pendingUnlockVisualizers.SafeRemoveDictionaryItem(visualizer);
             visualizer.OverrideSourcePose = false;
         }
 
         private Pose GetLockPose() => new Pose(transform.TransformPoint(localOffsetPose.position), transform.rotation * Quaternion.Euler(localOffsetPose.rotation.eulerAngles));
 
-        private bool HasFinishedSmoothTransition(IControllerVisualizer visualizer, Pose snapPose)
+        private bool HasFinishedSmoothTransition(Dictionary<IControllerVisualizer, bool> smoothingStateDictionary, IControllerVisualizer visualizer)
         {
-            if (lockedVisualizers[visualizer])
+            if (smoothingStateDictionary[visualizer])
             {
                 return true;
             }
@@ -145,7 +178,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return false;
             }
 
-            lockedVisualizers[visualizer] = true;
+            smoothingStateDictionary[visualizer] = true;
             return true;
         }
     }
