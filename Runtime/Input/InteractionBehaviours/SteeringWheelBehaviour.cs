@@ -1,8 +1,10 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,7 +20,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     {
         [SerializeField]
         [Tooltip("Controls the threshold angle for steering when at maximum steering in either direction.")]
-        [Range(1f, 179f)]
+        [Range(1f, 45)]
         private float steeringAngleLimit = 45f;
 
         [SerializeField, Tooltip("If set, the steering resets to neutral on release.")]
@@ -39,7 +41,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private float elapsedResetTime;
         private Quaternion resetStartRotation;
         private Quaternion neutralSteeringRotation = Quaternion.Euler(0f, 0f, 0f);
-        private IControllerInteractor currentInteractor;
+        private readonly List<IControllerInteractor> interactors = new();
         private float currentAngle;
 
         /// <summary>
@@ -103,7 +105,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <inheritdoc/>
         protected override void Update()
         {
-            if (currentInteractor == null && !resetting)
+            if (interactors.Count == 0 && !resetting)
             {
                 return;
             }
@@ -123,29 +125,34 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            var angle = FindSteeringWheelAngle();
+            var angle = FindWheelAngle();
             var angleDifference = currentAngle - angle;
             Rotate(-angleDifference);
             currentAngle = angle;
         }
 
         /// <inheritdoc/>
-        protected override void OnFirstGrabEntered(InteractionEventArgs eventArgs)
+        protected override void OnGrabEntered(InteractionEventArgs eventArgs)
         {
             if (eventArgs.Interactor is not IControllerInteractor controllerInteractor)
             {
                 return;
             }
 
-            currentInteractor = controllerInteractor;
-            currentAngle = FindSteeringWheelAngle();
+            interactors.EnsureListItem(controllerInteractor);
+            currentAngle = FindWheelAngle();
         }
 
         /// <inheritdoc/>
-        protected override void OnLastGrabExited(InteractionExitEventArgs eventArgs)
+        protected override void OnGrabExited(InteractionExitEventArgs eventArgs)
         {
-            currentAngle = FindSteeringWheelAngle();
-            currentInteractor = null;
+            if (eventArgs.Interactor is not IControllerInteractor controllerInteractor)
+            {
+                return;
+            }
+
+            interactors.SafeRemoveListItem(controllerInteractor);
+            currentAngle = FindWheelAngle();
 
             if (resetsToNeutral)
             {
@@ -153,10 +160,25 @@ namespace RealityToolkit.Input.InteractionBehaviours
             }
         }
 
-        /// <summary>
-        /// Rotates the steering wheel by <paramref name="angle"/>.
-        /// </summary>
-        /// <param name="angle">The euler angle to rotate by.</param>
+        private float FindWheelAngle()
+        {
+            var totalAngle = 0f;
+
+            foreach (var interactor in interactors)
+            {
+                var direction = FindLocalPoint(interactor.GameObject.transform.position);
+                totalAngle += FindRotationSensitivity() * ConvertToAngle(direction);
+            }
+
+            return totalAngle;
+        }
+
+        private Vector2 FindLocalPoint(Vector3 position) => upTransform.InverseTransformPoint(position).normalized;
+
+        private float ConvertToAngle(Vector2 direction) => Vector2.SignedAngle(upTransform.up, direction);
+
+        private float FindRotationSensitivity() => 1f / interactors.Count;
+
         private void Rotate(float angle)
         {
             resetting = false;
@@ -166,21 +188,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
             CurrentSteeringAngle = updated;
         }
 
-        private float FindSteeringWheelAngle()
-        {
-            var direction = FindLocalPoint(currentInteractor.GameObject.transform.position);
-            return ConvertToAngle(direction) * FindRotationSensitivity();
-        }
-
-        private Vector2 FindLocalPoint(Vector3 position) => upTransform.InverseTransformPoint(position);
-
-        private float ConvertToAngle(Vector2 direction) => Vector2.SignedAngle(upTransform.up, direction);
-
-        private float FindRotationSensitivity() => 1f;
-
-        /// <summary>
-        /// Returns the steering wheel to neutral position.
-        /// </summary>
         private void ReturnToNeutral()
         {
             if (resetting)
