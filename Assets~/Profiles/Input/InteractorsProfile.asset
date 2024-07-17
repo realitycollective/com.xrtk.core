@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f1708952b3739a47908a0fb9a103a7e, type: 3}
   m_Name: InteractorsProfile
   m_EditorClassIdentifier: 
-  pointingExtent: 10
   pointerRaycastLayerMasks:
   - serializedVersion: 2
     m_Bits: 4294967291
