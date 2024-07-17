@@ -86,12 +86,14 @@ namespace RealityToolkit.Input.Hands.Visualizers
             }
 
             if (eventData.InputSource == Controller.InputSource &&
-                eventData.InputAction == selectInputAction)
+                eventData.InputAction == selectInputAction &&
+                !IsTargetingHandPoseProvider(eventData, false, true, false))
             {
                 poseAnimator.Transition(selectHandPose);
             }
             else if (eventData.InputSource == Controller.InputSource &&
-                eventData.InputAction == gripInputAction)
+                eventData.InputAction == gripInputAction &&
+                !IsTargetingHandPoseProvider(eventData, false, false, true))
             {
                 poseAnimator.Transition(gripHandPose);
             }
@@ -106,12 +108,14 @@ namespace RealityToolkit.Input.Hands.Visualizers
             }
 
             if (eventData.InputSource == Controller.InputSource &&
-                eventData.InputAction == selectInputAction)
+                eventData.InputAction == selectInputAction &&
+                !IsTargetingHandPoseProvider(eventData, false, true, false))
             {
                 poseAnimator.Transition(idlePose);
             }
             else if (eventData.InputSource == Controller.InputSource &&
-                eventData.InputAction == gripInputAction)
+                eventData.InputAction == gripInputAction &&
+                !IsTargetingHandPoseProvider(eventData, false, false, true))
             {
                 poseAnimator.Transition(idlePose);
             }
@@ -130,12 +134,14 @@ namespace RealityToolkit.Input.Hands.Visualizers
             }
 
             if (eventData.InputSource == Controller.InputSource &&
-                eventData.InputAction == selectInputAction)
+                eventData.InputAction == selectInputAction &&
+                !IsTargetingHandPoseProvider(eventData, false, true, false))
             {
                 OnSingleAxisInputChanged(eventData.InputData, selectHandPose);
             }
             else if (eventData.InputSource == Controller.InputSource &&
-                eventData.InputAction == gripInputAction)
+                eventData.InputAction == gripInputAction &&
+                !IsTargetingHandPoseProvider(eventData, false, false, true))
             {
                 OnSingleAxisInputChanged(eventData.InputData, gripHandPose);
             }

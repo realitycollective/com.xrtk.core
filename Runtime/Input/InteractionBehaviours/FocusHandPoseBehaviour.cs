@@ -14,13 +14,22 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// into the assigned <see cref="focusPose"/>, when the <see cref="Interactables.IInteractable"/> is focused.
     [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/focus-hand-pose-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(FocusHandPoseBehaviour))]
-    public class FocusHandPoseBehaviour : BaseInteractionBehaviour
+    public class FocusHandPoseBehaviour : BaseInteractionBehaviour, IProvideHandPose
     {
         [SerializeField, Tooltip("Hand pose applied when focusing the interactable.")]
         private HandPose focusPose = null;
 
         /// <inheritdoc/>
-        protected override void OnFirstFocusEntered(InteractionEventArgs eventArgs)
+        public HandPose FocusPose => focusPose;
+
+        /// <inheritdoc/>
+        public HandPose SelectPose { get; } = null;
+
+        /// <inheritdoc/>
+        public HandPose GrabPose { get; } = null;
+
+        /// <inheritdoc/>
+        protected override void OnFocusEntered(InteractionEventArgs eventArgs)
         {
             if (Interactable.IsSelected || Interactable.IsGrabbed)
             {
@@ -35,7 +44,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
         }
 
         /// <inheritdoc/>
-        protected override void OnLastFocusExited(InteractionExitEventArgs eventArgs)
+        protected override void OnFocusExited(InteractionExitEventArgs eventArgs)
         {
             if (Interactable.IsSelected || Interactable.IsGrabbed)
             {

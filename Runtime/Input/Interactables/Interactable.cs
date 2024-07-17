@@ -49,7 +49,6 @@ namespace RealityToolkit.Input.Interactables
         [Tooltip("The action that will grab this interactable, if focused by an interactor.")]
         protected InputAction grabAction = InputAction.None;
 
-        [Space]
         [SerializeField, Tooltip("The focus mode for this interactable.")]
         private InteractableFocusMode focusMode = InteractableFocusMode.Single;
 
