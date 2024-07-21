@@ -30,7 +30,7 @@ namespace RealityToolkit.Input.Interactors
             {
                 if(inputService.FocusProvider == null)
                 {
-                    throw new ArgumentException($"Couldn't find a valid {nameof(IFocusProvider)} configured for the {nameof(IInputService)}!");
+                    throw new InvalidOperationException(IFocusProvider.MissingFocusProviderMessage);
                 }
 
                 PointerId = inputService.FocusProvider.GenerateNewPointerId();

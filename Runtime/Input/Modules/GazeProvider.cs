@@ -306,7 +306,12 @@ namespace RealityToolkit.Input.Modules
                 }
 
                 // We've been destroyed during the await.
-                if (this == null || GazePointer == null) { return; }
+                if (this == null) { return; }
+
+                if (GazePointer == null && inputService.FocusProvider == null)
+                {
+                    throw new InvalidOperationException(IFocusProvider.MissingFocusProviderMessage);
+                }
 
                 lateInitialize = false;
                 InputService.Register(gameObject);

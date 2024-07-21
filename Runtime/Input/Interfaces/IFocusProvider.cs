@@ -14,6 +14,8 @@ namespace RealityToolkit.Input.Interfaces
     /// </summary>
     public interface IFocusProvider : ISourceStateHandler, IInputServiceModule
     {
+        public static string MissingFocusProviderMessage = $"Couldn't find a valid {nameof(IFocusProvider)} configured for the {nameof(IInputService)}!";
+        
         /// <summary>
         /// The Physics Layers, in prioritized order, that are used to determine the <see cref="IInteractorResult.CurrentTarget"/> when raycasting.
         /// </summary>
