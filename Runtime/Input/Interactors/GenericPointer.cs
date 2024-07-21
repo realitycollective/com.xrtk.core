@@ -28,6 +28,11 @@ namespace RealityToolkit.Input.Interactors
         {
             if (ServiceManager.Instance.TryGetService<IInputService>(out var inputService))
             {
+                if(inputService.FocusProvider == null)
+                {
+                    throw new ArgumentException($"Couldn't find a valid {nameof(IFocusProvider)} configured for the {nameof(IInputService)}!");
+                }
+
                 PointerId = inputService.FocusProvider.GenerateNewPointerId();
                 PointerName = pointerName;
                 this.inputSourceParent = inputSourceParent;

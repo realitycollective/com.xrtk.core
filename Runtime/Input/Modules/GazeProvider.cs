@@ -306,7 +306,7 @@ namespace RealityToolkit.Input.Modules
                 }
 
                 // We've been destroyed during the await.
-                if (this == null) { return; }
+                if (this == null || GazePointer == null) { return; }
 
                 lateInitialize = false;
                 InputService.Register(gameObject);
@@ -376,7 +376,7 @@ namespace RealityToolkit.Input.Modules
         {
             InputService?.Unregister(gameObject);
 
-            if (GazePointer.BaseCursor != null)
+            if (GazePointer != null && GazePointer.BaseCursor != null)
             {
                 GazePointer.BaseCursor.IsVisible = false;
             }
@@ -434,7 +434,7 @@ namespace RealityToolkit.Input.Modules
 
         private IInteractor InitializeGazePointer()
         {
-            if (InputService == null) { return null; }
+            if (InputService == null || InputService.FocusProvider == null) { return null; }
 
             if (gazeTransform == null)
             {

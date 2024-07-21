@@ -59,7 +59,8 @@ namespace RealityToolkit.Input.Interactables
         {
             if (ServiceManager.IsActiveAndInitialized &&
                 ServiceManager.Instance.TryGetService<IInputService>(out var inputService) &&
-                canvas.isRootCanvas && canvas.renderMode == RenderMode.WorldSpace)
+                canvas.isRootCanvas && canvas.renderMode == RenderMode.WorldSpace &&
+                inputService.FocusProvider != null)
             {
                 canvas.worldCamera = inputService.FocusProvider.UIRaycastCamera;
             }
