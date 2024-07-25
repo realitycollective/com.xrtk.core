@@ -41,6 +41,11 @@ namespace RealityToolkit.Input.Interfaces
         bool FarInteractionEnabled { get; set; }
 
         /// <summary>
+        /// The active <see cref="IInputRig"/> the <see cref="IInputService"/> is using.
+        /// </summary>
+        IInputRig InputRig { get; set; }
+
+        /// <summary>
         /// List of the Interaction Input Sources as detected by the input manager like hands or motion controllers.
         /// </summary>
         IReadOnlyCollection<IInputSource> DetectedInputSources { get; }

@@ -60,10 +60,12 @@ namespace RealityToolkit.Input.InteractionBehaviours
                         continue;
                     }
 
-                    var unlockPose = visualizer.SourcePose;
-                    unlockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, unlockPose.position, smoothingProgress[visualizer]);
-                    unlockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, unlockPose.rotation, smoothingProgress[visualizer]);
-                    visualizer.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
+                    if (visualizer.Controller.TryGetPose(Space.World, out var unlockPose))
+                    {
+                        unlockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, unlockPose.position, smoothingProgress[visualizer]);
+                        unlockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, unlockPose.rotation, smoothingProgress[visualizer]);
+                        visualizer.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
+                    }
                 }
                 else
                 {

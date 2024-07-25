@@ -70,6 +70,9 @@ namespace RealityToolkit.Input
         /// <inheritdoc/>
         public bool FarInteractionEnabled { get; set; }
 
+        /// <inheritdoc/>
+        public IInputRig InputRig { get; set; }
+
         private readonly HashSet<IInputSource> detectedInputSources = new HashSet<IInputSource>();
 
         /// <inheritdoc />
