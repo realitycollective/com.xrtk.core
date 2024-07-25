@@ -196,8 +196,7 @@ namespace RealityToolkit.Input.Controllers
                 return;
             }
 
-            var rigTransform = Camera.main.transform.parent;
-
+            var rigTransform = InputService.InputRig.RigTransform;
             var controllerObject = Object.Instantiate(controllerPrefab, rigTransform);
             controllerObject.name = GetType().Name;
             Visualizer = controllerObject.GetComponent<IControllerVisualizer>();
@@ -241,6 +240,28 @@ namespace RealityToolkit.Input.Controllers
             {
                 Debug.LogError($"{GetType().Name} prefab must have a {nameof(IControllerVisualizer)} component attached.");
             }
+        }
+
+        /// <inheritdoc />
+        public bool TryGetPose(Space space, out Pose pose)
+        {
+            if (!IsPositionAvailable || !IsRotationAvailable)
+            {
+                pose = default;
+                return false;
+            }
+
+            if (space == Space.Self)
+            {
+                pose = Pose;
+                return true;
+            }
+
+            pose = new Pose(
+                InputService.InputRig.RigTransform.TransformPoint(Pose.position),
+                InputService.InputRig.RigTransform.rotation * Pose.rotation);
+
+            return true;
         }
     }
 }

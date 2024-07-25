@@ -108,5 +108,14 @@ namespace RealityToolkit.Input.Controllers
         /// Updates the <see cref="IController"/>'s state.
         /// </summary>
         void UpdateController();
+
+        /// <summary>
+        /// Attempts to retrieve the <see cref="IController"/>'s pose in the scene in either the local space,
+        /// that is in the <see cref="IInputRig.RigTransform"/> space or in world space.
+        /// </summary>
+        /// <param name="space">The space to get the <see cref="UnityEngine.Pose"/> in.</param>
+        /// <param name="pose">The pose.</param>
+        /// <returns><c>true</c>, if found Will return <c>false</c>, if not <see cref="IsPositionAvailable"/> or <see cref="IsRotationAvailable"/>.</returns>
+        bool TryGetPose(Space space, out Pose pose);
     }
 }

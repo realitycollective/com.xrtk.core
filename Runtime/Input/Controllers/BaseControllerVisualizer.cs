@@ -22,9 +22,6 @@ namespace RealityToolkit.Input.Controllers
         public GameObject GameObject => gameObject;
 
         /// <inheritdoc />
-        public Pose SourcePose { get; private set; }
-
-        /// <inheritdoc />
         public bool OverrideSourcePose { get; set; }
 
         /// <inheritdoc />
