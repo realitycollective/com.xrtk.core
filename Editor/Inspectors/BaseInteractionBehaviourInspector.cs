@@ -12,6 +12,13 @@ namespace RealityToolkit.Editor.Inspectors
         private const string targetHandednessBindingPath = "targetHandedness";
 
         /// <summary>
+        /// Used internally by some <see cref="BaseInteractionBehaviourInspector"/>
+        /// implementations to hide the handedness field from the inspector, likely because that
+        /// behaviour works without that setting impacting it.
+        /// </summary>
+        protected virtual bool ShowHandedness => true;
+
+        /// <summary>
         /// <inheritdoc/>
         /// </summary>
         public override VisualElement CreateInspectorGUI()
@@ -19,7 +26,11 @@ namespace RealityToolkit.Editor.Inspectors
             var inspector = new VisualElement();
 
             inspector.Add(new PropertyField(serializedObject.FindProperty(sortingOrderBindingPath)));
-            inspector.Add(new PropertyField(serializedObject.FindProperty(targetHandednessBindingPath)));
+
+            if (ShowHandedness)
+            {
+                inspector.Add(new PropertyField(serializedObject.FindProperty(targetHandednessBindingPath)));
+            }
 
             return inspector;
         }
