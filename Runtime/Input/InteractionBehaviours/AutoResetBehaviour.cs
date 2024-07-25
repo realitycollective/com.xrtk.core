@@ -6,6 +6,10 @@ using UnityEngine;
 
 namespace RealityToolkit.Input.InteractionBehaviours
 {
+    /// <summary>
+    /// This <see cref="IInteractionBehaviour"/> will monitor interactions and once ALL interaction on the interactable has ended it will execute a reset
+    /// using the <see cref="Interactables.IInteractable.ResetInteractable"/> API.
+    /// </summary>
     [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/auto-reset-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(AutoResetBehaviour))]
     public class AutoResetBehaviour : BaseInteractionBehaviour
