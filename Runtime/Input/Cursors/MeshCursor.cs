@@ -62,11 +62,11 @@ namespace RealityToolkit.Input.Cursors
             if (targetRenderer == null) { return; }
 
             var targetTransform = targetRenderer.transform;
-            var targetCamera = Camera.main;
+            var targetCamera = InputService.InputRig.CameraTransform;
 
             var cameraPosition = targetCamera.transform.position;
             var distance = (cameraPosition - targetTransform.position).magnitude;
-            var size = distance * fixedSize * targetCamera.fieldOfView;
+            var size = distance * fixedSize * InputService.InputRig.RigCamera.fieldOfView;
 
             targetTransform.localScale = Vector3.one * size;
             targetTransform.localPosition = new Vector3(fixedSizeOffset.x * size, fixedSizeOffset.y * size, fixedSizeOffset.z * size);

@@ -20,5 +20,10 @@ namespace RealityToolkit.Input.Interfaces
         /// The <see cref="Transform"/> where the <see cref="Camera"/> component is located.
         /// </summary>
         Transform CameraTransform { get; }
+
+        /// <summary>
+        /// The rig's <see cref="Camera"/> reference.
+        /// </summary>
+        Camera RigCamera { get; }
     }
 }

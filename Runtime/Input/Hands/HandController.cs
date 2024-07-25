@@ -788,10 +788,10 @@ namespace RealityToolkit.Input.Hands
                 };
 
                 // Translate to world space.
-                if (Camera.main.transform.parent.IsNotNull())
+                if (InputService.InputRig.RigTransform.IsNotNull())
                 {
-                    pose.position = Camera.main.transform.parent.TransformPoint(pose.position);
-                    pose.rotation = Camera.main.transform.parent.rotation * pose.rotation;
+                    pose.position = InputService.InputRig.RigTransform.TransformPoint(pose.position);
+                    pose.rotation = InputService.InputRig.RigTransform.rotation * pose.rotation;
                 }
 
                 return lastHandRootPose != Pose.identity;

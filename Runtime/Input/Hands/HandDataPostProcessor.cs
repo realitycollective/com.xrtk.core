@@ -1,10 +1,12 @@
 ﻿// Copyright (c) Reality Collective. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using RealityCollective.ServiceFramework.Services;
 using RealityCollective.Utilities.Extensions;
 using RealityToolkit.Definitions.Devices;
 using RealityToolkit.Input.Definitions;
 using RealityToolkit.Input.Hands.Poses;
+using RealityToolkit.Input.Interfaces;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,9 +40,9 @@ namespace RealityToolkit.Input.Hands
         {
             get
             {
-                if (playerCamera == null)
+                if (playerCamera.IsNull())
                 {
-                    playerCamera = Camera.main;
+                    playerCamera = ServiceManager.Instance.GetService<IInputService>().InputRig.RigCamera;
                 }
 
                 return playerCamera;
