@@ -12,7 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// Base implementation for <see cref="IInteractionBehaviour"/>s.
     /// </summary>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/custom-behaviours")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/custom-behaviours")]
     [RequireComponent(typeof(Interactable))]
     public abstract class BaseInteractionBehaviour : MonoBehaviour, IInteractionBehaviour
     {
@@ -73,6 +73,12 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <see cref="MonoBehaviour"/>.
         /// </summary>
         protected virtual void OnValidate() { }
+
+        /// <inheritdoc/>
+        void IInteractionBehaviour.OnInteractableReset() => OnResetBehaviour();
+
+        /// <inheritdoc cref="IInteractionBehaviour.OnInteractableReset"/>
+        protected virtual void OnResetBehaviour() { }
 
         /// <inheritdoc/>
         void IInteractionBehaviour.OnFirstFocusEntered(InteractionEventArgs eventArgs)

@@ -23,6 +23,12 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// </summary>
         IInteractable Interactable { get; }
 
+        /// <summary>
+        /// The <see cref="IInteractable"/> was reset. Use this hook to implement any custom reset
+        /// behaviour your <see cref="IInteractionBehaviour"/> might need to perform when <see cref="IInteractable"/> resets.
+        /// </summary>
+        void OnInteractableReset();
+
         #region Focus
 
         /// <summary>

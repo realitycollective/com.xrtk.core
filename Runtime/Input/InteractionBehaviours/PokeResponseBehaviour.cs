@@ -13,7 +13,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// A <see cref="IInteractionBehaviour"/> that will translate a given <see cref="Transform"/>
     /// in response to being poked by a <see cref="IPokeInteractor"/>.
     /// </summary>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/poke-response-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/poke-response-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(PokeResponseBehaviour))]
     public class PokeResponseBehaviour : BaseInteractionBehaviour
     {

@@ -9,7 +9,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// The <see cref="SelectHandPoseBehaviour"/> will animate the <see cref="RiggedHandControllerVisualizer"/>
     /// into the assigned <see cref="selectPose"/>, when the <see cref="Interactables.IInteractable"/> is selected.
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/select-hand-pose-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/select-hand-pose-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(SelectHandPoseBehaviour))]
     public class SelectHandPoseBehaviour : BaseInteractionBehaviour, IProvideHandPose
     {

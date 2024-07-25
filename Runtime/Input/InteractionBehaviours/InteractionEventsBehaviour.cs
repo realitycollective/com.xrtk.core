@@ -14,7 +14,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <remarks>
     /// Consider implementing a custom <see cref="BaseInteractionBehaviour"/> instead.
     /// </remarks>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/interaction-events-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/interaction-events-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(InteractionEventsBehaviour))]
     public class InteractionEventsBehaviour : BaseInteractionBehaviour
     {
