@@ -12,7 +12,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// The <see cref="GrabHandPoseBehaviour"/> will animate the <see cref="RiggedHandControllerVisualizer"/>
     /// into the assigned <see cref="grabPose"/>, when the <see cref="Interactables.IInteractable"/> is grabbed.
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/grab-hand-pose-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/grab-hand-pose-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(GrabHandPoseBehaviour))]
     public class GrabHandPoseBehaviour : BaseInteractionBehaviour, IProvideHandPose
     {

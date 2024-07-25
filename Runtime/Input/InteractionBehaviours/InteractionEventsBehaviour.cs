@@ -3,6 +3,7 @@
 
 using RealityToolkit.Input.Events;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace RealityToolkit.Input.InteractionBehaviours
 {
@@ -14,11 +15,10 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <remarks>
     /// Consider implementing a custom <see cref="BaseInteractionBehaviour"/> instead.
     /// </remarks>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/interaction-events-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/interaction-events-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(InteractionEventsBehaviour))]
     public class InteractionEventsBehaviour : BaseInteractionBehaviour
     {
-        [Space]
         [SerializeField]
         private InteractionEvent firstFocusEntered = null;
 
@@ -31,7 +31,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField]
         private InteractionExitEvent lastFocusExited = null;
 
-        [Space]
         [SerializeField]
         private InteractionEvent firstSelectEntered = null;
 
@@ -44,7 +43,6 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField]
         private InteractionExitEvent lastSelectExited = null;
 
-        [Space]
         [SerializeField]
         private InteractionEvent firstGrabEntered = null;
 
@@ -56,6 +54,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         [SerializeField]
         private InteractionExitEvent lastGrabExited = null;
+
+        [SerializeField]
+        private UnityEvent reset = null;
 
         /// <inheritdoc cref="OnFirstFocusEntered(InteractionEventArgs)"/>
         public InteractionEvent FirstFocusEntered => firstFocusEntered;
@@ -93,6 +94,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <inheritdoc cref="OnLastGrabExited(InteractionExitEventArgs)"/>
         public InteractionExitEvent LastGrabExited => lastGrabExited;
 
+        /// <inheritdoc cref="OnResetBehaviour"/>
+        public UnityEvent Reset => reset;
+
         /// <inheritdoc/>
         protected override void OnFirstFocusEntered(InteractionEventArgs eventArgs) => FirstFocusEntered?.Invoke(eventArgs);
 
@@ -128,5 +132,8 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         /// <inheritdoc/>
         protected override void OnLastGrabExited(InteractionExitEventArgs eventArgs) => LastGrabExited?.Invoke(eventArgs);
+
+        /// <inheritdoc/>
+        protected override void OnResetBehaviour() => Reset?.Invoke();
     }
 }

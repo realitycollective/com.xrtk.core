@@ -68,5 +68,11 @@ namespace RealityToolkit.Input.Interactables
         /// </summary>
         /// <param name="behaviour">The <see cref="IInteractionBehaviour"/>.</param>
         void Remove(IInteractionBehaviour behaviour);
+
+        /// <summary>
+        /// Resets the <see cref="IInteractable"/> and notifies any attached <see cref="IInteractionBehaviour"/>s
+        /// about it using the <see cref="IInteractionBehaviour.OnInteractableReset"/> hook.
+        /// </summary>
+        void ResetInteractable();
     }
 }

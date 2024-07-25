@@ -10,7 +10,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// This <see cref="IInteractionBehaviour"/> will update the <see cref="Rigidbody"/> on the <see cref="Interactables.IInteractable"/>
     /// when interacted with.
     /// </summary>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/update-rigidbody-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/update-rigidbody-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(UpdateRigidbodyBehaviour))]
     public class UpdateRigidbodyBehaviour : BaseInteractionBehaviour
     {

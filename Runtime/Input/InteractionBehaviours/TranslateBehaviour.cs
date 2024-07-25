@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace RealityToolkit.Input.InteractionBehaviours
 {
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/translate-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/translate-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(TranslateBehaviour))]
     public class TranslateBehaviour : BaseInteractionBehaviour
     {

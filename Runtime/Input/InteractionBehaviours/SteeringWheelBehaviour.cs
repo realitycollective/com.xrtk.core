@@ -14,7 +14,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// Use this <see cref="IInteractionBehaviour"/> to make an <see cref="Interactables.IInteractable"/> behave like
     /// a steering wheel.
     /// </summary>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/steering-wheel-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/steering-wheel-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(SteeringWheelBehaviour))]
     public class SteeringWheelBehaviour : BaseInteractionBehaviour
     {

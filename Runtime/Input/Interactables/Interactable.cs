@@ -379,6 +379,15 @@ namespace RealityToolkit.Input.Interactables
         /// <inheritdoc/>
         public void Remove(IInteractionBehaviour behaviour) => behaviours.SafeRemoveListItem(behaviour);
 
+        /// <inheritdoc/>
+        public void ResetInteractable()
+        {
+            for (var i = 0; i < behaviours.Count; i++)
+            {
+                behaviours[i].OnInteractableReset();
+            }
+        }
+
         private bool IsValidInteractor(IInteractor interactor) =>
             (interactor.IsFarInteractor && FarInteractionEnabled) || (!interactor.IsFarInteractor && DirectInteractionEnabled);
 

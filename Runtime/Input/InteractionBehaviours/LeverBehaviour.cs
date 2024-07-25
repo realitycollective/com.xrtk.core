@@ -14,7 +14,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// simulate all kinds of levers the user can interacth with.
     /// </summary>
     [ExecuteInEditMode]
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/lever-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/lever-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LeverBehaviour))]
     public class LeverBehaviour : BaseInteractionBehaviour
     {

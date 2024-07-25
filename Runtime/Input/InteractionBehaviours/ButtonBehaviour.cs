@@ -11,7 +11,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// <summary>
     /// A <see cref="IInteractionBehaviour"/> for creating <see cref="Interactables.IInteractable"/>s that mimick button behaviour.
     /// </summary>
-    [HelpURL("https://www.realitytoolkit.io/docs/interactions/interaction-behaviours/default-behaviours/button-behaviour")]
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/button-behaviour")]
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(ButtonBehaviour))]
     public class ButtonBehaviour : BaseInteractionBehaviour
     {

@@ -14,6 +14,11 @@ namespace RealityToolkit
         public const string Toolkit_AddComponentMenu = "Reality Toolkit";
 
         /// <summary>
+        /// The top level domain of the toolkit docs website.
+        /// </summary>
+        public const string Toolkit_Docs_BaseUrl = "https://realitytoolkit.realitycollective.net/";
+
+        /// <summary>
         /// The top level interactions menu group for the add component menu.
         /// </summary>
         public const string Toolkit_InteractionsAddComponentMenu = Toolkit_AddComponentMenu + "/" + "Interactions";
