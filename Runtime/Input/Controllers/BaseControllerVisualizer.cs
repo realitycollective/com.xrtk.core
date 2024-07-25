@@ -44,11 +44,6 @@ namespace RealityToolkit.Input.Controllers
         /// <inheritdoc />
         public override void OnSourcePoseChanged(SourcePoseEventData<Pose> eventData)
         {
-            if (eventData.SourceId == Controller?.InputSource.SourceId)
-            {
-                SourcePose = eventData.SourceData;
-            }
-
             if (OverrideSourcePose)
             {
                 return;
@@ -60,11 +55,6 @@ namespace RealityToolkit.Input.Controllers
         /// <inheritdoc />
         public override void OnSourcePoseChanged(SourcePoseEventData<Quaternion> eventData)
         {
-            if (eventData.SourceId == Controller?.InputSource.SourceId)
-            {
-                SourcePose = new Pose(SourcePose.position, eventData.SourceData);
-            }
-
             if (OverrideSourcePose)
             {
                 return;
@@ -76,11 +66,6 @@ namespace RealityToolkit.Input.Controllers
         /// <inheritdoc />
         public override void OnSourcePoseChanged(SourcePoseEventData<Vector2> eventData)
         {
-            if (eventData.SourceId == Controller?.InputSource.SourceId)
-            {
-                SourcePose = new Pose(eventData.SourceData, SourcePose.rotation);
-            }
-
             if (OverrideSourcePose)
             {
                 return;
@@ -92,11 +77,6 @@ namespace RealityToolkit.Input.Controllers
         /// <inheritdoc />
         public override void OnSourcePoseChanged(SourcePoseEventData<Vector3> eventData)
         {
-            if (eventData.SourceId == Controller?.InputSource.SourceId)
-            {
-                SourcePose = new Pose(eventData.SourceData, SourcePose.rotation);
-            }
-
             if (OverrideSourcePose)
             {
                 return;

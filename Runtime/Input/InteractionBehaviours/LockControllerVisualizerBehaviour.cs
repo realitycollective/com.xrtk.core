@@ -60,7 +60,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                         continue;
                     }
 
-                    var unlockPose = visualizer.SourcePose;
+                    var unlockPose = visualizer.Controller.Pose;
                     unlockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, unlockPose.position, smoothingProgress[visualizer]);
                     unlockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, unlockPose.rotation, smoothingProgress[visualizer]);
                     visualizer.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
