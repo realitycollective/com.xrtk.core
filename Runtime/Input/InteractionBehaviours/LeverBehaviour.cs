@@ -79,13 +79,13 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private float smoothSnapSpeed = 5f;
 
         [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the x-axis.")]
-        public float valueX = 0f;
+        private float valueX = 0f;
 
         [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the y-axis.")]
-        public float valueY = 0f;
+        private float valueY = 0f;
 
         [SerializeField, Range(-1f, 1f), Tooltip("The lever's value on the z-axis.")]
-        public float valueZ = 0f;
+        private float valueZ = 0f;
 
         [SerializeField, Space, Tooltip("A normalized value per axis indicating the levers pose.")]
         private UnityEvent<Vector3> valueChanged = null;
