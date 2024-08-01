@@ -918,20 +918,20 @@ namespace RealityToolkit.Input.Modules
                 return false;
             }
 
-            if (!TryGetCamera(graphicEventData, out var UIRaycastCamera))
+            if (!TryGetCamera(graphicEventData, out var uiCameraRaycaster))
             {
                 Debug.LogError("No valid camera found for raycasting!");
                 return false;
             }
 
             // Move the uiRaycast camera to the current pointer's position.
-            UIRaycastCamera.transform.position = step.Origin;
-            UIRaycastCamera.transform.rotation = Quaternion.LookRotation(step.Direction, Vector3.up);
+            uiCameraRaycaster.transform.position = step.Origin;
+            uiCameraRaycaster.transform.rotation = Quaternion.LookRotation(step.Direction, Vector3.up);
 
             // We always raycast from the center of the camera.
             var newPosition = graphicRaycastMultiplier;
-            newPosition.x *= UIRaycastCamera.pixelWidth;
-            newPosition.y *= UIRaycastCamera.pixelHeight;
+            newPosition.x *= uiCameraRaycaster.pixelWidth;
+            newPosition.y *= uiCameraRaycaster.pixelHeight;
             graphicEventData.position = newPosition;
             // Graphics raycast
             //uiRaycastResult = currentEventSystem.Raycast(graphicEventData, prioritizedLayerMasks);
@@ -946,7 +946,7 @@ namespace RealityToolkit.Input.Modules
             if (graphicEventData.pointerCurrentRaycast.isValid)
             {
                 //NOTE: This is the correct way to interact with a canvas in world space.
-                screenPosition = UIRaycastCamera.WorldToScreenPoint(graphicEventData.pointerCurrentRaycast.worldPosition);
+                screenPosition = uiCameraRaycaster.WorldToScreenPoint(graphicEventData.pointerCurrentRaycast.worldPosition);
                 if(pointer.IsSelectPressed)
                 {
                     Debug.Log("Select Pressed");
@@ -961,7 +961,7 @@ namespace RealityToolkit.Input.Modules
             else
             {
                 var endPosition = Vector3.zero;
-                screenPosition = UIRaycastCamera.WorldToScreenPoint(endPosition);
+                screenPosition = uiCameraRaycaster.WorldToScreenPoint(endPosition);
                 graphicEventData.position = screenPosition;
             }
 
@@ -971,10 +971,10 @@ namespace RealityToolkit.Input.Modules
 
             if (graphicEventData.pressPosition != Vector2.zero)
             {
-                graphicEventData.pressPosition = UIRaycastCamera.WorldToScreenPoint(graphicEventData.pointerCurrentRaycast.worldPosition);
+                graphicEventData.pressPosition = uiCameraRaycaster.WorldToScreenPoint(graphicEventData.pointerCurrentRaycast.worldPosition);
             }
             uiRaycastResult = graphicEventData.pointerCurrentRaycast;
-            return UIRaycastCamera.gameObject != null;
+            return uiCameraRaycaster.gameObject != null;
         }
 
         UnityEvents.RaycastResult PerformRaycast(UnityEvents.PointerEventData eventData)
