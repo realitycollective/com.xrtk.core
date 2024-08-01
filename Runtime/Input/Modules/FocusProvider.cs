@@ -51,11 +51,18 @@ namespace RealityToolkit.Input.Modules
         private readonly Color[] debugPointingRayColors;
         private RenderTexture uiRaycastCameraTargetTexture;
         private bool didCreateUIRaycastCamera;
+        [NonSerialized]
+        protected List<UnityEvents.RaycastResult> m_RaycastResultCache = new List<UnityEvents.RaycastResult>();
 
         private IInputService inputService = null;
 
         protected IInputService InputService
             => inputService ?? (inputService = ServiceManager.Instance.GetService<IInputService>());
+
+        protected UnityEvents.EventSystem eventSystem
+        {
+            get { return UnityEvents.EventSystem.current; }
+        }
 
         #region IFocusProvider Properties
 
@@ -70,22 +77,6 @@ namespace RealityToolkit.Input.Modules
         /// <inheritdoc />
         public LayerMask[] GlobalPointerRaycastLayerMasks => focusLayerMasks;
 
-        private Camera uiRaycastCamera = null;
-
-        /// <inheritdoc />
-        public Camera UIRaycastCamera
-        {
-            get
-            {
-                if (uiRaycastCamera == null)
-                {
-                    EnsureUiRaycastCameraSetup();
-                }
-
-                return uiRaycastCamera;
-            }
-            private set => uiRaycastCamera = value;
-        }
 
         #endregion IFocusProvider Properties
 
@@ -494,7 +485,6 @@ namespace RealityToolkit.Input.Modules
         public override void Destroy()
         {
             base.Destroy();
-            CleanUpUiRaycastCamera();
         }
 
         #endregion IService Implementation
@@ -558,87 +548,6 @@ namespace RealityToolkit.Input.Modules
             }
 
             return newId;
-        }
-
-        /// <summary>
-        /// Utility for validating the UIRaycastCamera.
-        /// </summary>
-        /// <returns>The UIRaycastCamera</returns>
-        private void EnsureUiRaycastCameraSetup()
-        {
-            const string uiRayCastCameraName = "UIRaycastCamera";
-
-            if (Camera.main.IsNull())
-            {
-                // The main camera is not available yet, so we cannot init the raycat camera
-                // at this time. The get-accessor of the UIRaycastCamera property will ensure
-                // it is set up at a later time when accessed.
-                return;
-            }
-
-            GameObject cameraObject;
-
-            var existingUiRaycastCameraObject = GameObject.Find(uiRayCastCameraName);
-            if (existingUiRaycastCameraObject != null)
-            {
-                cameraObject = existingUiRaycastCameraObject;
-            }
-            else
-            {
-                cameraObject = new GameObject { name = uiRayCastCameraName };
-                cameraObject.transform.SetParent(Camera.main.transform, false);
-                didCreateUIRaycastCamera = true;
-            }
-
-            uiRaycastCamera = cameraObject.EnsureComponent<Camera>();
-            uiRaycastCamera.enabled = false;
-            uiRaycastCamera.clearFlags = CameraClearFlags.Color;
-            uiRaycastCamera.backgroundColor = new Color(0, 0, 0, 1);
-            uiRaycastCamera.orthographic = true;
-            uiRaycastCamera.orthographicSize = 0.5f;
-            uiRaycastCamera.nearClipPlane = 0.0f;
-            uiRaycastCamera.farClipPlane = 1000f;
-            uiRaycastCamera.rect = new Rect(0, 0, 1, 1);
-            uiRaycastCamera.depth = 0;
-            uiRaycastCamera.renderingPath = RenderingPath.UsePlayerSettings;
-            uiRaycastCamera.useOcclusionCulling = false;
-            uiRaycastCamera.allowHDR = false;
-            uiRaycastCamera.allowMSAA = false;
-            uiRaycastCamera.allowDynamicResolution = false;
-            uiRaycastCamera.targetDisplay = 0;
-
-            if (RenderPipelineUtilities.GetActiveRenderingPipeline() == RealityToolkit.Definitions.Utilities.UnityRenderPipeline.Legacy)
-            {
-                uiRaycastCamera.stereoTargetEye = StereoTargetEyeMask.Both;
-            }
-
-            uiRaycastCamera.cullingMask = Camera.main.cullingMask;
-
-            if (uiRaycastCameraTargetTexture == null)
-            {
-                // Set target texture to specific pixel size so that drag thresholds are treated the same regardless of underlying
-                // device display resolution.
-                uiRaycastCameraTargetTexture = new RenderTexture(128, 128, 0);
-            }
-
-            uiRaycastCamera.targetTexture = uiRaycastCameraTargetTexture;
-        }
-
-        private void CleanUpUiRaycastCamera()
-        {
-            if (uiRaycastCameraTargetTexture != null)
-            {
-                uiRaycastCameraTargetTexture.Destroy();
-            }
-
-            uiRaycastCameraTargetTexture = null;
-
-            if (didCreateUIRaycastCamera && UIRaycastCamera.gameObject.IsNotNull())
-            {
-                UIRaycastCamera.gameObject.Destroy();
-            }
-
-            UIRaycastCamera = null;
         }
 
         /// <inheritdoc />
@@ -951,9 +860,6 @@ namespace RealityToolkit.Input.Modules
         /// <param name="hitResult"></param>
         private void RaycastGraphics(IInteractor pointer, UnityEvents.PointerEventData graphicEventData, LayerMask[] prioritizedLayerMasks, PointerHitResult hitResult)
         {
-            Debug.Assert(UIRaycastCamera != null, "Missing UIRaycastCamera!");
-            Debug.Assert(UIRaycastCamera.nearClipPlane == 0, "Near plane must be zero for raycast distances to be correct");
-
             if (pointer.Rays == null || pointer.Rays.Length <= 0)
             {
                 Debug.LogError($"No valid rays for {pointer.PointerName} pointer.");
@@ -964,24 +870,23 @@ namespace RealityToolkit.Input.Modules
             var totalDistance = 0.0f;
             for (int i = 0; i < pointer.Rays.Length; i++)
             {
-
                 UnityEvents.RaycastResult raycastResult;
-                if (RaycastGraphicsStep(graphicEventData, pointer.Rays[i], prioritizedLayerMasks, out raycastResult) &&
+                if (RaycastGraphicsStep(pointer, graphicEventData, pointer.Rays[i], prioritizedLayerMasks, out raycastResult) &&
                         raycastResult.isValid &&
                         raycastResult.distance < pointer.Rays[i].Length &&
-                        raycastResult.module != null &&
-                        raycastResult.module.eventCamera == UIRaycastCamera)
+                        raycastResult.module != null)
                 {
                     totalDistance += raycastResult.distance;
 
-                    newUiRaycastPosition.x = raycastResult.screenPosition.x;
-                    newUiRaycastPosition.y = raycastResult.screenPosition.y;
-                    newUiRaycastPosition.z = raycastResult.distance;
+                    // newUiRaycastPosition.x = raycastResult.screenPosition.x;
+                    // newUiRaycastPosition.y = raycastResult.screenPosition.y;
+                    // newUiRaycastPosition.z = raycastResult.distance;
 
-                    Vector3 worldPos = UIRaycastCamera.ScreenToWorldPoint(newUiRaycastPosition);
-                    Vector3 normal = -raycastResult.gameObject.transform.forward;
+                    // Vector3 worldPos = Camera.main.ScreenToWorldPoint(newUiRaycastPosition);
+                    // Vector3 normal = -raycastResult.gameObject.transform.forward;
 
-                    hitResult.Set(raycastResult, worldPos, normal, pointer.Rays[i], i, totalDistance);
+                    hitResult.Set(raycastResult, raycastResult.worldPosition, raycastResult.worldNormal, pointer.Rays[i], i, totalDistance);
+                    //hitResult.Set(raycastResult, worldPos, normal, pointer.Rays[i], i, totalDistance);
                     return;
                 }
 
@@ -996,7 +901,7 @@ namespace RealityToolkit.Input.Modules
         /// <param name="step"></param>
         /// <param name="prioritizedLayerMasks"></param>
         /// <param name="uiRaycastResult"></param>
-        private bool RaycastGraphicsStep(UnityEvents.PointerEventData graphicEventData, RayStep step, LayerMask[] prioritizedLayerMasks, out UnityEvents.RaycastResult uiRaycastResult)
+        private bool RaycastGraphicsStep(IInteractor pointer, UnityEvents.PointerEventData graphicEventData, RayStep step, LayerMask[] prioritizedLayerMasks, out UnityEvents.RaycastResult uiRaycastResult)
         {
             uiRaycastResult = default;
             var currentEventSystem = UnityEvents.EventSystem.current;
@@ -1013,6 +918,12 @@ namespace RealityToolkit.Input.Modules
                 return false;
             }
 
+            if (!TryGetCamera(graphicEventData, out var UIRaycastCamera))
+            {
+                Debug.LogError("No valid camera found for raycasting!");
+                return false;
+            }
+
             // Move the uiRaycast camera to the current pointer's position.
             UIRaycastCamera.transform.position = step.Origin;
             UIRaycastCamera.transform.rotation = Quaternion.LookRotation(step.Direction, Vector3.up);
@@ -1022,12 +933,92 @@ namespace RealityToolkit.Input.Modules
             newPosition.x *= UIRaycastCamera.pixelWidth;
             newPosition.y *= UIRaycastCamera.pixelHeight;
             graphicEventData.position = newPosition;
-
             // Graphics raycast
-            uiRaycastResult = currentEventSystem.Raycast(graphicEventData, prioritizedLayerMasks);
-            graphicEventData.pointerCurrentRaycast = uiRaycastResult;
+            //uiRaycastResult = currentEventSystem.Raycast(graphicEventData, prioritizedLayerMasks);
 
+
+            // var savedPosition = graphicEventData.position;
+            // graphicEventData.position = new Vector2(float.MinValue, float.MinValue);
+            graphicEventData.pointerCurrentRaycast = PerformRaycast(graphicEventData);
+            // graphicEventData.position = savedPosition;
+
+            Vector2 screenPosition;
+            if (graphicEventData.pointerCurrentRaycast.isValid)
+            {
+                //NOTE: This is the correct way to interact with a canvas in world space.
+                screenPosition = UIRaycastCamera.WorldToScreenPoint(graphicEventData.pointerCurrentRaycast.worldPosition);
+                if(pointer.IsSelectPressed)
+                {
+                    Debug.Log("Select Pressed");
+                    //eventData.pressWorldPosition = eventData.pointerCurrentRaycast.worldPosition;
+                }
+
+                // if ((deviceState.selectDelta & ButtonDeltaState.Pressed) != 0)
+                // {
+                //     eventData.pressWorldPosition = eventData.pointerCurrentRaycast.worldPosition;
+                // }
+            }
+            else
+            {
+                var endPosition = Vector3.zero;
+                screenPosition = UIRaycastCamera.WorldToScreenPoint(endPosition);
+                graphicEventData.position = screenPosition;
+            }
+
+            var thisFrameDelta = screenPosition - graphicEventData.position;
+            graphicEventData.position = screenPosition;
+            graphicEventData.delta = thisFrameDelta;
+
+            if (graphicEventData.pressPosition != Vector2.zero)
+            {
+                graphicEventData.pressPosition = UIRaycastCamera.WorldToScreenPoint(graphicEventData.pointerCurrentRaycast.worldPosition);
+            }
+            uiRaycastResult = graphicEventData.pointerCurrentRaycast;
             return UIRaycastCamera.gameObject != null;
+        }
+
+        UnityEvents.RaycastResult PerformRaycast(UnityEvents.PointerEventData eventData)
+        {
+            if (eventData == null)
+                throw new ArgumentNullException(nameof(eventData));
+
+            eventSystem.RaycastAll(eventData, m_RaycastResultCache);
+            var result = FindFirstRaycast(m_RaycastResultCache);
+            m_RaycastResultCache.Clear();
+            return result;
+        }
+
+        /// <summary>
+        /// Return the first valid RaycastResult.
+        /// </summary>
+        protected static UnityEvents.RaycastResult FindFirstRaycast(List<UnityEvents.RaycastResult> candidates)
+        {
+            var candidatesCount = candidates.Count;
+            for (var i = 0; i < candidatesCount; ++i)
+            {
+                if (candidates[i].gameObject == null)
+                    continue;
+
+                return candidates[i];
+            }
+            return new UnityEvents.RaycastResult();
+        }
+
+        bool TryGetCamera(UnityEvents.PointerEventData eventData, out Camera screenPointCamera)
+        {
+            // Get associated Camera, or Main Camera, or Camera from ray cast, and if *nothing* exists, then abort processing this frame.
+            screenPointCamera = Camera.main;
+            if (screenPointCamera != null)
+                return true;
+
+            var module = eventData.pointerCurrentRaycast.module;
+            if (module != null)
+            {
+                screenPointCamera = module.eventCamera;
+                return screenPointCamera != null;
+            }
+
+            return false;
         }
 
         private readonly Vector2 graphicRaycastMultiplier = new Vector2(0.5f, 0.5f);

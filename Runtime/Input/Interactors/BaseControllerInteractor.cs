@@ -89,9 +89,7 @@ namespace RealityToolkit.Input.Interactors
         /// <inheritdoc />
         public string PointerName => gameObject.name;
 
-        /// <summary>
-        /// True if select is pressed right now
-        /// </summary>
+        /// <inheritdoc />
         protected bool IsSelectPressed { get; set; } = false;
 
         /// <inheritdoc />

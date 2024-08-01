@@ -353,6 +353,12 @@ namespace RealityToolkit.Input.Cursors
                 Debug.LogError($"[BaseCursor.{name}] No Pointer has been assigned!");
                 return;
             }
+            
+            if(InputService.FocusProvider == null)
+            {
+                Debug.LogError($"[BaseCursor.{name}] No FocusProvider has been assigned!");
+                return;
+            }
 
             if (!InputService.FocusProvider.TryGetFocusDetails(Pointer, out var focusDetails))
             {

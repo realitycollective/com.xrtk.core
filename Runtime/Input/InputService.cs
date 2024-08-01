@@ -903,6 +903,7 @@ namespace RealityToolkit.Input
             if (focusedObject.IsNotNull() &&
                 FocusProvider.TryGetSpecificPointerGraphicEventData(pointer, out var graphicInputEventData))
             {
+                graphicInputEventData.pressPosition = graphicInputEventData.position;
                 InputServiceEventHandlers.Execute(focusedObject, graphicInputEventData, UnityEvents.ExecuteEvents.pointerDownHandler);
                 InputServiceEventHandlers.Execute(focusedObject, graphicInputEventData, UnityEvents.ExecuteEvents.initializePotentialDrag);
             }
@@ -942,6 +943,7 @@ namespace RealityToolkit.Input
             if (focusedObject.IsNotNull() &&
                 FocusProvider.TryGetSpecificPointerGraphicEventData(pointer, out var graphicInputEventData))
             {
+                graphicInputEventData.pressPosition = Vector2.zero;
                 InputServiceEventHandlers.Execute(focusedObject, graphicInputEventData, UnityEvents.ExecuteEvents.pointerUpHandler);
                 InputServiceEventHandlers.Execute(focusedObject, graphicInputEventData, UnityEvents.ExecuteEvents.pointerClickHandler);
 

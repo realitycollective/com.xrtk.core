@@ -62,7 +62,7 @@ namespace RealityToolkit.Input.Interactables
                 canvas.isRootCanvas && canvas.renderMode == RenderMode.WorldSpace &&
                 inputService.FocusProvider != null)
             {
-                canvas.worldCamera = inputService.FocusProvider.UIRaycastCamera;
+                canvas.worldCamera = Camera.main;
             }
 
             Debug.Assert(canvas.IsNotNull(), $"The {nameof(InteractableCanvas)} requires a {nameof(Canvas)} component on the game object.");

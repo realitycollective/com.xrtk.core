@@ -22,12 +22,6 @@ namespace RealityToolkit.Input.Interfaces
         LayerMask[] GlobalPointerRaycastLayerMasks { get; }
 
         /// <summary>
-        /// The Camera the <see cref="UnityEngine.EventSystems.EventSystem"/> uses to raycast against.
-        /// </summary>
-        /// <remarks>Every uGUI <see cref="Canvas"/> in your scene should use this camera as its event camera.</remarks>
-        Camera UIRaycastCamera { get; }
-
-        /// <summary>
         /// Gets the currently focused object for the pointing source.
         /// </summary>
         /// <remarks>If the pointing source is not registered, then the Gaze's Focused <see cref="GameObject"/> is returned.</remarks>

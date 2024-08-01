@@ -379,27 +379,33 @@ namespace RealityToolkit.Input.Modules
 
         protected virtual void OnDisable()
         {
-            InputService?.Unregister(gameObject);
+            // if(inputService != null)
+            // {
+            //     InputService.Unregister(gameObject);
+            // }
 
-            if (GazePointer != null && GazePointer.BaseCursor != null)
-            {
-                GazePointer.BaseCursor.IsVisible = false;
-            }
+            // if (GazePointer != null && GazePointer.BaseCursor != null)
+            // {
+            //     GazePointer.BaseCursor.IsVisible = false;
+            // }
 
-            if (sourceRaised)
-            {
-                InputService?.RaiseSourceLost(GazeInputSource);
-            }
+            // if (sourceRaised)
+            // {
+            //     InputService?.RaiseSourceLost(GazeInputSource);
+            // }
         }
 
         protected void OnDestroy()
         {
-            InputService?.Unregister(gameObject);
+            // if(inputService != null)
+            // {
+            //     InputService.Unregister(gameObject);
+            // }
 
-            if (GazePointer != null && !GazeCursor.Equals(null) && GazeCursor.GameObjectReference.IsNotNull())
-            {
-                GazeCursor.GameObjectReference.Destroy();
-            }
+            // if (GazePointer != null && !GazeCursor.Equals(null) && GazeCursor.GameObjectReference.IsNotNull())
+            // {
+            //     GazeCursor.GameObjectReference.Destroy();
+            // }
         }
 
         #endregion MonoBehaviour Implementation

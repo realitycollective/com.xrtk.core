@@ -37,6 +37,11 @@ namespace RealityToolkit.Input.Interactors
         bool IsFarInteractor { get; }
 
         /// <summary>
+        /// True if select is pressed right now
+        /// </summary>
+        bool IsSelectPressed { get; set; }
+
+        /// <summary>
         /// <c>true</c>, if any <see cref="InputAction"/> is down on this <see cref="IInteractor"/>.
         /// </summary>
         bool IsInputDown { get; }
