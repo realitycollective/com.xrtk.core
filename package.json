@@ -3,7 +3,7 @@
   "displayName": "RealityToolkit.Core",
   "description": "The core framework of the Reality Toolkit by the Reality Collective.",
   "version": "1.0.0-pre.71",
-  "documentationUrl": "https://realitytoolkit.io",
+  "documentationUrl": "https://realitytoolkit.realitycollective.net/docs/get-started/",
   "changelogUrl": "https://github.com/realitycollective/com.realitytoolkit.core/releases",
   "licensesUrl": "https://github.com/realitycollective/com.realitytoolkit.core/blob/main/LICENSE.md",
   "keywords": [
@@ -13,7 +13,7 @@
     "Mixed Reality"
   ],
   "unity": "2022.3",
-  "homepage": "https://realitytoolkit.io",
+  "homepage": "https://realitytoolkit.realitycollective.net/",
   "bugs": {
     "url": "https://github.com/realitycollective/com.realitytoolkit.core/issues"
   },
