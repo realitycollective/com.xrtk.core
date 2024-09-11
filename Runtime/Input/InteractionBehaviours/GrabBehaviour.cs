@@ -22,38 +22,41 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("Optional local offset from the object's pivot.")]
         private Vector3 grabPoseLocalRotationOffset = Vector3.zero;
 
-        private IDirectInteractor grabbingInteractor;
+        private static GrabBehaviour primary;
+        private static IDirectInteractor primaryInteractor;
 
         /// <inheritdoc/>
         protected override void Update()
         {
-            if (grabbingInteractor != null)
+            if (primary == this && primaryInteractor != null)
             {
-                transform.SetPositionAndRotation(GetGrabPosition(), GetGrabRotation());
+                transform.SetPositionAndRotation(GetGrabPosition(transform, grabPoseLocalOffset), GetGrabRotation(grabPoseLocalRotationOffset));
             }
         }
 
         /// <inheritdoc/>
-        protected override void OnFirstGrabEntered(InteractionEventArgs eventArgs)
+        protected override void OnGrabEntered(InteractionEventArgs eventArgs)
         {
             if (eventArgs.Interactor is IDirectInteractor directInteractor)
             {
-                grabbingInteractor = directInteractor;
-                transform.SetPositionAndRotation(GetGrabPosition(), GetGrabRotation());
+                primary = this;
+                primaryInteractor = directInteractor;
             }
         }
 
         /// <inheritdoc/>
         protected override void OnGrabExited(InteractionExitEventArgs eventArgs)
         {
-            if (eventArgs.Interactor == grabbingInteractor)
+            if (eventArgs.Interactor is IDirectInteractor directInteractor &&
+                primaryInteractor == directInteractor)
             {
-                grabbingInteractor = null;
+                primary = null;
+                primaryInteractor = null;
             }
         }
 
-        private Vector3 GetGrabPosition() => grabbingInteractor.Controller.Visualizer.GripPose.transform.position + transform.TransformDirection(grabPoseLocalOffset);
+        private static Vector3 GetGrabPosition(Transform interactable, Vector3 grabPoseLocalOffset) => primaryInteractor.Controller.Visualizer.GripPose.position + interactable.TransformDirection(grabPoseLocalOffset);
 
-        private Quaternion GetGrabRotation() => grabbingInteractor.Controller.Visualizer.GripPose.transform.rotation * Quaternion.Euler(grabPoseLocalRotationOffset);
+        private static Quaternion GetGrabRotation(Vector3 grabPoseLocalRotationOffset) => primaryInteractor.Controller.Visualizer.GripPose.rotation * Quaternion.Euler(grabPoseLocalRotationOffset);
     }
 }
