@@ -1,5 +1,6 @@
 ﻿using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using RealityToolkit.Editor.Utilities;
 
 namespace RealityToolkit.Editor.Inspectors
 {
@@ -31,6 +32,8 @@ namespace RealityToolkit.Editor.Inspectors
             {
                 inspector.Add(new PropertyField(serializedObject.FindProperty(targetHandednessBindingPath)));
             }
+
+            inspector.Add(UIElementsUtilities.VerticalSpace());
 
             return inspector;
         }

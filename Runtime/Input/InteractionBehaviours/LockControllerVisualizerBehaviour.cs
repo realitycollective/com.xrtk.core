@@ -23,8 +23,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LockControllerVisualizerBehaviour))]
     public class LockControllerVisualizerBehaviour : BaseInteractionBehaviour
     {
-        [SerializeField, Tooltip("Optional offset pose applied to the visualizer.")]
-        private Pose localOffsetPose = Pose.identity;
+        [SerializeField, Tooltip("Optional: The pose to hold / grab onto when locking onto this interactable. Must be a child " +
+        "transform of the component transform. If not set, the component transform is used.")]
+        private Transform hint = null;
 
         [SerializeField, Tooltip("If set, the controller visualizer will smoothly attach to the interactable instead of instantly.")]
         private bool smoothSyncPose = true;
@@ -39,6 +40,17 @@ namespace RealityToolkit.Input.InteractionBehaviours
         private readonly Dictionary<IControllerVisualizer, float> smoothingProgress = new();
 
         /// <inheritdoc/>
+        protected override void Awake()
+        {
+            base.Awake();
+
+            if (hint.IsNull())
+            {
+                hint = transform;
+            }
+        }
+
+        /// <inheritdoc/>
         protected override void Update()
         {
             if (lockedVisualizers.Count == 0)
@@ -46,7 +58,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            var lockPose = GetLockPose();
+            var lockPose = GetInteractableLockPose();
             var visualizers = lockedVisualizers.Keys.ToList();
 
             foreach (var visualizer in visualizers)
@@ -64,6 +76,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
                     {
                         unlockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, unlockPose.position, smoothingProgress[visualizer]);
                         unlockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, unlockPose.rotation, smoothingProgress[visualizer]);
+                        
                         visualizer.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
                     }
                 }
@@ -148,7 +161,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
             }
 
             pendingUnlockVisualizers.EnsureDictionaryItem(visualizer, false, true);
-            smoothingStartPose.EnsureDictionaryItem(visualizer, GetLockPose(), true);
+            smoothingStartPose.EnsureDictionaryItem(visualizer, GetInteractableLockPose(), true);
             smoothingStartTime.EnsureDictionaryItem(visualizer, Time.time, true);
             smoothingProgress.EnsureDictionaryItem(visualizer, 0f, true);
         }
@@ -163,7 +176,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
             visualizer.OverrideSourcePose = false;
         }
 
-        private Pose GetLockPose() => new Pose(transform.TransformPoint(localOffsetPose.position), transform.rotation * Quaternion.Euler(localOffsetPose.rotation.eulerAngles));
+        private Pose GetInteractableLockPose() => new Pose(hint.position, hint.rotation);
 
         private bool HasFinishedSmoothTransition(Dictionary<IControllerVisualizer, bool> smoothingStateDictionary, IControllerVisualizer visualizer)
         {

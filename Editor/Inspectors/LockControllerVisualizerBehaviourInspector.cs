@@ -16,7 +16,7 @@ namespace RealityToolkit.Editor.Inspectors
         private PropertyField smoothSyncPose;
         private PropertyField syncDuration;
 
-        private const string localOffsetPoseBindingPath = "localOffsetPose";
+        private const string hintBindingPath = "hint";
         private const string smoothSyncPoseBindingPath = nameof(smoothSyncPose);
         private const string syncPositionSpeedBindingPath = nameof(syncDuration);
 
@@ -27,7 +27,7 @@ namespace RealityToolkit.Editor.Inspectors
         {
             inspector = base.CreateInspectorGUI();
 
-            inspector.Add(new PropertyField(serializedObject.FindProperty(localOffsetPoseBindingPath)));
+            inspector.Add(new PropertyField(serializedObject.FindProperty(hintBindingPath)));
 
             smoothSyncPose = new PropertyField(serializedObject.FindProperty(smoothSyncPoseBindingPath));
             smoothSyncPose.RegisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
