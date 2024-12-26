@@ -6,7 +6,6 @@ using RealityToolkit.Input.Controllers;
 using RealityToolkit.Input.Events;
 using RealityToolkit.Input.Interactors;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace RealityToolkit.Input.InteractionBehaviours
@@ -33,11 +32,20 @@ namespace RealityToolkit.Input.InteractionBehaviours
         [SerializeField, Tooltip("Duration in seconds to sync the visualizer pose with the interactable."), Min(.01f)]
         private float syncDuration = 1f;
 
-        private readonly Dictionary<IControllerVisualizer, bool> lockedVisualizers = new();
-        private readonly Dictionary<IControllerVisualizer, bool> pendingUnlockVisualizers = new();
-        private readonly Dictionary<IControllerVisualizer, Pose> smoothingStartPose = new();
-        private readonly Dictionary<IControllerVisualizer, float> smoothingStartTime = new();
-        private readonly Dictionary<IControllerVisualizer, float> smoothingProgress = new();
+        private struct VisualizerLockData
+        {
+            public bool IsLocked { get; set; }
+
+            public bool IsPendingUnlock { get; set; }
+
+            public Pose SmoothingStartPose { get; set; }
+
+            public float SmoothingStartTime { get; set; }
+
+            public float SmoothingProgress { get; set; }
+        }
+
+        private readonly Dictionary<IControllerVisualizer, VisualizerLockData> visualizers = new();
 
         /// <inheritdoc/>
         protected override void Awake()
@@ -53,44 +61,54 @@ namespace RealityToolkit.Input.InteractionBehaviours
         /// <inheritdoc/>
         protected override void Update()
         {
-            if (lockedVisualizers.Count == 0)
+            if (visualizers.Count == 0)
             {
                 return;
             }
 
             var lockPose = GetInteractableLockPose();
-            var visualizers = lockedVisualizers.Keys.ToList();
 
             foreach (var visualizer in visualizers)
             {
-                if (pendingUnlockVisualizers.TryGetValue(visualizer, out _))
+                if (!visualizers.TryGetValue(visualizer.Key, out var data))
                 {
-                    var finishedUnlock = HasFinishedSmoothTransition(pendingUnlockVisualizers, visualizer);
-                    if (finishedUnlock)
+                    continue;
+                }
+
+                if (data.IsPendingUnlock)
+                {
+                    var t = CalculateSmoothingTransition(visualizer.Key);
+                    if (t >= 1f)
                     {
-                        CleanUpVisualizer(visualizer);
+                        CleanUpVisualizer(visualizer.Key);
                         continue;
                     }
 
-                    if (visualizer.Controller.TryGetPose(Space.World, out var unlockPose))
+                    data.SmoothingProgress = t;
+                    visualizers[visualizer.Key] = data;
+
+                    if (visualizer.Key.Controller.TryGetPose(Space.World, out var unlockPose))
                     {
-                        unlockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, unlockPose.position, smoothingProgress[visualizer]);
-                        unlockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, unlockPose.rotation, smoothingProgress[visualizer]);
-                        
-                        visualizer.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
+                        unlockPose.position = Vector3.Slerp(data.SmoothingStartPose.position, unlockPose.position, data.SmoothingProgress);
+                        unlockPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, unlockPose.rotation, data.SmoothingProgress);
+
+                        visualizer.Key.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
                     }
                 }
                 else
                 {
-                    var shouldLock = HasFinishedSmoothTransition(lockedVisualizers, visualizer);
+                    var t = CalculateSmoothingTransition(visualizer.Key);
 
-                    if (!shouldLock)
+                    data.SmoothingProgress = t;
+                    visualizers[visualizer.Key] = data;
+
+                    if (t < 1f)
                     {
-                        lockPose.position = Vector3.Slerp(smoothingStartPose[visualizer].position, lockPose.position, smoothingProgress[visualizer]);
-                        lockPose.rotation = Quaternion.Slerp(smoothingStartPose[visualizer].rotation, lockPose.rotation, smoothingProgress[visualizer]);
+                        lockPose.position = Vector3.Slerp(data.SmoothingStartPose.position, lockPose.position, data.SmoothingProgress);
+                        lockPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, lockPose.rotation, data.SmoothingProgress);
                     }
 
-                    visualizer.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
+                    visualizer.Key.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
                 }
             }
         }
@@ -145,10 +163,15 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private void LockVisualizer(IControllerVisualizer visualizer)
         {
-            lockedVisualizers.EnsureDictionaryItem(visualizer, !smoothSyncPose, true);
-            smoothingStartPose.EnsureDictionaryItem(visualizer, new Pose(visualizer.PoseDriver.position, visualizer.PoseDriver.rotation), true);
-            smoothingStartTime.EnsureDictionaryItem(visualizer, Time.time, true);
-            smoothingProgress.EnsureDictionaryItem(visualizer, 0f, true);
+            visualizers.EnsureDictionaryItem(visualizer, new VisualizerLockData
+            {
+                IsPendingUnlock = false,
+                IsLocked = !smoothSyncPose,
+                SmoothingStartPose = new Pose(visualizer.PoseDriver.position, visualizer.PoseDriver.rotation),
+                SmoothingStartTime = Time.time,
+                SmoothingProgress = 0f
+            });
+
             visualizer.OverrideSourcePose = true;
         }
 
@@ -160,41 +183,34 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            pendingUnlockVisualizers.EnsureDictionaryItem(visualizer, false, true);
-            smoothingStartPose.EnsureDictionaryItem(visualizer, GetInteractableLockPose(), true);
-            smoothingStartTime.EnsureDictionaryItem(visualizer, Time.time, true);
-            smoothingProgress.EnsureDictionaryItem(visualizer, 0f, true);
+            visualizers.EnsureDictionaryItem(visualizer, new VisualizerLockData
+            {
+                IsPendingUnlock = true,
+                IsLocked = false,
+                SmoothingStartPose = GetInteractableLockPose(),
+                SmoothingStartTime = Time.time,
+                SmoothingProgress = 0f
+            }, true);
         }
 
         private void CleanUpVisualizer(IControllerVisualizer visualizer)
         {
-            lockedVisualizers.SafeRemoveDictionaryItem(visualizer);
-            smoothingStartPose.SafeRemoveDictionaryItem(visualizer);
-            smoothingStartTime.SafeRemoveDictionaryItem(visualizer);
-            smoothingProgress.SafeRemoveDictionaryItem(visualizer);
-            pendingUnlockVisualizers.SafeRemoveDictionaryItem(visualizer);
+            visualizers.SafeRemoveDictionaryItem(visualizer);
             visualizer.OverrideSourcePose = false;
         }
 
         private Pose GetInteractableLockPose() => new Pose(hint.position, hint.rotation);
 
-        private bool HasFinishedSmoothTransition(Dictionary<IControllerVisualizer, bool> smoothingStateDictionary, IControllerVisualizer visualizer)
+        private float CalculateSmoothingTransition(IControllerVisualizer visualizer)
         {
-            if (smoothingStateDictionary[visualizer])
+            if (!visualizers.TryGetValue(visualizer, out var data) ||
+            data.IsLocked || data.SmoothingProgress >= 1f)
             {
-                return true;
+                return 1f;
             }
 
-            var t = (Time.time - smoothingStartTime[visualizer]) / syncDuration;
-            smoothingProgress[visualizer] = t;
-
-            if (t < 1f)
-            {
-                return false;
-            }
-
-            smoothingStateDictionary[visualizer] = true;
-            return true;
+            var t = (Time.time - data.SmoothingStartTime) / syncDuration;
+            return t;
         }
     }
 }
