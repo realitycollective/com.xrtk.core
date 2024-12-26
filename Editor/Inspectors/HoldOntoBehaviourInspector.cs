@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 
 namespace RealityToolkit.Editor.Inspectors
 {
-    [CustomEditor(typeof(LockControllerVisualizerBehaviour), true)]
-    public class LockControllerVisualizerBehaviourInspector : BaseInteractionBehaviourInspector
+    [CustomEditor(typeof(HoldOntoBehaviour), true)]
+    public class HoldOntoBehaviourInspector : BaseInteractionBehaviourInspector
     {
         private VisualElement inspector;
         private PropertyField smoothSyncPose;

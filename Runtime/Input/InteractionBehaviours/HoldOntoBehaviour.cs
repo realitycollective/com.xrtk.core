@@ -18,9 +18,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
     /// Only supports <see cref="IControllerInteractor"/>s.
     /// Does not support <see cref="IPokeInteractor"/>s and will ignore them.
     /// </remarks>
-    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/lock-controller-visualizer-behaviour")]
-    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(LockControllerVisualizerBehaviour))]
-    public class LockControllerVisualizerBehaviour : BaseInteractionBehaviour
+    [HelpURL(RealityToolkitRuntimePreferences.Toolkit_Docs_BaseUrl + "docs/interactions/interaction-behaviours/default-behaviours/hold-onto-behaviour")]
+    [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(HoldOntoBehaviour))]
+    public class HoldOntoBehaviour : BaseInteractionBehaviour
     {
         [SerializeField, Tooltip("Optional: The pose to hold / grab onto when locking onto this interactable. Must be a child " +
         "transform of the component transform. If not set, the component transform is used.")]
