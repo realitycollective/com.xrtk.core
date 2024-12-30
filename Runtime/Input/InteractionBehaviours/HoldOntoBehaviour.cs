@@ -70,46 +70,31 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
             foreach (var visualizer in visualizers)
             {
-                if (!visualizers.TryGetValue(visualizer.Key, out var data))
+                var data = visualizer.Value;
+                var t = CalculateSmoothingTransition(visualizer.Key);
+
+                if (data.IsPendingUnlock && t >= 1f)
                 {
+                    CleanUpVisualizer(visualizer.Key);
                     continue;
                 }
 
-                if (data.IsPendingUnlock)
+                data.SmoothingProgress = t;
+                visualizers[visualizer.Key] = data;
+                var targetPose = lockPose;
+
+                if (data.IsPendingUnlock && visualizer.Key.Controller.TryGetPose(Space.World, out var unlockPose))
                 {
-                    var t = CalculateSmoothingTransition(visualizer.Key);
-                    if (t >= 1f)
-                    {
-                        CleanUpVisualizer(visualizer.Key);
-                        continue;
-                    }
-
-                    data.SmoothingProgress = t;
-                    visualizers[visualizer.Key] = data;
-
-                    if (visualizer.Key.Controller.TryGetPose(Space.World, out var unlockPose))
-                    {
-                        unlockPose.position = Vector3.Slerp(data.SmoothingStartPose.position, unlockPose.position, data.SmoothingProgress);
-                        unlockPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, unlockPose.rotation, data.SmoothingProgress);
-
-                        visualizer.Key.PoseDriver.SetPositionAndRotation(unlockPose.position, unlockPose.rotation);
-                    }
+                    targetPose.position = Vector3.Slerp(data.SmoothingStartPose.position, unlockPose.position, data.SmoothingProgress);
+                    targetPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, unlockPose.rotation, data.SmoothingProgress);
                 }
-                else
+                else if (!data.IsPendingUnlock && t < 1f)
                 {
-                    var t = CalculateSmoothingTransition(visualizer.Key);
-
-                    data.SmoothingProgress = t;
-                    visualizers[visualizer.Key] = data;
-
-                    if (t < 1f)
-                    {
-                        lockPose.position = Vector3.Slerp(data.SmoothingStartPose.position, lockPose.position, data.SmoothingProgress);
-                        lockPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, lockPose.rotation, data.SmoothingProgress);
-                    }
-
-                    visualizer.Key.PoseDriver.SetPositionAndRotation(lockPose.position, lockPose.rotation);
+                    targetPose.position = Vector3.Slerp(data.SmoothingStartPose.position, lockPose.position, data.SmoothingProgress);
+                    targetPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, lockPose.rotation, data.SmoothingProgress);
                 }
+
+                visualizer.Key.PoseDriver.SetPositionAndRotation(targetPose.position, targetPose.rotation);
             }
         }
 
