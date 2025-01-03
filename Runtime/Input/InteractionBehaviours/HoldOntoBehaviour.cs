@@ -22,30 +22,35 @@ namespace RealityToolkit.Input.InteractionBehaviours
     [AddComponentMenu(RealityToolkitRuntimePreferences.Toolkit_InteractionsAddComponentMenu + "/" + nameof(HoldOntoBehaviour))]
     public class HoldOntoBehaviour : BaseInteractionBehaviour
     {
-        [SerializeField, Tooltip("Optional: The pose to hold / grab onto when locking onto this interactable. Must be a child " +
-        "transform of the component transform. If not set, the component transform is used.")]
-        private Transform hint = null;
-
-        [SerializeField, Tooltip("If set, the controller visualizer will smoothly attach to the interactable instead of instantly.")]
-        private bool smoothSyncPose = true;
-
-        [SerializeField, Tooltip("Duration in seconds to sync the visualizer pose with the interactable."), Min(.01f)]
-        private float syncDuration = 1f;
-
-        private struct VisualizerLockData
+        /// <summary>
+        /// Internal structure keeping track of locked visualizers and their state.
+        /// </summary>
+        private class VisualizerLockData
         {
             public bool IsLocked { get; set; }
 
             public bool IsPendingUnlock { get; set; }
 
-            public Pose SmoothingStartPose { get; set; }
-
             public float SmoothingStartTime { get; set; }
 
             public float SmoothingProgress { get; set; }
+
+            public float SmoothingDuration { get; set; }
         }
 
+        [SerializeField, Tooltip("Optional: The pose to hold / grab onto when locking onto this interactable. Must be a child " +
+        "transform of the component transform. If not set, the component transform is used.")]
+        private Transform hint = null;
+
+        [SerializeField, Tooltip("If set, the controller visualizer will smoothly lock to the interactable instead of instantly.")]
+        private bool smooth = true;
+
+        [SerializeField, Min(.01f), Tooltip("Duration in seconds to sync the visualizer pose with the interactable. The value is in seconds per unit and will " +
+            "interpolate based on distance. So if the visualizer is 5 units away, the total sync duration is five times the configured duration.")]
+        private float smoothingDuration = 1f;
+
         private readonly Dictionary<IControllerVisualizer, VisualizerLockData> visualizers = new();
+        private readonly List<IControllerVisualizer> visualizersForClearing = new();
 
         /// <inheritdoc/>
         protected override void Awake()
@@ -75,36 +80,49 @@ namespace RealityToolkit.Input.InteractionBehaviours
                 return;
             }
 
-            var lockPose = GetInteractableLockPose();
-
-            foreach (var visualizer in visualizers)
+            foreach (var item in visualizers)
             {
-                var data = visualizer.Value;
-                var t = CalculateSmoothingTransition(visualizer.Key);
+                var visualizer = item.Key;
+                var data = item.Value;
 
+                var t = CalculateSmoothingTransition(visualizer, data);
                 if (data.IsPendingUnlock && t >= 1f)
                 {
-                    CleanUpVisualizer(visualizer.Key);
+                    visualizersForClearing.Add(visualizer);
                     continue;
                 }
 
-                data.SmoothingProgress = t;
-                visualizers[visualizer.Key] = data;
+                var lockPose = GetInteractableLockPose(visualizer);
                 var targetPose = lockPose;
 
-                if (data.IsPendingUnlock && visualizer.Key.Controller.TryGetPose(Space.World, out var unlockPose))
+                if (data.IsPendingUnlock)
                 {
-                    targetPose.position = Vector3.Slerp(data.SmoothingStartPose.position, unlockPose.position, data.SmoothingProgress);
-                    targetPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, unlockPose.rotation, data.SmoothingProgress);
+                    // Smoothly return to actual controller pose.
+                    var startPose = GetInteractableLockPose(visualizer);
+                    var unlockPose = GetVisualizerUnlockPose(visualizer);
+
+                    targetPose.position = Vector3.Slerp(startPose.position, unlockPose.position, data.SmoothingProgress);
+                    targetPose.rotation = Quaternion.Slerp(startPose.rotation, unlockPose.rotation, data.SmoothingProgress);
                 }
                 else if (!data.IsPendingUnlock && t < 1f)
                 {
-                    targetPose.position = Vector3.Slerp(data.SmoothingStartPose.position, lockPose.position, data.SmoothingProgress);
-                    targetPose.rotation = Quaternion.Slerp(data.SmoothingStartPose.rotation, lockPose.rotation, data.SmoothingProgress);
+                    // Smoothly lock onto the interactable.
+                    var startPose = GetVisualizerUnlockPose(visualizer);
+                    targetPose.position = Vector3.Slerp(startPose.position, lockPose.position, data.SmoothingProgress);
+                    targetPose.rotation = Quaternion.Slerp(startPose.rotation, lockPose.rotation, data.SmoothingProgress);
                 }
 
-                visualizer.Key.PoseDriver.SetPositionAndRotation(targetPose.position, targetPose.rotation);
+                // The position we store is in local space while the rotation is a world rotation.
+                visualizer.PoseDriver.localPosition = targetPose.position;
+                visualizer.PoseDriver.rotation = targetPose.rotation;
             }
+
+            for (var i = 0; i < visualizersForClearing.Count; i++)
+            {
+                CleanUpVisualizer(visualizersForClearing[i]);
+            }
+
+            visualizersForClearing.Clear();
         }
 
         /// <inheritdoc/>
@@ -160,10 +178,10 @@ namespace RealityToolkit.Input.InteractionBehaviours
             visualizers.EnsureDictionaryItem(visualizer, new VisualizerLockData
             {
                 IsPendingUnlock = false,
-                IsLocked = !smoothSyncPose,
-                SmoothingStartPose = new Pose(visualizer.PoseDriver.position, visualizer.PoseDriver.rotation),
+                IsLocked = !smooth,
                 SmoothingStartTime = Time.time,
-                SmoothingProgress = 0f
+                SmoothingProgress = 0f,
+                SmoothingDuration = smooth ? CalculateSmoothingDuration(visualizer) : 0f
             });
 
             visualizer.OverrideSourcePose = true;
@@ -171,7 +189,7 @@ namespace RealityToolkit.Input.InteractionBehaviours
 
         private void UnlockVisualizer(IControllerVisualizer visualizer)
         {
-            if (!smoothSyncPose)
+            if (!smooth)
             {
                 CleanUpVisualizer(visualizer);
                 return;
@@ -181,9 +199,9 @@ namespace RealityToolkit.Input.InteractionBehaviours
             {
                 IsPendingUnlock = true,
                 IsLocked = false,
-                SmoothingStartPose = GetInteractableLockPose(),
                 SmoothingStartTime = Time.time,
-                SmoothingProgress = 0f
+                SmoothingProgress = 0f,
+                SmoothingDuration = CalculateSmoothingDuration(visualizer)
             }, true);
         }
 
@@ -193,17 +211,55 @@ namespace RealityToolkit.Input.InteractionBehaviours
             visualizer.OverrideSourcePose = false;
         }
 
-        private Pose GetInteractableLockPose() => new Pose(hint.position, hint.rotation);
-
-        private float CalculateSmoothingTransition(IControllerVisualizer visualizer)
+        private Pose GetInteractableLockPose(IControllerVisualizer visualizer)
         {
-            if (!visualizers.TryGetValue(visualizer, out var data) ||
-            data.IsLocked || data.SmoothingProgress >= 1f)
+            // If the visualizer is not parented, that means we'll be positioning it in world space.
+            // So we can use the hint transform world pose directly.
+            if (visualizer.PoseDriver.parent.IsNull())
+            {
+                return new Pose(hint.position, hint.rotation);
+            }
+
+            // If the visualzer is parented, we'll be positioning it within the local space of its parent,
+            // so we must first figure out where the hint transform is located within that space.
+            return new Pose(visualizer.PoseDriver.parent.InverseTransformPoint(hint.position), hint.rotation);
+        }
+
+        private Pose GetVisualizerUnlockPose(IControllerVisualizer visualizer)
+        {
+            visualizer.Controller.TryGetPose(Space.World, out var controllerPose);
+
+            // If the visualizer is not parented, we can use the controller's actual world space
+            // pose to determine where it currently is, since we'll be positioning in world space.
+            if (visualizer.PoseDriver.parent.IsNull())
+            {
+                return controllerPose;
+            }
+
+            // If the visualizer is parented, we'll be positioning it within the local space of its parent,
+            // so we need to know where the actual controller currently is within that space.
+            return new Pose(visualizer.PoseDriver.parent.InverseTransformPoint(controllerPose.position), controllerPose.rotation);
+        }
+
+        private float CalculateSmoothingDuration(IControllerVisualizer visualizer)
+        {
+            var start = hint.position;
+            var end = visualizer.Controller.TryGetPose(Space.World, out var controllerPose) ? controllerPose.position : visualizer.PoseDriver.position;
+            var distance = Vector3.Distance(start, end);
+
+            return distance * smoothingDuration;
+        }
+
+        private float CalculateSmoothingTransition(IControllerVisualizer visualizer, VisualizerLockData data)
+        {
+            if (!smooth || data.IsLocked || data.SmoothingProgress >= 1f)
             {
                 return 1f;
             }
 
-            var t = (Time.time - data.SmoothingStartTime) / syncDuration;
+            var t = (Time.time - data.SmoothingStartTime) / data.SmoothingDuration;
+            data.SmoothingProgress = t;
+
             return t;
         }
     }

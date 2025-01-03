@@ -13,12 +13,12 @@ namespace RealityToolkit.Editor.Inspectors
     public class HoldOntoBehaviourInspector : BaseInteractionBehaviourInspector
     {
         private VisualElement inspector;
-        private PropertyField smoothSyncPose;
-        private PropertyField syncDuration;
+        private PropertyField smooth;
+        private PropertyField smoothingDuration;
 
         private const string hintBindingPath = "hint";
-        private const string smoothSyncPoseBindingPath = nameof(smoothSyncPose);
-        private const string syncPositionSpeedBindingPath = nameof(syncDuration);
+        private const string smoothSyncPoseBindingPath = nameof(smooth);
+        private const string syncPositionSpeedBindingPath = nameof(smoothingDuration);
 
         /// <summary>
         /// <inheritdoc/>
@@ -29,12 +29,12 @@ namespace RealityToolkit.Editor.Inspectors
 
             inspector.Add(new PropertyField(serializedObject.FindProperty(hintBindingPath)));
 
-            smoothSyncPose = new PropertyField(serializedObject.FindProperty(smoothSyncPoseBindingPath));
-            smoothSyncPose.RegisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
-            inspector.Add(smoothSyncPose);
+            smooth = new PropertyField(serializedObject.FindProperty(smoothSyncPoseBindingPath));
+            smooth.RegisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
+            inspector.Add(smooth);
 
-            syncDuration = new PropertyField(serializedObject.FindProperty(syncPositionSpeedBindingPath));
-            syncDuration.style.paddingLeft = UIElementsUtilities.DefaultInset;
+            smoothingDuration = new PropertyField(serializedObject.FindProperty(syncPositionSpeedBindingPath));
+            smoothingDuration.style.paddingLeft = UIElementsUtilities.DefaultInset;
 
             UpdateSmoothSyncPoseFields(serializedObject.FindProperty(smoothSyncPoseBindingPath).boolValue);
 
@@ -46,9 +46,9 @@ namespace RealityToolkit.Editor.Inspectors
         /// </summary>
         private void OnDestroy()
         {
-            if (smoothSyncPose != null)
+            if (smooth != null)
             {
-                smoothSyncPose.UnregisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
+                smooth.UnregisterCallback<ChangeEvent<bool>>(SmoothSyncPose_ValueChanged);
             }
         }
 
@@ -58,14 +58,14 @@ namespace RealityToolkit.Editor.Inspectors
         {
             if (showFields)
             {
-                inspector.Add(syncDuration);
-                syncDuration.PlaceInFront(smoothSyncPose);
+                inspector.Add(smoothingDuration);
+                smoothingDuration.PlaceInFront(smooth);
                 return;
             }
 
-            if (inspector.Contains(syncDuration))
+            if (inspector.Contains(smoothingDuration))
             {
-                inspector.Remove(syncDuration);
+                inspector.Remove(smoothingDuration);
             }
         }
     }
