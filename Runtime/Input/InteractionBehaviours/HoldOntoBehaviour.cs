@@ -56,6 +56,15 @@ namespace RealityToolkit.Input.InteractionBehaviours
             {
                 hint = transform;
             }
+            else if (!hint.IsChildOf(transform))
+            {
+                Debug.LogError($"{hint.name} must be a child transform of {transform.name}.", this);
+            }
+
+            if (smooth && smoothingDuration < 0f)
+            {
+                Debug.LogError("Sync duration must be non-negative and above 0.", this);
+            }
         }
 
         /// <inheritdoc/>
