@@ -2,7 +2,7 @@
   "name": "com.realitytoolkit.core",
   "displayName": "RealityToolkit.Core",
   "description": "The foundational module of the Reality Toolkit, providing essential code and assets required to develop XR applications. This package serves as the core dependency for all other Reality Toolkit modules, ensuring seamless integration and functionality.",
-  "version": "1.0.0-pre.72",
+  "version": "1.0.0-pre.73",
   "documentationUrl": "https://realitytoolkit.realitycollective.net/docs/get-started/",
   "changelogUrl": "https://github.com/realitycollective/com.realitytoolkit.core/releases",
   "licensesUrl": "https://github.com/realitycollective/com.realitytoolkit.core/blob/main/LICENSE.md",
