@@ -2,7 +2,7 @@
 
 ![com.realitytoolkit.core](https://github.com/realitycollective/realitycollective.logo/blob/main/RealityToolkit/RepoBanners/com.realitytoolkit.core.png?raw=true)
 
-The core module of the [Reality Toolkit](https://realitytoolkit.realitycollective.net/) contains base implementations used across toolkit modules and is mandatory in any project using the toolkit.
+The foundational module of the [Reality Toolkit](https://realitytoolkit.realitycollective.net/), providing essential code and assets required to develop XR applications. This package serves as the core dependency for all other [Reality Toolkit](https://realitytoolkit.realitycollective.net/) modules, ensuring seamless integration and functionality.
 
 [![openupm](https://img.shields.io/npm/v/com.realitytoolkit.core?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.realitytoolkit.core/) [![Discord](https://img.shields.io/discord/597064584980987924.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/hF7TtRCFmB)
 [![Publish main branch and increment version](https://github.com/realitycollective/com.realitytoolkit.core/actions/workflows/main-publish.yml/badge.svg)](https://github.com/realitycollective/com.realitytoolkit.core/actions/workflows/main-publish.yml)
